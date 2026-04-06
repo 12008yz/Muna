@@ -20,7 +20,7 @@ const bodyTextStyle = {
 
 /**
  * Короткое уведомление (Rectangle 67): текст «Информация направлена…»
- * left 35px / top 165px от края фрейма 400px = баннер left 20 + текст left 15; top 125 + текст top 40.
+ * Баннер: top = --notification-top (ниже шапки на 10px, см. globals.css).
  */
 const compactMessageStyle = {
   position: 'absolute',
@@ -40,7 +40,7 @@ const compactMessageStyle = {
 
 /**
  * Баннер уведомления (куки и т.п.) — как Frame5 / Frame4.
- * `compact` — 360×70, glass, позиция как в макете (top 125, left 20).
+ * `compact` — 360×70, glass; top: 10px под header (--notification-top), left 20.
  */
 export default function CookieBanner({
   countdown,
@@ -58,7 +58,7 @@ export default function CookieBanner({
           width: 360,
           height: 70,
           left: 20,
-          top: 125,
+          top: 'var(--notification-top)',
           background: 'rgba(255, 255, 255, 0.85)',
           border: '1px solid rgba(255, 255, 255, 0.5)',
           backdropFilter: 'blur(7.5px)',
