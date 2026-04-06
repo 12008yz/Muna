@@ -39,3 +39,62 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Карусель как во next/frontend Frame3 — фрейм 400px, карточка 360px */
+.carousel-container {
+  padding-left: 0;
+  padding-right: 0;
+  scroll-padding-left: 20px;
+  scroll-padding-right: 20px;
+}
+
+.carousel-container.carousel-learning > .carousel-card {
+  width: 360px !important;
+  min-width: 360px !important;
+  max-width: 360px !important;
+}
+
+.carousel-container:not(.carousel-container--single-card) > .carousel-spacer-left,
+.carousel-container:not(.carousel-container--single-card) > .carousel-spacer-right {
+  min-width: 20px !important;
+  width: 20px !important;
+  flex-shrink: 0;
+}
+
+.carousel-spacer-left,
+.carousel-spacer-right {
+  min-width: 0;
+  width: 0;
+  flex-shrink: 0;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Тень у карточки карусели — как .carousel-card--shadow-top во Frame3 */
+.carousel-card--shadow-top::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80%;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 2px 12px rgba(16, 16, 16, 0.08);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.features-section::-webkit-scrollbar {
+  display: none;
+}
+.features-section {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

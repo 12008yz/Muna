@@ -12,7 +12,11 @@ const involve = {
   fontSynthesis: 'none',
 };
 
-const FEATURES = [
+/** Как во next/frontend Frame3/index.tsx — карточки от низа на 20px + safe area */
+const CARD_TO_BOTTOM_GAP_PX = 20;
+const CARD_HEIGHT_PX = 550;
+
+const GROUP_FEATURES = [
   { title: '8 уроков в мес. в формате «1х11»', subtitle: 'Продолжение подготовки', enabled: true },
   { title: 'Наставление от экспертов', subtitle: 'Ведение подготовки', enabled: true },
   { title: '1 экзамен в квартал с отчетом', subtitle: 'Подтверждение подготовки', enabled: true },
@@ -22,21 +26,31 @@ const FEATURES = [
   { title: 'Не предусмотрено', subtitle: 'Не заполнено', enabled: false },
 ];
 
+const PERSONAL_FEATURES = [
+  { title: '8 уроков в мес. в формате «1х1»', subtitle: 'Продолжение подготовки', enabled: true },
+  { title: 'Наставление от экспертов', subtitle: 'Ведение подготовки', enabled: true },
+  { title: '1 экзамен в квартал с отчетом', subtitle: 'Подтверждение подготовки', enabled: true },
+  { title: 'Вознаграждение за успеваемость', subtitle: 'Геймефицирование подготовки', enabled: true },
+  { title: '1000+ тестов повышенной сложности', subtitle: 'Повышение подготовки', enabled: true },
+  { title: 'Место', subtitle: 'Дополнение подготовки', enabled: true },
+  { title: 'Место', subtitle: 'Не заполнено', enabled: true },
+];
+
 function FeatureRow({ title, subtitle, enabled }) {
   return (
     <div
-      className="flex w-[330px] max-w-full shrink-0 items-start gap-[9px]"
+      className="feature-row flex w-full min-w-0 shrink-0 items-center gap-[9px]"
       style={{
         minHeight: 40,
         opacity: enabled ? 1 : 0.25,
       }}
     >
-      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center" aria-hidden>
+      <span className="feature-icon flex h-4 w-4 shrink-0 items-center justify-center" aria-hidden>
         {enabled ? <OutlineCheckCircle16 /> : <OutlineCrossCircle16 />}
       </span>
       <div className="min-w-0 flex-1">
         <p
-          className="m-0"
+          className="feature-text m-0"
           style={{
             ...involve,
             fontSize: 16,
@@ -47,7 +61,7 @@ function FeatureRow({ title, subtitle, enabled }) {
           {title}
         </p>
         <p
-          className="m-0 mt-0.5"
+          className="feature-desc m-0 mt-0.5"
           style={{
             ...involve,
             fontSize: 14,
@@ -62,8 +76,139 @@ function FeatureRow({ title, subtitle, enabled }) {
   );
 }
 
+/**
+ * Карточка тарифа — 360×550, структура как Frame3 (шапка / фичи / футер).
+ * Галочки — контурные (OutlineListIcons), не как TT Firs в Frame3.
+ */
+function EducationTariffCard({
+  eyebrow,
+  title,
+  features,
+  price,
+  priceCaption,
+  buttonLabel,
+  onButtonClick,
+}) {
+  return (
+    <div
+      className="carousel-card carousel-card--shadow-top relative flex shrink-0 flex-col overflow-hidden"
+      style={{
+        height: CARD_HEIGHT_PX,
+        minHeight: CARD_HEIGHT_PX,
+        background: '#FFFFFF',
+        borderRadius: 20,
+        scrollSnapAlign: 'start',
+        boxSizing: 'border-box',
+      }}
+    >
+      <div style={{ padding: '15px 15px 0 15px', flexShrink: 0 }}>
+        <p
+          className="m-0"
+          style={{
+            ...involve,
+            fontSize: 14,
+            lineHeight: '145%',
+            color: 'rgba(16, 16, 16, 0.5)',
+            marginBottom: 4,
+          }}
+        >
+          {eyebrow}
+        </p>
+        <h2
+          className="m-0"
+          style={{
+            ...involve,
+            fontSize: 18,
+            lineHeight: '140%',
+            color: '#101010',
+          }}
+        >
+          {title}
+        </h2>
+        <div
+          style={{
+            marginTop: 10,
+            height: 0,
+            borderTop: '1px solid rgba(16, 16, 16, 0.1)',
+            width: '100%',
+            maxWidth: 330,
+          }}
+        />
+      </div>
+
+      <div
+        className="features-section scrollbar-hide flex min-h-0 flex-1 flex-col overflow-y-auto"
+        style={{ padding: '10px 15px 0 15px' }}
+      >
+        <div className="features-container flex flex-col gap-[5px]">
+          {features.map((f, i) => (
+            <FeatureRow key={i} title={f.title} subtitle={f.subtitle} enabled={f.enabled} />
+          ))}
+        </div>
+        <div
+          style={{
+            marginTop: 10,
+            height: 0,
+            borderTop: '1px solid rgba(16, 16, 16, 0.1)',
+            width: '100%',
+            maxWidth: 330,
+          }}
+        />
+      </div>
+
+      <div style={{ padding: '20px 15px 15px 15px', flexShrink: 0 }}>
+        <p
+          className="m-0"
+          style={{
+            ...involve,
+            fontSize: 20,
+            lineHeight: '125%',
+            color: '#101010',
+            marginBottom: 4,
+          }}
+        >
+          {price}
+        </p>
+        <p
+          className="m-0"
+          style={{
+            ...involve,
+            fontSize: 14,
+            lineHeight: '105%',
+            color: 'rgba(16, 16, 16, 0.5)',
+            marginBottom: 20,
+          }}
+        >
+          {priceCaption}
+        </p>
+        <button
+          type="button"
+          className="box-border flex w-full cursor-pointer items-center justify-center rounded-[10px] border border-solid outline-none transition-opacity focus:outline-none"
+          style={{
+            ...involve,
+            height: 50,
+            minHeight: 50,
+            maxWidth: 330,
+            background: '#101010',
+            borderColor: '#101010',
+            fontSize: 16,
+            lineHeight: '315%',
+            color: '#FFFFFF',
+            textAlign: 'center',
+          }}
+          onClick={onButtonClick}
+        >
+          {buttonLabel}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function GroupTrainingPage() {
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
+
+  const openConsultation = () => setConsultationModalOpen(true);
 
   return (
     <div
@@ -86,7 +231,7 @@ export default function GroupTrainingPage() {
           boxSizing: 'border-box',
         }}
       >
-        <LandingHeaderBar onConsultationClick={() => setConsultationModalOpen(true)} />
+        <LandingHeaderBar onConsultationClick={openConsultation} />
 
         <ConsultationModal
           isOpen={consultationModalOpen}
@@ -94,110 +239,53 @@ export default function GroupTrainingPage() {
           onComplete={() => setConsultationModalOpen(false)}
         />
 
-        {/* Rectangle 30 — макет: 5% / 5%, top 20.11%, bottom 16.67% */}
+        {/* Контейнер карусели — как Frame3: 165px под шапкой, снизу 20px + safe area */}
         <div
-          className="absolute box-border flex min-h-0 flex-col overflow-hidden"
+          className="carousel-wrapper"
           style={{
-            left: '5%',
-            right: '5%',
-            top: '20.11%',
-            bottom: '16.67%',
-            background: 'rgba(255, 255, 255, 0.85)',
-            border: '1px solid rgba(255, 255, 255, 0.5)',
-            backdropFilter: 'blur(7.5px)',
-            WebkitBackdropFilter: 'blur(7.5px)',
-            borderRadius: 20,
-            boxSizing: 'border-box',
-            padding: 15,
-            alignItems: 'center',
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: 'calc(var(--header-top, 50px) + 40px + 165px)',
+            bottom: `calc(${CARD_TO_BOTTOM_GAP_PX}px + var(--sab, 0px))`,
+            zIndex: 1,
+            background: '#F5F5F5',
           }}
         >
-          <header className="flex w-[330px] max-w-full flex-col" style={{ minHeight: 45 }}>
-            <p
-              className="m-0"
-              style={{
-                ...involve,
-                fontSize: 14,
-                lineHeight: '145%',
-                color: 'rgba(16, 16, 16, 0.5)',
-              }}
-            >
-              Подготовка к государственным экзаменам
-            </p>
-            <h1
-              className="m-0 mt-1"
-              style={{
-                ...involve,
-                fontSize: 18,
-                lineHeight: '140%',
-                color: '#101010',
-              }}
-            >
-              Групповая подготовка
-            </h1>
-          </header>
-
           <div
-            className="my-[10px] w-[330px] max-w-full shrink-0 border-0"
-            style={{ borderTop: '1px solid rgba(16, 16, 16, 0.05)' }}
-            role="presentation"
-          />
-
-          <div className="flex w-full max-w-[330px] flex-col gap-[5px]">
-            {FEATURES.map((f, i) => (
-              <FeatureRow key={i} title={f.title} subtitle={f.subtitle} enabled={f.enabled} />
-            ))}
-          </div>
-
-          <div
-            className="my-[10px] w-[330px] max-w-full shrink-0 border-0"
-            style={{ borderTop: '1px solid rgba(16, 16, 16, 0.05)' }}
-            role="presentation"
-          />
-
-          <div className="flex w-[330px] max-w-full flex-col gap-1">
-            <p
-              className="m-0 flex items-center"
-              style={{
-                ...involve,
-                fontSize: 20,
-                lineHeight: '125%',
-                color: '#101010',
-              }}
-            >
-              4800 руб.
-            </p>
-            <p
-              className="m-0 flex items-center"
-              style={{
-                ...involve,
-                fontSize: 14,
-                lineHeight: '105%',
-                color: 'rgba(16, 16, 16, 0.5)',
-              }}
-            >
-              Месячная плата за один предмет
-            </p>
-          </div>
-
-          <button
-            type="button"
-            className="mt-4 box-border flex w-[330px] max-w-full shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid outline-none transition-opacity focus:outline-none"
+            className="carousel-container carousel-learning scrollbar-hide flex h-full flex-nowrap items-end overflow-x-auto overflow-y-hidden"
             style={{
-              ...involve,
-              height: 50,
-              minHeight: 50,
-              background: '#101010',
-              borderColor: '#101010',
-              fontSize: 16,
-              lineHeight: '315%',
-              color: '#FFFFFF',
-              textAlign: 'center',
+              gap: 5,
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
             }}
-            onClick={() => setConsultationModalOpen(true)}
           >
-            Консультирование
-          </button>
+            <div className="carousel-spacer-left shrink-0" aria-hidden style={{ alignSelf: 'stretch' }} />
+
+            <EducationTariffCard
+              eyebrow="Подготовка к государственным экзаменам"
+              title="Групповая подготовка"
+              features={GROUP_FEATURES}
+              price="4800 руб."
+              priceCaption="Месячная плата за один предмет"
+              buttonLabel="Консультирование"
+              onButtonClick={openConsultation}
+            />
+
+            <EducationTariffCard
+              eyebrow="Подготовка к государственным экзаменам"
+              title="Персональная подготовка"
+              features={PERSONAL_FEATURES}
+              price="20400 руб."
+              priceCaption="Месячная плата за один предмет"
+              buttonLabel="Подробнее"
+              onButtonClick={openConsultation}
+            />
+
+            <div className="carousel-spacer-right shrink-0" aria-hidden style={{ alignSelf: 'stretch' }} />
+          </div>
         </div>
       </div>
     </div>
