@@ -41,6 +41,7 @@ const compactMessageStyle = {
 /**
  * Баннер уведомления (куки и т.п.) — как Frame5 / Frame4.
  * `compact` — 360×70, glass; top: 10px под header (--notification-top), left 20.
+ * `stacked` — внутри колонки уведомлений: без absolute top/left, выравнивание даёт родитель.
  */
 export default function CookieBanner({
   countdown,
@@ -48,17 +49,18 @@ export default function CookieBanner({
   privacyHref,
   children,
   compact = false,
+  stacked = false,
 }) {
   if (compact) {
     return (
       <div
-        className="absolute z-20 box-border"
+        className={`box-border ${stacked ? 'relative z-20 mx-auto w-full max-w-[360px]' : 'absolute left-5 z-20'}`}
         style={{
-          position: 'absolute',
-          width: 360,
+          position: stacked ? 'relative' : 'absolute',
+          width: stacked ? '100%' : 360,
+          maxWidth: stacked ? 'min(360px, calc(100vw - 40px))' : undefined,
           height: 70,
-          left: 20,
-          top: 'var(--notification-top)',
+          ...(stacked ? {} : { left: 20, top: 'var(--notification-top)' }),
           background: 'rgba(255, 255, 255, 0.85)',
           border: '1px solid rgba(255, 255, 255, 0.5)',
           backdropFilter: 'blur(7.5px)',
@@ -106,10 +108,12 @@ export default function CookieBanner({
 
   return (
     <div
-      className="absolute left-1/2 z-20 flex -translate-x-1/2 flex-col rounded-[20px] bg-white"
+      className={`z-20 flex flex-col rounded-[20px] bg-white ${
+        stacked ? 'relative mx-auto w-full' : 'absolute left-1/2 -translate-x-1/2'
+      }`}
       style={{
         width: 'min(360px, calc(100vw - 40px))',
-        top: 'var(--notification-top)',
+        ...(stacked ? {} : { top: 'var(--notification-top)' }),
         padding: 15,
         boxSizing: 'border-box',
         backdropFilter: 'blur(7.5px)',
