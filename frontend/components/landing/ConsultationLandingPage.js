@@ -277,11 +277,12 @@ export default function ConsultationLandingPage() {
           </Link>
         </div>
 
+        {/* Логотип МНОЖИТЕЛ — SVG 140×10, left 70, выравнивание с кругами шапки */}
         <div
           className="absolute z-10 flex items-center"
           style={{
             left: 70,
-            top: 'calc(var(--header-top, 50px) + 15px)',
+            top: 'calc(var(--header-top, 10px) + 15px)',
             width: 140,
             height: 10,
           }}
@@ -321,6 +322,7 @@ export default function ConsultationLandingPage() {
         {showLeadSuccessBanner ? (
           <div className="relative z-[30]">
             <CookieBanner
+              compact
               countdown={leadSuccessTimer}
               onClose={() => setShowLeadSuccessBanner(false)}
               privacyHref={PRIVACY_HREF}

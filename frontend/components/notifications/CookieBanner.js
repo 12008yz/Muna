@@ -10,17 +10,100 @@ const involve = {
   fontSynthesis: 'none',
 };
 
+/** Текст основного блока (куки / длинный) — по макету 14px / 105% */
+const bodyTextStyle = {
+  ...involve,
+  fontSize: 14,
+  lineHeight: '105%',
+  color: '#101010',
+};
+
 /**
- * Баннер уведомления (куки и т.п.) — по структуре как
- * next/frontend Frame5/components/NotificationBanner.tsx и Frame4 уведомление.
- * Позиция: ниже строки header (40px) с отступом 10px — var(--notification-top).
+ * Короткое уведомление (Rectangle 67): текст «Информация направлена…»
+ * left 35px / top 165px от края фрейма 400px = баннер left 20 + текст left 15; top 125 + текст top 40.
+ */
+const compactMessageStyle = {
+  position: 'absolute',
+  left: 15,
+  top: 40,
+  width: 330,
+  height: 15,
+  margin: 0,
+  padding: 0,
+  ...bodyTextStyle,
+  display: 'flex',
+  alignItems: 'center',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+};
+
+/**
+ * Баннер уведомления (куки и т.п.) — как Frame5 / Frame4.
+ * `compact` — 360×70, glass, позиция как в макете (top 125, left 20).
  */
 export default function CookieBanner({
   countdown,
   onClose,
   privacyHref,
   children,
+  compact = false,
 }) {
+  if (compact) {
+    return (
+      <div
+        className="absolute z-20 box-border"
+        style={{
+          position: 'absolute',
+          width: 360,
+          height: 70,
+          left: 20,
+          top: 125,
+          background: 'rgba(255, 255, 255, 0.85)',
+          border: '1px solid rgba(255, 255, 255, 0.5)',
+          backdropFilter: 'blur(7.5px)',
+          WebkitBackdropFilter: 'blur(7.5px)',
+          borderRadius: 20,
+          boxSizing: 'border-box',
+        }}
+        onClick={(e) => e.stopPropagation()}
+        role="region"
+        aria-label="Уведомление"
+      >
+        <div
+          className="absolute flex items-center justify-between"
+          style={{
+            left: 15,
+            right: 15,
+            top: 10,
+            height: 20,
+            boxSizing: 'border-box',
+          }}
+        >
+          <span
+            style={{
+              ...involve,
+              fontSize: 14,
+              lineHeight: '145%',
+              color: 'rgba(16, 16, 16, 0.25)',
+            }}
+          >
+            Автоматически закроется через {countdown}
+          </span>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-6 w-6 flex-shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 outline-none"
+            aria-label="Закрыть"
+          >
+            <CloseIcon width={16} height={16} />
+          </button>
+        </div>
+        <p style={compactMessageStyle}>{children}</p>
+      </div>
+    );
+  }
+
   return (
     <div
       className="absolute left-1/2 z-20 flex -translate-x-1/2 flex-col rounded-[20px] bg-white"
@@ -57,11 +140,10 @@ export default function CookieBanner({
       </div>
       <div
         style={{
-          ...involve,
-          fontSize: 14,
-          lineHeight: '110%',
-          color: '#101010',
+          ...bodyTextStyle,
           marginTop: 8,
+          width: 330,
+          maxWidth: '100%',
         }}
       >
         {children || (
