@@ -41,6 +41,7 @@ function FeatureRow({ title, subtitle, enabled }) {
     <div
       className="feature-row flex w-full min-w-0 shrink-0 items-center gap-[9px]"
       style={{
+        height: 40,
         minHeight: 40,
         opacity: enabled ? 1 : 0.25,
       }}
@@ -48,7 +49,7 @@ function FeatureRow({ title, subtitle, enabled }) {
       <span className="feature-icon flex h-4 w-4 shrink-0 items-center justify-center" aria-hidden>
         {enabled ? <OutlineCheckCircle16 /> : <OutlineCrossCircle16 />}
       </span>
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1" style={{ width: 305, minWidth: 0, height: 40 }}>
         <p
           className="feature-text m-0"
           style={{
@@ -56,17 +57,23 @@ function FeatureRow({ title, subtitle, enabled }) {
             fontSize: 16,
             lineHeight: '155%',
             color: '#101010',
+            display: 'flex',
+            alignItems: 'center',
+            height: 25,
           }}
         >
           {title}
         </p>
         <p
-          className="feature-desc m-0 mt-0.5"
+          className="feature-desc m-0"
           style={{
             ...involve,
             fontSize: 14,
             lineHeight: '105%',
             color: 'rgba(16, 16, 16, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            height: 15,
           }}
         >
           {subtitle}
@@ -102,6 +109,7 @@ function EducationTariffCard({
       }}
     >
       <div style={{ padding: '15px 15px 0 15px', flexShrink: 0 }}>
+        <div style={{ width: 330, height: 45, marginBottom: 10 }}>
         <p
           className="m-0"
           style={{
@@ -109,7 +117,10 @@ function EducationTariffCard({
             fontSize: 14,
             lineHeight: '145%',
             color: 'rgba(16, 16, 16, 0.5)',
-            marginBottom: 4,
+            display: 'flex',
+            alignItems: 'center',
+            height: 20,
+            marginBottom: 0,
           }}
         >
           {eyebrow}
@@ -121,13 +132,17 @@ function EducationTariffCard({
             fontSize: 18,
             lineHeight: '140%',
             color: '#101010',
+            display: 'flex',
+            alignItems: 'center',
+            height: 25,
           }}
         >
           {title}
         </h2>
+        </div>
         <div
           style={{
-            marginTop: 10,
+            marginTop: 0,
             height: 0,
             borderTop: '1px solid rgba(16, 16, 16, 0.1)',
             width: '100%',
@@ -137,10 +152,10 @@ function EducationTariffCard({
       </div>
 
       <div
-        className="features-section scrollbar-hide flex min-h-0 flex-1 flex-col overflow-y-auto"
-        style={{ padding: '10px 15px 0 15px' }}
+        className="features-section scrollbar-hide flex min-h-0 flex-1 flex-col overflow-hidden"
+        style={{ marginTop: 10, padding: '0 15px 0 15px' }}
       >
-        <div className="features-container flex flex-col gap-[5px]">
+        <div className="features-container flex flex-col" style={{ gap: 5 }}>
           {features.map((f, i) => (
             <FeatureRow key={i} title={f.title} subtitle={f.subtitle} enabled={f.enabled} />
           ))}
@@ -156,7 +171,7 @@ function EducationTariffCard({
         />
       </div>
 
-      <div style={{ padding: '20px 15px 15px 15px', flexShrink: 0 }}>
+      <div style={{ padding: '15px 15px 15px 15px', flexShrink: 0 }}>
         <p
           className="m-0"
           style={{
@@ -223,9 +238,8 @@ export default function GroupTrainingPage() {
       <div
         className="relative shrink-0 overflow-hidden bg-[#F5F5F5]"
         style={{
-          width: 400,
-          minWidth: 400,
-          maxWidth: 400,
+          width: '100%',
+          maxWidth: '425px',
           height: '100dvh',
           maxHeight: '100dvh',
           boxSizing: 'border-box',

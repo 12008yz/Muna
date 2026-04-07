@@ -40,25 +40,16 @@ body {
   }
 }
 
-/* Карусель как во next/frontend Frame3 — фрейм 400px, карточка 360px */
+/* Карусель Frame3: отступ 20px слева; справа 0 — ширина карточки гибкая, виден правый peek */
 .carousel-container {
-  padding-left: 0;
+  padding-left: 20px;
   padding-right: 0;
-  scroll-padding-left: 20px;
-  scroll-padding-right: 20px;
 }
 
-.carousel-container.carousel-learning > .carousel-card {
-  width: 360px !important;
-  min-width: 360px !important;
-  max-width: 360px !important;
-}
-
-.carousel-container:not(.carousel-container--single-card) > .carousel-spacer-left,
-.carousel-container:not(.carousel-container--single-card) > .carousel-spacer-right {
-  min-width: 20px !important;
-  width: 20px !important;
-  flex-shrink: 0;
+/* Карточка подстраивается под ширину контейнера */
+.carousel-container > .carousel-card {
+  width: calc(100% - 19px) !important;
+  min-width: calc(100% - 19px) !important;
 }
 
 .carousel-spacer-left,
@@ -66,6 +57,56 @@ body {
   min-width: 0;
   width: 0;
   flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .carousel-container {
+    padding-left: 0;
+    padding-right: 0;
+    scroll-padding-left: 20px;
+    scroll-padding-right: 20px;
+  }
+
+  .carousel-container > .carousel-card {
+    width: calc(100% - 39px) !important;
+    min-width: calc(100% - 39px) !important;
+  }
+
+  .carousel-container:not(.carousel-container--single-card) > .carousel-spacer-left,
+  .carousel-container:not(.carousel-container--single-card) > .carousel-spacer-right {
+    min-width: 20px !important;
+    width: 20px !important;
+    flex-shrink: 0;
+  }
+
+  .carousel-container.carousel-container--single-card > .carousel-spacer-left,
+  .carousel-container.carousel-container--single-card > .carousel-spacer-right {
+    min-width: 15px !important;
+    width: 15px !important;
+    flex: none;
+  }
+
+  .carousel-container.carousel-container--single-card > .carousel-card {
+    width: calc(100% - 40px) !important;
+    min-width: calc(100% - 40px) !important;
+  }
+}
+
+.carousel-container.carousel-container--single-card {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.carousel-container.carousel-container--single-card > .carousel-spacer-left,
+.carousel-container.carousel-container--single-card > .carousel-spacer-right {
+  flex: none;
+  min-width: 15px !important;
+  width: 15px !important;
+}
+
+.carousel-container.carousel-container--single-card > .carousel-card {
+  width: calc(100% - 40px) !important;
+  min-width: calc(100% - 40px) !important;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
