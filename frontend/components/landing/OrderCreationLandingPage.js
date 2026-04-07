@@ -34,12 +34,16 @@ function ConsentCheckIcon() {
 
 export default function OrderCreationLandingPage() {
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
-  const [privacyTouched, setPrivacyTouched] = useState(false);
+  /** Как на /: тёмная рамка блока политики после клика по нему или попытки «Формирование» без согласия */
+  const [privacyConsentTouched, setPrivacyConsentTouched] = useState(false);
+  /** Как «Консультирование» на / без телефона: после попытки без согласия — светлая кнопка (прозрачный фон на белой карточке) */
+  const [submitAttemptedWithoutPrivacy, setSubmitAttemptedWithoutPrivacy] = useState(false);
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
 
+  const submitButtonSolid = !submitAttemptedWithoutPrivacy || privacyAccepted;
   const privacyBorderMuted = 'rgba(16,16,16,0.25)';
   const privacyBorderStrong = 'rgba(16,16,16,0.75)';
-  const privacyShowStrongBorder = !privacyAccepted && privacyTouched;
+  const privacyShowStrongBorder = !privacyAccepted && privacyConsentTouched;
 
   return (
     <div
@@ -103,7 +107,7 @@ export default function OrderCreationLandingPage() {
                 borderColor: privacyAccepted ? privacyBorderMuted : privacyShowStrongBorder ? privacyBorderStrong : privacyBorderMuted,
               }}
               onClick={() => {
-                setPrivacyTouched(true);
+                setPrivacyConsentTouched(true);
                 setPrivacyAccepted(!privacyAccepted);
               }}
             >
@@ -132,21 +136,22 @@ export default function OrderCreationLandingPage() {
 
           <button
             type="button"
-            className="box-border mt-[15px] flex w-[330px] max-w-full cursor-pointer items-center justify-center rounded-[10px] outline-none transition-opacity focus:outline-none"
+            className="box-border mt-[15px] flex w-[330px] max-w-full shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-[background,color] duration-150 focus:outline-none"
             style={{
               ...involve,
               height: 50,
               minHeight: 50,
-              background: privacyAccepted ? '#101010' : 'rgba(16,16,16,0.25)',
-              border: '1px solid rgba(16, 16, 16, 0.25)',
+              background: submitButtonSolid ? '#101010' : '#FFFFFF',
+              border: 'none',
               borderRadius: 10,
               fontSize: 16,
               lineHeight: '315%',
-              color: '#FFFFFF',
+              color: submitButtonSolid ? '#FFFFFF' : 'rgba(16, 16, 16, 0.5)',
             }}
             onClick={() => {
               if (!privacyAccepted) {
-                setPrivacyTouched(true);
+                setPrivacyConsentTouched(true);
+                setSubmitAttemptedWithoutPrivacy(true);
                 return;
               }
               setConsultationModalOpen(true);
