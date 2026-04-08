@@ -25,6 +25,22 @@ function createSequelize() {
     });
   }
 
+  if (process.env.DATABASE_URL) {
+    return new Sequelize(process.env.DATABASE_URL, {
+      dialect: 'postgres',
+      logging: process.env.NODE_ENV === 'development' ? console.log : false,
+      dialectOptions: {
+        ssl: process.env.DB_SSL === 'false' ? false : { require: true, rejectUnauthorized: false },
+      },
+      pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000,
+      },
+    });
+  }
+
   return new Sequelize(
     process.env.DB_NAME || 'mnozh_db',
     process.env.DB_USER || 'mnozh_user',
