@@ -197,6 +197,9 @@ const ORDER_PREP_TYPE_KEY = 'orderPrepType';
 const ORDER_GRADE_KEY = 'orderGrade';
 const ORDER_SUBJECT_IDS_KEY = 'orderSubjectIds';
 const ORDER_DURATION_KEY = 'orderDuration';
+const SAVED_PHONE_KEY = 'leadPhone';
+const RAW_API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3040';
+const API_BASE = /^https?:\/\//i.test(RAW_API_BASE) ? RAW_API_BASE : `https://${RAW_API_BASE}`;
 
 const GRADE_OPTIONS = [5, 6, 7, 8, 9, 10, 11];
 
@@ -241,6 +244,7 @@ export default function OrderCreationLandingPage() {
   /** Как «Консультирование» на / без телефона: после попытки без согласия — светлая кнопка (прозрачный фон на белой карточке) */
   const [submitAttemptedWithoutPrivacy, setSubmitAttemptedWithoutPrivacy] = useState(false);
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
+  const [leadSubmitting, setLeadSubmitting] = useState(false);
 
   useEffect(() => {
     if (prepType != null) setAttemptedStep1(false);
@@ -366,6 +370,37 @@ export default function OrderCreationLandingPage() {
     setOrderStep(5);
   };
 
+  const submitOrderLead = async ({ name, phone }) => {
+    if (leadSubmitting) return;
+    setLeadSubmitting(true);
+    try {
+      await fetch(`${API_BASE}/api/leads/consultation`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone,
+          name: name || null,
+          privacyAccepted: true,
+          contactMethod: 'phone',
+          source: 'order',
+          trainingType: prepType,
+          grade,
+          subjectIds: selectedSubjectIds,
+          durationId,
+        }),
+      });
+      try {
+        localStorage.setItem(SAVED_PHONE_KEY, phone);
+      } catch {
+        // ignore
+      }
+    } catch {
+      // ignore errors in secondary submission
+    } finally {
+      setLeadSubmitting(false);
+    }
+  };
+
   const renderFinalCard = (buttonHandler) => (
     <div
       className="absolute box-border bg-white"
@@ -483,7 +518,10 @@ export default function OrderCreationLandingPage() {
         <ConsultationModal
           isOpen={consultationModalOpen}
           onClose={() => setConsultationModalOpen(false)}
-          onComplete={() => setConsultationModalOpen(false)}
+          onComplete={async (payload) => {
+            await submitOrderLead(payload);
+            setConsultationModalOpen(false);
+          }}
         />
 
         {orderStep === 0 && renderFinalCard(goToTariffStep)}

@@ -31,6 +31,25 @@ const ConsultationLead = sequelize.define(
       allowNull: true,
       comment: 'landing, tariff-page, …',
     },
+    trainingType: {
+      type: DataTypes.STRING(32),
+      allowNull: true,
+      comment: 'group | personal',
+    },
+    grade: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    subjectIds: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      comment: '["russian","math",...]',
+    },
+    durationId: {
+      type: DataTypes.STRING(32),
+      allowNull: true,
+      comment: '1m | 3m | ...',
+    },
     privacyAccepted: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

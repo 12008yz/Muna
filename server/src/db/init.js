@@ -6,7 +6,7 @@ const { seedTariffsIfEmpty, seedTariffs } = require('../seed/tariffSeed');
  */
 async function initDatabase() {
   await sequelize.authenticate();
-  await sequelize.sync({ alter: false });
+  await sequelize.sync({ alter: true });
   await seedTariffsIfEmpty();
 }
 

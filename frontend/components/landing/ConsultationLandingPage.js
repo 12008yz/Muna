@@ -20,6 +20,7 @@ const API_BASE = /^https?:\/\//i.test(RAW_API_BASE) ? RAW_API_BASE : `https://${
 /** Длительность схлопывания баннера + небольшой запас до размонтирования */
 const NOTIFICATION_EXIT_MS = 320;
 const NOTIFICATION_EXIT_TRANSITION_MS = 300;
+const SAVED_PHONE_KEY = 'leadPhone';
 
 function BadgeCheckIcon() {
   return (
@@ -128,6 +129,15 @@ export default function ConsultationLandingPage() {
   const privacyShowStrongBorder = !privacyAccepted && privacyConsentTouched;
 
   useEffect(() => {
+    try {
+      const saved = localStorage.getItem(SAVED_PHONE_KEY);
+      if (saved) setPhone(formatPhoneRu(saved));
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  useEffect(() => {
     if (!showCookieBanner || cookieTimer <= 0 || cookieBannerClosing) return;
     const id = setInterval(() => {
       setCookieTimer((prev) => {
@@ -217,6 +227,11 @@ export default function ConsultationLandingPage() {
         return;
       }
       setPhone('');
+      try {
+        localStorage.setItem(SAVED_PHONE_KEY, phone);
+      } catch {
+        // ignore
+      }
       setPhoneError(false);
       setSubmitAttemptedWithoutPhone(false);
       setPrivacyConsentTouched(false);

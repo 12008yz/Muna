@@ -9,6 +9,7 @@ const involve = {
   fontWeight: 500,
   fontSynthesis: 'none',
 };
+const SAVED_PHONE_KEY = 'leadPhone';
 
 /** Как карточка мастера в OrderCreationLandingPage (Figma) */
 const cardTitleStyle = {
@@ -86,7 +87,23 @@ export default function ConsultationModal({ isOpen, onClose, onComplete }) {
     if (!isOpen) return;
     setShouldRender(true);
     setName('');
-    setPhoneNumber('+7 ');
+    try {
+      const saved = localStorage.getItem(SAVED_PHONE_KEY);
+      if (saved) {
+        const digits = saved.replace(/\D/g, '').slice(0, 11);
+        const rest = digits.startsWith('7') || digits.startsWith('8') ? digits.slice(1) : digits;
+        let formatted = '+7 ';
+        if (rest.length > 0) formatted += rest.slice(0, 3);
+        if (rest.length > 3) formatted += ` ${rest.slice(3, 6)}`;
+        if (rest.length > 6) formatted += ` ${rest.slice(6, 8)}`;
+        if (rest.length > 8) formatted += ` ${rest.slice(8, 10)}`;
+        setPhoneNumber(formatted || '+7 ');
+      } else {
+        setPhoneNumber('+7 ');
+      }
+    } catch {
+      setPhoneNumber('+7 ');
+    }
     setSubmitAttempted(false);
     requestAnimationFrame(() => setIsAnimating(true));
   }, [isOpen]);
@@ -127,6 +144,11 @@ export default function ConsultationModal({ isOpen, onClose, onComplete }) {
     if (!formValid) {
       setSubmitAttempted(true);
       return;
+    }
+    try {
+      localStorage.setItem(SAVED_PHONE_KEY, phoneNumber);
+    } catch {
+      // ignore
     }
     if (typeof onComplete === 'function') onComplete({ name: name.trim(), phone: phoneNumber });
     closeWithAnimation();

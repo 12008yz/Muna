@@ -17,8 +17,20 @@ async function createLead(payload) {
     privacyAccepted: payload.privacyAccepted,
     contactMethod: payload.contactMethod ?? null,
     source: payload.source ?? null,
+    trainingType: payload.trainingType ?? null,
+    grade: payload.grade ?? null,
+    subjectIds: payload.subjectIds ?? null,
+    durationId: payload.durationId ?? null,
   });
   return row.get({ plain: true });
+}
+
+async function listLeads() {
+  const rows = await ConsultationLead.findAll({
+    order: [['createdAt', 'DESC']],
+    limit: 500,
+  });
+  return rows.map((row) => row.get({ plain: true }));
 }
 
 function isValidContactMethod(value) {
@@ -28,6 +40,7 @@ function isValidContactMethod(value) {
 
 module.exports = {
   createLead,
+  listLeads,
   isValidContactMethod,
   VALID_CONTACT_METHODS,
 };

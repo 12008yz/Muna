@@ -40,6 +40,7 @@ function UnselectedArrowIcon() {
 }
 
 export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialStep = 'contact-method' }) {
+  const SAVED_PHONE_KEY = 'leadPhone';
   const [step, setStep] = useState(initialStep);
   const [phoneNumber, setPhoneNumber] = useState('+7 ');
   const [selectedMethod, setSelectedMethod] = useState(null);
@@ -55,6 +56,21 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
     requestAnimationFrame(() => {
       setIsAnimating(true);
     });
+    try {
+      const saved = localStorage.getItem(SAVED_PHONE_KEY);
+      if (saved) {
+        const digits = saved.replace(/\D/g, '').slice(0, 11);
+        const rest = digits.startsWith('7') ? digits.slice(1) : digits.startsWith('8') ? digits.slice(1) : digits;
+        let formatted = '+7 ';
+        if (rest.length > 0) formatted += rest.slice(0, 3);
+        if (rest.length > 3) formatted += ` ${rest.slice(3, 6)}`;
+        if (rest.length > 6) formatted += ` ${rest.slice(6, 8)}`;
+        if (rest.length > 8) formatted += ` ${rest.slice(8, 10)}`;
+        setPhoneNumber(formatted || '+7 ');
+      }
+    } catch {
+      // ignore
+    }
   }, []);
 
   const formatPhoneNumber = useCallback((value) => {
@@ -81,9 +97,14 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
   const handleSubmitPhoneAfterMethod = useCallback(() => {
     const phoneDigits = phoneNumber.replace(/\D/g, '');
     if (phoneDigits.length === 11) {
+      try {
+        localStorage.setItem(SAVED_PHONE_KEY, phoneNumber);
+      } catch {
+        // ignore
+      }
       onSubmit({ phone: phoneNumber, method: 'phone' });
     }
-  }, [phoneNumber, onSubmit]);
+  }, [phoneNumber, onSubmit, SAVED_PHONE_KEY]);
 
   const handleNextFromMethod = useCallback(() => {
     if (selectedMethod === 'phone') {

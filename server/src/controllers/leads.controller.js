@@ -42,6 +42,13 @@ async function postConsultationLead(req, res, next) {
 
     const name = sanitizeString(body.name, 120);
     const source = sanitizeString(body.source, 100);
+    const trainingTypeRaw = sanitizeString(body.trainingType, 32);
+    const trainingType = trainingTypeRaw === 'group' || trainingTypeRaw === 'personal' ? trainingTypeRaw : null;
+    const grade = Number.isInteger(body.grade) && body.grade >= 1 && body.grade <= 11 ? body.grade : null;
+    const subjectIds = Array.isArray(body.subjectIds)
+      ? body.subjectIds.filter((v) => typeof v === 'string').slice(0, 20)
+      : null;
+    const durationId = sanitizeString(body.durationId, 32);
 
     const lead = await leadService.createLead({
       phoneNormalized: phoneResult.value,
@@ -49,6 +56,10 @@ async function postConsultationLead(req, res, next) {
       privacyAccepted: true,
       contactMethod,
       source,
+      trainingType,
+      grade,
+      subjectIds,
+      durationId,
     });
 
     return res.status(201).json({
@@ -60,4 +71,20 @@ async function postConsultationLead(req, res, next) {
   }
 }
 
-module.exports = { postConsultationLead };
+/**
+ * GET /api/leads/consultation
+ * Простой список всех входящих заявок для внутренней панели.
+ */
+async function getConsultationLeads(req, res, next) {
+  try {
+    const leads = await leadService.listLeads();
+    return res.status(200).json({
+      success: true,
+      data: leads,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { postConsultationLead, getConsultationLeads };
