@@ -219,7 +219,7 @@ const SUBJECT_OPTIONS = [
 ];
 
 export default function OrderCreationLandingPage() {
-  /** 0 — лендинг; 1 — тип; 2 — класс; 3 — предметы; 4 — срок тарифа */
+  /** 0 — лендинг; 1 — тип; 2 — класс; 3 — предметы; 4 — срок тарифа; 5 — финальный экран */
   const [orderStep, setOrderStep] = useState(0);
   /** 'group' | 'personal' | null — без выбора по умолчанию */
   const [prepType, setPrepType] = useState(null);
@@ -363,8 +363,105 @@ export default function OrderCreationLandingPage() {
     } catch {
       // игнорируем
     }
-    setConsultationModalOpen(true);
+    setOrderStep(5);
   };
+
+  const renderFinalCard = (buttonHandler) => (
+    <div
+      className="absolute box-border bg-white"
+      style={{
+        left: 20,
+        top: 230,
+        width: 360,
+        borderRadius: 20,
+        display: 'flex',
+        flexDirection: 'column',
+        padding: 15,
+        boxSizing: 'border-box',
+        gap: 5,
+      }}
+    >
+      <h1 className="m-0 flex-shrink-0" style={{ ...involve, fontSize: 20, lineHeight: '125%', color: '#101010', paddingBottom: 15 }}>
+        Подготавливание школьников
+        <br />
+        с 5 по 11 класс, чтобы все
+        <br />
+        государственные экзамены
+        <br />
+        сдали на топ баллов
+      </h1>
+
+      <div className="box-border flex shrink-0 items-center gap-[5px] self-start rounded-[100px] bg-[#F5F5F5] px-[5px]" style={{ width: 330, height: 25 }}>
+        <span className="flex h-[15px] w-[15px] shrink-0 items-center justify-center" aria-hidden>
+          <BadgeCheckIcon />
+        </span>
+        <span className="flex min-h-0 min-w-0 flex-1 items-center overflow-hidden text-ellipsis whitespace-nowrap text-[12px] font-medium leading-[25px] text-[rgba(16,16,16,0.75)]" style={involve}>
+          свыше 999+ школьников подготовились с нами
+        </span>
+      </div>
+
+      <div className="shrink-0" style={{ width: 330, maxWidth: '100%', marginTop: 5 }}>
+        <button
+          type="button"
+          className="relative box-border flex cursor-pointer items-center rounded-[10px] border border-solid bg-white text-left outline-none focus:outline-none"
+          style={{
+            width: 330,
+            maxWidth: '100%',
+            height: 50,
+            minHeight: 50,
+            paddingLeft: 10,
+            paddingRight: 10,
+            boxSizing: 'border-box',
+            borderColor: privacyAccepted ? privacyBorderMuted : privacyShowStrongBorder ? privacyBorderStrong : privacyBorderMuted,
+          }}
+          onClick={() => {
+            setPrivacyConsentTouched(true);
+            setPrivacyAccepted(!privacyAccepted);
+          }}
+        >
+          <span
+            className="flex flex-shrink-0 items-center justify-center rounded-full border border-solid box-border"
+            style={{
+              width: 16,
+              height: 16,
+              marginRight: 8,
+              borderColor: privacyAccepted ? 'transparent' : privacyShowStrongBorder ? privacyBorderStrong : privacyBorderMuted,
+              background: privacyAccepted ? '#101010' : 'transparent',
+            }}
+          >
+            {privacyAccepted ? <ConsentCheckIcon /> : null}
+          </span>
+          <span className="text-[14px] font-medium leading-[105%] text-[#101010]" style={{ ...involve, flex: 1, minWidth: 0 }}>
+            Я, полностью соглашаюсь с условиями
+            <br />
+            <Link href="/privacy-policy" className="text-[#2563eb] underline decoration-solid [text-underline-offset:3px]" style={{ textDecorationSkipInk: 'none' }} onClick={(e) => e.stopPropagation()}>
+              политики приватности
+            </Link>{' '}
+            этого портала
+          </span>
+        </button>
+      </div>
+
+      <button
+        type="button"
+        className="box-border mt-[15px] flex w-[330px] max-w-full shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-[background,color] duration-150 focus:outline-none"
+        style={{
+          ...involve,
+          height: 50,
+          minHeight: 50,
+          background: submitButtonSolid ? '#101010' : '#FFFFFF',
+          border: 'none',
+          borderRadius: 10,
+          fontSize: 16,
+          lineHeight: '315%',
+          color: submitButtonSolid ? '#FFFFFF' : 'rgba(16, 16, 16, 0.5)',
+        }}
+        onClick={buttonHandler}
+      >
+        Формирование
+      </button>
+    </div>
+  );
 
   return (
     <div
@@ -389,102 +486,8 @@ export default function OrderCreationLandingPage() {
           onComplete={() => setConsultationModalOpen(false)}
         />
 
-        {orderStep === 0 && (
-          <div
-            className="absolute box-border bg-white"
-            style={{
-              left: 20,
-              top: 230,
-              width: 360,
-              borderRadius: 20,
-              display: 'flex',
-              flexDirection: 'column',
-              padding: 15,
-              boxSizing: 'border-box',
-              gap: 5,
-            }}
-          >
-            <h1 className="m-0 flex-shrink-0" style={{ ...involve, fontSize: 20, lineHeight: '125%', color: '#101010', paddingBottom: 15 }}>
-              Подготавливание школьников
-              <br />
-              с 5 по 11 класс, чтобы все
-              <br />
-              государственные экзамены
-              <br />
-              сдали на топ баллов
-            </h1>
-
-            <div className="box-border flex shrink-0 items-center gap-[5px] self-start rounded-[100px] bg-[#F5F5F5] px-[5px]" style={{ width: 330, height: 25 }}>
-              <span className="flex h-[15px] w-[15px] shrink-0 items-center justify-center" aria-hidden>
-                <BadgeCheckIcon />
-              </span>
-              <span className="flex min-h-0 min-w-0 flex-1 items-center overflow-hidden text-ellipsis whitespace-nowrap text-[12px] font-medium leading-[25px] text-[rgba(16,16,16,0.75)]" style={involve}>
-                свыше 999+ школьников подготовились с нами
-              </span>
-            </div>
-
-            <div className="shrink-0" style={{ width: 330, maxWidth: '100%', marginTop: 5 }}>
-              <button
-                type="button"
-                className="relative box-border flex cursor-pointer items-center rounded-[10px] border border-solid bg-white text-left outline-none focus:outline-none"
-                style={{
-                  width: 330,
-                  maxWidth: '100%',
-                  height: 50,
-                  minHeight: 50,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  boxSizing: 'border-box',
-                  borderColor: privacyAccepted ? privacyBorderMuted : privacyShowStrongBorder ? privacyBorderStrong : privacyBorderMuted,
-                }}
-                onClick={() => {
-                  setPrivacyConsentTouched(true);
-                  setPrivacyAccepted(!privacyAccepted);
-                }}
-              >
-                <span
-                  className="flex flex-shrink-0 items-center justify-center rounded-full border border-solid box-border"
-                  style={{
-                    width: 16,
-                    height: 16,
-                    marginRight: 8,
-                    borderColor: privacyAccepted ? 'transparent' : privacyShowStrongBorder ? privacyBorderStrong : privacyBorderMuted,
-                    background: privacyAccepted ? '#101010' : 'transparent',
-                  }}
-                >
-                  {privacyAccepted ? <ConsentCheckIcon /> : null}
-                </span>
-                <span className="text-[14px] font-medium leading-[105%] text-[#101010]" style={{ ...involve, flex: 1, minWidth: 0 }}>
-                  Я, полностью соглашаюсь с условиями
-                  <br />
-                  <Link href="/privacy-policy" className="text-[#2563eb] underline decoration-solid [text-underline-offset:3px]" style={{ textDecorationSkipInk: 'none' }} onClick={(e) => e.stopPropagation()}>
-                    политики приватности
-                  </Link>{' '}
-                  этого портала
-                </span>
-              </button>
-            </div>
-
-            <button
-              type="button"
-              className="box-border mt-[15px] flex w-[330px] max-w-full shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-[background,color] duration-150 focus:outline-none"
-              style={{
-                ...involve,
-                height: 50,
-                minHeight: 50,
-                background: submitButtonSolid ? '#101010' : '#FFFFFF',
-                border: 'none',
-                borderRadius: 10,
-                fontSize: 16,
-                lineHeight: '315%',
-                color: submitButtonSolid ? '#FFFFFF' : 'rgba(16, 16, 16, 0.5)',
-              }}
-              onClick={goToTariffStep}
-            >
-              Формирование
-            </button>
-          </div>
-        )}
+        {orderStep === 0 && renderFinalCard(goToTariffStep)}
+        {orderStep === 5 && renderFinalCard(() => setConsultationModalOpen(true))}
 
         {(orderStep === 1 || orderStep === 2 || orderStep === 3 || orderStep === 4) && (
           <div
