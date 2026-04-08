@@ -124,8 +124,8 @@ export default function ConsultationModal({ isOpen, onClose, onComplete }) {
   const nameValid = useMemo(() => isNameValid(name), [name]);
   const formValid = nameValid && phoneValid;
 
-  /** Кнопка активна только при полностью валидной форме */
-  const confirmButtonSolid = formValid;
+  /** До первой неуспешной попытки кнопка тёмная; после — белая до валидной формы */
+  const confirmButtonSolid = !submitAttempted || formValid;
 
   const nameShowError = submitAttempted && !nameValid;
   const phoneShowError = submitAttempted && !phoneValid;
