@@ -124,8 +124,8 @@ export default function ConsultationModal({ isOpen, onClose, onComplete }) {
   const nameValid = useMemo(() => isNameValid(name), [name]);
   const formValid = nameValid && phoneValid;
 
-  /** Как «Формирование» на OrderCreationLandingPage: сначала активная чёрная кнопка; после попытки с ошибкой — светлая, пока форма невалидна */
-  const confirmButtonSolid = !submitAttempted || formValid;
+  /** Кнопка активна только при полностью валидной форме */
+  const confirmButtonSolid = formValid;
 
   const nameShowError = submitAttempted && !nameValid;
   const phoneShowError = submitAttempted && !phoneValid;

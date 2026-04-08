@@ -119,11 +119,10 @@ export default function ConsultationLandingPage() {
   const [cookieBannerClosing, setCookieBannerClosing] = useState(false);
   const [leadSuccessClosing, setLeadSuccessClosing] = useState(false);
 
-  const hasPhone = !isPhoneEmpty(phone);
   const phoneValid = !phoneError && isPhoneInputValid(phone);
   const showPhoneSuccessIcon = phoneValid;
   const showPhoneTrailingIcon = phoneError || showPhoneSuccessIcon;
-  const submitButtonSolid = !submitAttemptedWithoutPhone || hasPhone;
+  const submitButtonSolid = !submitAttemptedWithoutPhone || (phoneValid && privacyAccepted);
   const privacyBorderMuted = 'rgba(16,16,16,0.25)';
   const privacyBorderStrong = 'rgba(16,16,16,0.75)';
   const privacyShowStrongBorder = !privacyAccepted && privacyConsentTouched;
@@ -199,13 +198,14 @@ export default function ConsultationLandingPage() {
     if (!privacyAccepted) {
       setPrivacyConsentTouched(true);
     }
-    if (isPhoneEmpty(phone)) {
+    if (!isPhoneInputValid(phone)) {
       setPhoneError(true);
       setSubmitAttemptedWithoutPhone(true);
       return;
     }
     setPhoneError(false);
     if (!privacyAccepted) {
+      setSubmitAttemptedWithoutPhone(true);
       return;
     }
     setSubmitting(true);

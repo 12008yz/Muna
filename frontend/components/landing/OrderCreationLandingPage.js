@@ -241,7 +241,7 @@ export default function OrderCreationLandingPage() {
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   /** Как на /: тёмная рамка блока политики после клика по нему или попытки «Формирование» без согласия */
   const [privacyConsentTouched, setPrivacyConsentTouched] = useState(false);
-  /** Как «Консультирование» на / без телефона: после попытки без согласия — светлая кнопка (прозрачный фон на белой карточке) */
+  /** До первой неуспешной попытки кнопка тёмная; после клика без согласия — белая до валидного состояния */
   const [submitAttemptedWithoutPrivacy, setSubmitAttemptedWithoutPrivacy] = useState(false);
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
   const [leadSubmitting, setLeadSubmitting] = useState(false);
@@ -259,7 +259,7 @@ export default function OrderCreationLandingPage() {
     if (durationId != null) setAttemptedStep4(false);
   }, [durationId]);
 
-  /** Как ConsultationModal: сначала чёрная; после «Далее» без выбора — белая, пока шаг невалиден */
+  /** Как раньше: до первой неуспешной попытки кнопка тёмная; после — белая до валидного выбора */
   const wizardNextStyle = (step) => {
     const attempted =
       step === 1

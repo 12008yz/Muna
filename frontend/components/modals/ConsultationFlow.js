@@ -119,11 +119,6 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
     else onClose();
   }, [step, onClose]);
 
-  const handleSkipFromPhoneFirst = useCallback(() => {
-    if (onSkip) onSkip();
-    else onClose();
-  }, [onSkip, onClose]);
-
   const isPhoneValid = useMemo(() => {
     const phoneDigits = phoneNumber.replace(/\D/g, '');
     return phoneDigits.length === 11;
@@ -330,11 +325,23 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
         </div>
         <button
           type="button"
-          onClick={isPhoneValid ? () => { setSelectedMethod('phone'); setStep('contact-method'); } : handleSkipFromPhoneFirst}
-          className="w-full cursor-pointer rounded-[10px] text-white outline-none"
-          style={{ height: '50px', fontFamily: 'var(--font-involve), system-ui, sans-serif', fontSize: '16px', background: '#101010', border: '1px solid rgba(16, 16, 16, 0.25)' }}
+          onClick={() => {
+            if (!isPhoneValid) return;
+            setSelectedMethod('phone');
+            setStep('contact-method');
+          }}
+          disabled={!isPhoneValid}
+          className="w-full cursor-pointer rounded-[10px] outline-none disabled:cursor-not-allowed"
+          style={{
+            height: '50px',
+            fontFamily: 'var(--font-involve), system-ui, sans-serif',
+            fontSize: '16px',
+            background: isPhoneValid ? '#101010' : '#FFFFFF',
+            color: isPhoneValid ? '#FFFFFF' : 'rgba(16, 16, 16, 0.5)',
+            border: '1px solid rgba(16, 16, 16, 0.25)',
+          }}
         >
-          {isPhoneValid ? 'Далее' : 'Пропустить'}
+          Далее
         </button>
       </div>
     </div>
