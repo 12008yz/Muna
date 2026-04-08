@@ -427,7 +427,7 @@ export default function GroupTrainingPage() {
                 position: 'absolute',
                 left: 0,
                 right: 0,
-                top: 'calc(var(--header-top, 50px) + 40px + 145px)',
+                top: 'calc(var(--header-top, 50px) + 40px + 95px)',
                 bottom: `calc(${CARD_TO_BOTTOM_GAP_PX}px + var(--sab, 0px))`,
                 zIndex: 1,
                 background: '#F5F5F5',
