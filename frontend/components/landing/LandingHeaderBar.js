@@ -53,16 +53,21 @@ function PaperPlaneIcon() {
 }
 
 export default function LandingHeaderBar({ onConsultationClick, menuHref = '/' }) {
+  const menuClassName =
+    'flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white backdrop-blur-[5px]';
+
   return (
     <>
       <div className="absolute z-10 h-10 w-10 cursor-pointer" style={{ left: 'var(--main-block-margin)', top: 'var(--header-top, 50px)' }}>
-        <Link
-          href={menuHref}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white backdrop-blur-[5px]"
-          aria-label="Меню"
-        >
-          <CirclesFourIcon />
-        </Link>
+        {menuHref.startsWith('#') ? (
+          <a href={menuHref} className={menuClassName} aria-label="Меню">
+            <CirclesFourIcon />
+          </a>
+        ) : (
+          <Link href={menuHref} className={menuClassName} aria-label="Меню">
+            <CirclesFourIcon />
+          </Link>
+        )}
       </div>
 
       <div

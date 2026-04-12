@@ -1,5 +1,5 @@
-import OrderCreationLandingPage from '@/components/landing/OrderCreationLandingPage';
+import RedirectToHomeSection from '@/components/navigation/RedirectToHomeSection';
 
 export default function OrderPage() {
-  return <OrderCreationLandingPage />;
+  return <RedirectToHomeSection hash="#section-order" />;
 }

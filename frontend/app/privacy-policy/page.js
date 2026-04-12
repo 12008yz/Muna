@@ -1,5 +1,5 @@
-import PrivacyPolicyPage from '@/components/privacy/PrivacyPolicyPage';
+import RedirectToHomeSection from '@/components/navigation/RedirectToHomeSection';
 
 export default function PrivacyPolicyRoute() {
-  return <PrivacyPolicyPage />;
+  return <RedirectToHomeSection hash="#section-privacy" />;
 }

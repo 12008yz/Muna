@@ -1,4 +1,4 @@
-import GroupTrainingPage from '@/components/landing/GroupTrainingPage';
+import RedirectToHomeSection from '@/components/navigation/RedirectToHomeSection';
 
 export const metadata = {
   title: 'Групповая подготовка — МНОЖИТЕЛ',
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function GroupTrainingRoute() {
-  return <GroupTrainingPage />;
+  return <RedirectToHomeSection hash="#section-tariffs" />;
 }

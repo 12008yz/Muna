@@ -101,8 +101,22 @@ function isPhoneEmpty(value) {
  * Лендинг по структуре next/frontend Frame1/index.tsx:
  * контейнер 400px, шапка absolute (20 / 340, --header-top), cookie 360×120, карточка left/right 15, top 230, padding 15, gap 5.
  */
-export default function ConsultationLandingPage({ onOpenFullPrivacyPolicy } = {}) {
+export default function ConsultationLandingPage({
+  onOpenFullPrivacyPolicy,
+  layout = 'viewport',
+  onAfterLeadSuccess,
+  exposeOpenConsultation,
+  /** В режиме stacked — скролл к секциям вместо перехода по маршрутам */
+  scrollNavigate,
+} = {}) {
   const router = useRouter();
+  const isStacked = layout === 'stacked';
+
+  useEffect(() => {
+    if (!isStacked || typeof exposeOpenConsultation !== 'function') return;
+    exposeOpenConsultation(() => setConsultationFlowOpen(true));
+    return () => exposeOpenConsultation(null);
+  }, [isStacked, exposeOpenConsultation]);
   const [showCookieBanner, setShowCookieBanner] = useState(true);
   const [cookieTimer, setCookieTimer] = useState(7);
   const [phone, setPhone] = useState('');
@@ -187,10 +201,14 @@ export default function ConsultationLandingPage({ onOpenFullPrivacyPolicy } = {}
   useEffect(() => {
     if (!showLeadSuccessBanner) return;
     const id = setTimeout(() => {
-      router.push('/group-training');
+      if (typeof onAfterLeadSuccess === 'function') {
+        onAfterLeadSuccess();
+      } else {
+        router.push('/group-training');
+      }
     }, 1000);
     return () => clearTimeout(id);
-  }, [showLeadSuccessBanner, router]);
+  }, [showLeadSuccessBanner, router, onAfterLeadSuccess]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -246,27 +264,43 @@ export default function ConsultationLandingPage({ onOpenFullPrivacyPolicy } = {}
     }
   };
 
+  const notificationsTop = isStacked ? '12px' : 'var(--notification-top)';
+  const privacyLinkHref = isStacked ? '#section-privacy' : PRIVACY_HREF;
+
   return (
     <>
       <div
-        className="fixed inset-0 z-[9999] flex w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#F5F5F5]"
-        style={{
-          height: '100dvh',
-          boxSizing: 'border-box',
-          paddingTop: 'var(--sat, 0px)',
-          paddingBottom: 'calc(var(--main-block-margin) + env(safe-area-inset-bottom, 0px))',
-        }}
+        className={
+          isStacked
+            ? 'relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#F5F5F5]'
+            : 'fixed inset-0 z-[9999] flex w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#F5F5F5]'
+        }
+        style={
+          isStacked
+            ? {
+                height: '100%',
+                minHeight: 0,
+                boxSizing: 'border-box',
+                paddingBottom: 'calc(var(--main-block-margin) + env(safe-area-inset-bottom, 0px))',
+              }
+            : {
+                height: '100dvh',
+                boxSizing: 'border-box',
+                paddingTop: 'var(--sat, 0px)',
+                paddingBottom: 'calc(var(--main-block-margin) + env(safe-area-inset-bottom, 0px))',
+              }
+        }
       >
         <div
           className="relative box-border flex h-full min-h-0 w-full min-w-0 flex-col bg-[#F5F5F5]"
           style={{ boxSizing: 'border-box' }}
         >
-          <LandingHeaderBar onConsultationClick={() => setConsultationFlowOpen(true)} />
+          {!isStacked ? <LandingHeaderBar onConsultationClick={() => setConsultationFlowOpen(true)} /> : null}
 
           {/* Уведомления — колонка: ниже header; верхнее схлопывается, нижнее плавно поднимается */}
         <div
           className="pointer-events-none absolute left-0 right-0 z-20 flex flex-col items-center px-[var(--main-block-margin)]"
-          style={{ top: 'var(--notification-top)' }}
+          style={{ top: notificationsTop }}
         >
           {(showCookieBanner || cookieBannerClosing) && (
             <div
@@ -283,7 +317,7 @@ export default function ConsultationLandingPage({ onOpenFullPrivacyPolicy } = {}
                 stacked
                 countdown={cookieTimer}
                 onClose={() => setCookieBannerClosing(true)}
-                privacyHref={PRIVACY_HREF}
+                privacyHref={privacyLinkHref}
                 onPrivacyLinkClick={onOpenFullPrivacyPolicy}
               />
             </div>
@@ -474,7 +508,7 @@ export default function ConsultationLandingPage({ onOpenFullPrivacyPolicy } = {}
                   Я, полностью соглашаюсь с условиями
                   <br />
                   <Link
-                    href={PRIVACY_HREF}
+                    href={privacyLinkHref}
                     className="text-[#2563eb] underline decoration-solid [text-underline-offset:3px]"
                     style={{ textDecorationSkipInk: 'none' }}
                     onClick={(e) => e.stopPropagation()}
@@ -515,16 +549,21 @@ export default function ConsultationLandingPage({ onOpenFullPrivacyPolicy } = {}
         <ConsultationFlow
           onClose={() => {
             setConsultationFlowOpen(false);
-            router.push('/order');
+            if (isStacked && scrollNavigate?.toOrder) scrollNavigate.toOrder();
+            else router.push('/order');
           }}
           onSkip={() => {
             setConsultationFlowOpen(false);
-            router.push('/order');
+            if (isStacked && scrollNavigate?.toOrder) scrollNavigate.toOrder();
+            else router.push('/order');
           }}
           onSubmit={(payload) => {
             setConsultationFlowOpen(false);
             if (payload?.method === 'phone') {
-              router.push('/');
+              if (isStacked && scrollNavigate?.toHero) scrollNavigate.toHero();
+              else router.push('/');
+            } else if (isStacked && scrollNavigate?.toOrder) {
+              scrollNavigate.toOrder();
             } else {
               router.push('/order');
             }

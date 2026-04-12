@@ -394,8 +394,9 @@ function EducationTariffCard({
   );
 }
 
-export default function GroupTrainingPage() {
+export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsultation, scrollNavigate } = {}) {
   const router = useRouter();
+  const isStacked = layout === 'stacked';
   const [consultationFlowOpen, setConsultationFlowOpen] = useState(false);
   const [detailsTariff, setDetailsTariff] = useState(null);
 
@@ -403,8 +404,23 @@ export default function GroupTrainingPage() {
     setDetailsTariff(null);
     setConsultationFlowOpen(true);
   };
+
+  useEffect(() => {
+    if (!isStacked || typeof exposeOpenConsultation !== 'function') return;
+    exposeOpenConsultation(() => {
+      setDetailsTariff(null);
+      setConsultationFlowOpen(true);
+    });
+    return () => exposeOpenConsultation(null);
+  }, [isStacked, exposeOpenConsultation]);
   const openTariffDetails = (tariff) => setDetailsTariff(tariff);
   const closeTariffDetails = () => setDetailsTariff(null);
+
+  const carouselTop = isStacked
+    ? 'clamp(12px, 3vh, 36px)'
+    : 'calc(var(--header-top, 50px) + 40px + clamp(45px, 8vh, 95px))';
+
+  const mainColumnHeight = isStacked ? '100%' : '100dvh';
 
   return (
     <>
@@ -416,25 +432,38 @@ export default function GroupTrainingPage() {
         />
       ) : (
         <div
-          className="fixed inset-0 z-[9999] flex w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#F5F5F5]"
-          style={{
-            height: '100dvh',
-            boxSizing: 'border-box',
-            paddingTop: 'var(--sat, 0px)',
-            paddingBottom: 'calc(var(--main-block-margin) + env(safe-area-inset-bottom, 0px))',
-          }}
+          className={
+            isStacked
+              ? 'relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#F5F5F5]'
+              : 'fixed inset-0 z-[9999] flex w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#F5F5F5]'
+          }
+          style={
+            isStacked
+              ? {
+                  height: '100%',
+                  minHeight: 0,
+                  boxSizing: 'border-box',
+                  paddingBottom: 'calc(var(--main-block-margin) + env(safe-area-inset-bottom, 0px))',
+                }
+              : {
+                  height: '100dvh',
+                  boxSizing: 'border-box',
+                  paddingTop: 'var(--sat, 0px)',
+                  paddingBottom: 'calc(var(--main-block-margin) + env(safe-area-inset-bottom, 0px))',
+                }
+          }
         >
           <div
             className="relative min-h-0 min-w-0 shrink-0 overflow-hidden bg-[#F5F5F5]"
             style={{
               width: '100%',
               maxWidth: '425px',
-              height: '100dvh',
-              maxHeight: '100dvh',
+              height: mainColumnHeight,
+              maxHeight: mainColumnHeight,
               boxSizing: 'border-box',
             }}
           >
-            <LandingHeaderBar onConsultationClick={openConsultation} />
+            {!isStacked ? <LandingHeaderBar onConsultationClick={openConsultation} /> : null}
 
             {/* Контейнер карусели: адаптивный верхний отступ, чтобы в in-app браузерах карточки не обрезались */}
             <div
@@ -443,7 +472,7 @@ export default function GroupTrainingPage() {
                 position: 'absolute',
                 left: 0,
                 right: 0,
-                top: 'calc(var(--header-top, 50px) + 40px + clamp(45px, 8vh, 95px))',
+                top: carouselTop,
                 bottom: 'calc(var(--main-block-margin) + env(safe-area-inset-bottom, 0px))',
                 zIndex: 1,
                 background: '#F5F5F5',
@@ -457,6 +486,7 @@ export default function GroupTrainingPage() {
                   WebkitOverflowScrolling: 'touch',
                   scrollbarWidth: 'none',
                   msOverflowStyle: 'none',
+                  overscrollBehaviorX: 'contain',
                 }}
               >
                 <div className="carousel-spacer-left shrink-0" aria-hidden style={{ alignSelf: 'stretch' }} />
@@ -492,16 +522,21 @@ export default function GroupTrainingPage() {
         <ConsultationFlow
           onClose={() => {
             setConsultationFlowOpen(false);
-            router.push('/order');
+            if (isStacked && scrollNavigate?.toOrder) scrollNavigate.toOrder();
+            else router.push('/order');
           }}
           onSkip={() => {
             setConsultationFlowOpen(false);
-            router.push('/order');
+            if (isStacked && scrollNavigate?.toOrder) scrollNavigate.toOrder();
+            else router.push('/order');
           }}
           onSubmit={(payload) => {
             setConsultationFlowOpen(false);
             if (payload?.method === 'phone') {
-              router.push('/');
+              if (isStacked && scrollNavigate?.toHero) scrollNavigate.toHero();
+              else router.push('/');
+            } else if (isStacked && scrollNavigate?.toOrder) {
+              scrollNavigate.toOrder();
             } else {
               router.push('/order');
             }

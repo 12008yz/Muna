@@ -222,8 +222,13 @@ const SUBJECT_OPTIONS = [
   { id: 'physics', label: 'Физика' },
 ];
 
-export default function OrderCreationLandingPage() {
+export default function OrderCreationLandingPage({
+  layout = 'viewport',
+  exposeOpenConsultation,
+  onAfterPhoneLead,
+} = {}) {
   const router = useRouter();
+  const isStacked = layout === 'stacked';
   /** 0 — лендинг; 1 — тип; 2 — класс; 3 — предметы; 4 — срок тарифа; 5 — финальный экран */
   const [orderStep, setOrderStep] = useState(0);
   /** 'group' | 'personal' | null — без выбора по умолчанию */
@@ -292,6 +297,12 @@ export default function OrderCreationLandingPage() {
   const privacyBorderMuted = 'rgba(16,16,16,0.25)';
   const privacyBorderStrong = 'rgba(16,16,16,0.75)';
   const privacyShowStrongBorder = !privacyAccepted && privacyConsentTouched;
+
+  useEffect(() => {
+    if (!isStacked || typeof exposeOpenConsultation !== 'function') return;
+    exposeOpenConsultation(() => setConsultationFlowOpen(true));
+    return () => exposeOpenConsultation(null);
+  }, [isStacked, exposeOpenConsultation]);
 
   const goToTariffStep = () => {
     if (!privacyAccepted) {
@@ -472,7 +483,12 @@ export default function OrderCreationLandingPage() {
           <span className="text-[14px] font-medium leading-[105%] text-[#101010]" style={{ ...involve, flex: 1, minWidth: 0 }}>
             Я, полностью соглашаюсь с условиями
             <br />
-            <Link href="/privacy-policy" className="text-[#2563eb] underline decoration-solid [text-underline-offset:3px]" style={{ textDecorationSkipInk: 'none' }} onClick={(e) => e.stopPropagation()}>
+            <Link
+              href={isStacked ? '#section-privacy' : '/privacy-policy'}
+              className="text-[#2563eb] underline decoration-solid [text-underline-offset:3px]"
+              style={{ textDecorationSkipInk: 'none' }}
+              onClick={(e) => e.stopPropagation()}
+            >
               политики приватности
             </Link>{' '}
             этого портала
@@ -505,21 +521,36 @@ export default function OrderCreationLandingPage() {
   return (
     <>
       <div
-        className="fixed inset-0 z-[9999] flex w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#F5F5F5]"
-        style={{
-          height: '100dvh',
-          boxSizing: 'border-box',
-          paddingTop: 'var(--sat, 0px)',
-          paddingBottom: 'calc(var(--main-block-margin) + env(safe-area-inset-bottom, 0px))',
-        }}
+        className={
+          isStacked
+            ? 'relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#F5F5F5]'
+            : 'fixed inset-0 z-[9999] flex w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#F5F5F5]'
+        }
+        style={
+          isStacked
+            ? {
+                height: '100%',
+                minHeight: 0,
+                boxSizing: 'border-box',
+                paddingBottom: 'calc(var(--main-block-margin) + env(safe-area-inset-bottom, 0px))',
+              }
+            : {
+                height: '100dvh',
+                boxSizing: 'border-box',
+                paddingTop: 'var(--sat, 0px)',
+                paddingBottom: 'calc(var(--main-block-margin) + env(safe-area-inset-bottom, 0px))',
+              }
+        }
       >
         <div
           className="relative box-border flex h-full min-h-0 w-full min-w-0 flex-col bg-[#F5F5F5]"
-          style={{ boxSizing: 'border-box' }}
+          style={{
+            boxSizing: 'border-box',
+          }}
         >
-          {(orderStep === 0 || orderStep === 5) && (
-            <LandingHeaderBar onConsultationClick={() => setConsultationFlowOpen(true)} />
-          )}
+          {(orderStep === 0 || orderStep === 5) && !isStacked ? (
+            <LandingHeaderBar onConsultationClick={openConsultation} />
+          ) : null}
 
           {orderStep === 0 && renderFinalCard(goToTariffStep)}
         {orderStep === 5 && renderFinalCard(() => setConsultationFlowOpen(true))}
@@ -555,6 +586,13 @@ export default function OrderCreationLandingPage() {
                   boxSizing: 'border-box',
                   padding: 15,
                   marginBottom: 0,
+                  ...(isStacked
+                    ? {
+                        maxHeight: 'calc(var(--unified-section-min-h) - 120px)',
+                        overflowY: 'auto',
+                        WebkitOverflowScrolling: 'touch',
+                      }
+                    : {}),
                 }}
               >
                 <h2 className="m-0 flex max-w-full flex-shrink-0 items-center self-stretch" style={wizardTitleStyle}>
@@ -759,7 +797,11 @@ export default function OrderCreationLandingPage() {
             await submitOrderLead({ name: null, phone: payload?.phone, contactMethod: method });
             setConsultationFlowOpen(false);
             if (method === 'phone') {
-              router.push('/');
+              if (typeof onAfterPhoneLead === 'function') {
+                onAfterPhoneLead();
+              } else {
+                router.push('/');
+              }
             }
           }}
           initialStep="contact-method"

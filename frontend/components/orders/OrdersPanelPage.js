@@ -33,7 +33,7 @@ function formatDate(value) {
   return date.toLocaleString('ru-RU');
 }
 
-export default function OrdersPanelPage() {
+export default function OrdersPanelPage({ embedded = false } = {}) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -87,8 +87,17 @@ export default function OrdersPanelPage() {
   );
 
   return (
-    <div className="min-h-[100dvh] bg-[#F5F5F5] p-6 text-[#101010]" style={{ paddingTop: 'calc(24px + var(--sat, 0px))' }}>
-      <div className="mx-auto max-w-[1200px] rounded-[20px] border border-[rgba(16,16,16,0.08)] bg-white p-5 shadow-[0_1px_2px_rgba(16,16,16,0.06)]">
+    <div
+      className={`bg-[#F5F5F5] text-[#101010] ${
+        embedded ? 'flex h-full min-h-0 flex-col overflow-hidden p-3 pt-2' : 'min-h-[100dvh] p-6'
+      }`}
+      style={embedded ? undefined : { paddingTop: 'calc(24px + var(--sat, 0px))' }}
+    >
+      <div
+        className={`mx-auto w-full max-w-[1200px] rounded-[20px] border border-[rgba(16,16,16,0.08)] bg-white p-5 shadow-[0_1px_2px_rgba(16,16,16,0.06)] ${
+          embedded ? 'flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden' : ''
+        }`}
+      >
         <h1 className="m-0 mb-2 text-[24px] font-semibold text-[#101010]">Заявки</h1>
         <p className="m-0 mb-4 text-[14px] text-[rgba(16,16,16,0.55)]">
           Телефоны, способы связи и источник обращений из формы консультации.
@@ -99,7 +108,11 @@ export default function OrdersPanelPage() {
         {!loading && !error && rows.length === 0 ? <p className="m-0 text-[14px]">Пока нет заявок.</p> : null}
 
         {!loading && !error && rows.length > 0 ? (
-          <div className="overflow-auto rounded-[12px] border border-[rgba(16,16,16,0.16)] bg-white">
+          <div
+            className={`overflow-auto rounded-[12px] border border-[rgba(16,16,16,0.16)] bg-white ${
+              embedded ? 'min-h-0 min-w-0 flex-1' : ''
+            }`}
+          >
             <table className="w-full min-w-[980px] border-collapse text-left text-[14px] text-[#101010]">
               <thead>
                 <tr className="bg-[rgba(16,16,16,0.08)] text-[#101010]">

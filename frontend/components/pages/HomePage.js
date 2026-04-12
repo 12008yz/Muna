@@ -1,15 +1,257 @@
 'use client';
 
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import LandingHeaderBar from '@/components/landing/LandingHeaderBar';
 import ConsultationLandingPage from '@/components/landing/ConsultationLandingPage';
+import GroupTrainingPage from '@/components/landing/GroupTrainingPage';
+import OrderCreationLandingPage from '@/components/landing/OrderCreationLandingPage';
+import OrdersPanelPage from '@/components/orders/OrdersPanelPage';
 import PrivacyPolicyPage from '@/components/privacy/PrivacyPolicyPage';
 
+const SECTION_IDS = {
+  hero: 'section-hero',
+  tariffs: 'section-tariffs',
+  order: 'section-order',
+  orders: 'section-orders',
+  privacy: 'section-privacy',
+};
+
+const SECTION_ORDER = [
+  SECTION_IDS.hero,
+  SECTION_IDS.tariffs,
+  SECTION_IDS.order,
+  SECTION_IDS.orders,
+  SECTION_IDS.privacy,
+];
+
+function scrollSectionIntoView(id, behavior = 'auto') {
+  if (typeof document === 'undefined') return;
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior, block: 'start' });
+}
+
+function sectionIdToKey(id) {
+  if (id === SECTION_IDS.hero) return 'hero';
+  if (id === SECTION_IDS.tariffs) return 'tariffs';
+  if (id === SECTION_IDS.order) return 'order';
+  if (id === SECTION_IDS.orders) return 'orders';
+  if (id === SECTION_IDS.privacy) return 'privacy';
+  return 'hero';
+}
+
+const sectionShellClass = 'snap-start snap-always box-border shrink-0 overflow-hidden';
+
 /**
- * Главная: лендинг; полный текст политики — по клику на «политики приватности» в баннере про куки (7 с).
+ * Главная: все ключевые экраны подряд в одном вертикальном скролле (жёсткий snap + поблочный wheel),
+ * липкая шапка; политика из куки — отдельный оверлей.
  */
 export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPrivacyCollapse }) {
+  const scrollRef = useRef(null);
+  const openersRef = useRef({ hero: null, tariffs: null, order: null, orders: null, privacy: null });
+  const [activeSection, setActiveSection] = useState('hero');
+  const searchParams = useSearchParams();
+
+  const scrollNavigate = useMemo(
+    () => ({
+      toOrder: () => scrollSectionIntoView(SECTION_IDS.order, 'auto'),
+      toHero: () => scrollSectionIntoView(SECTION_IDS.hero, 'auto'),
+      toTariffs: () => scrollSectionIntoView(SECTION_IDS.tariffs, 'auto'),
+      toOrders: () => scrollSectionIntoView(SECTION_IDS.orders, 'auto'),
+      toPrivacy: () => scrollSectionIntoView(SECTION_IDS.privacy, 'auto'),
+    }),
+    []
+  );
+
+  useEffect(() => {
+    const root = scrollRef.current;
+    if (!root) return;
+
+    const elements = SECTION_ORDER.map((id) => document.getElementById(id)).filter(Boolean);
+    if (elements.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const ranked = entries
+          .filter((e) => e.isIntersecting && e.target instanceof HTMLElement)
+          .map((e) => ({ id: e.target.id, ratio: e.intersectionRatio }))
+          .sort((a, b) => b.ratio - a.ratio);
+        if (!ranked.length) return;
+        setActiveSection(sectionIdToKey(ranked[0].id));
+      },
+      { root, threshold: [0.2, 0.35, 0.5, 0.65, 0.8] }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  /** Поблочный wheel: целый «экран» за жест, если не скроллим вложенный overflow. */
+  useEffect(() => {
+    const root = scrollRef.current;
+    if (!root) return;
+
+    const onWheel = (e) => {
+      let el = e.target;
+      while (el && el !== root) {
+        if (el instanceof HTMLElement) {
+          const { overflowY } = window.getComputedStyle(el);
+          const canY =
+            (overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight > el.clientHeight + 2;
+          if (canY) {
+            const atTop = el.scrollTop <= 0;
+            const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
+            if ((e.deltaY < 0 && !atTop) || (e.deltaY > 0 && !atBottom)) {
+              return;
+            }
+          }
+        }
+        el = el.parentElement;
+      }
+
+      if (Math.abs(e.deltaY) < 28) return;
+      e.preventDefault();
+      const step = root.clientHeight;
+      const dir = e.deltaY > 0 ? 1 : -1;
+      root.scrollBy({ top: dir * step, behavior: 'auto' });
+    };
+
+    root.addEventListener('wheel', onWheel, { passive: false });
+    return () => root.removeEventListener('wheel', onWheel);
+  }, []);
+
+  useEffect(() => {
+    const section = searchParams.get('section');
+    const idMap = {
+      tariffs: SECTION_IDS.tariffs,
+      order: SECTION_IDS.order,
+      orders: SECTION_IDS.orders,
+      privacy: SECTION_IDS.privacy,
+    };
+    const id = idMap[section];
+    if (id) requestAnimationFrame(() => scrollSectionIntoView(id, 'auto'));
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const raw = window.location.hash.replace(/^#/, '');
+    const idMap = {
+      [SECTION_IDS.tariffs]: SECTION_IDS.tariffs,
+      [SECTION_IDS.order]: SECTION_IDS.order,
+      [SECTION_IDS.orders]: SECTION_IDS.orders,
+      [SECTION_IDS.privacy]: SECTION_IDS.privacy,
+      tariffs: SECTION_IDS.tariffs,
+      order: SECTION_IDS.order,
+      orders: SECTION_IDS.orders,
+      privacy: SECTION_IDS.privacy,
+    };
+    const id = idMap[raw];
+    if (id) requestAnimationFrame(() => scrollSectionIntoView(id, 'auto'));
+  }, []);
+
+  const handleHeaderConsultation = useCallback(() => {
+    const fn = openersRef.current[activeSection];
+    if (typeof fn === 'function') {
+      fn();
+      return;
+    }
+    if (activeSection === 'orders' || activeSection === 'privacy') {
+      scrollSectionIntoView(SECTION_IDS.hero, 'auto');
+      requestAnimationFrame(() => {
+        queueMicrotask(() => openersRef.current.hero?.());
+      });
+    }
+  }, [activeSection]);
+
+  const exposeHero = useCallback((fn) => {
+    openersRef.current.hero = fn;
+  }, []);
+
+  const exposeTariffs = useCallback((fn) => {
+    openersRef.current.tariffs = fn;
+  }, []);
+
+  const exposeOrder = useCallback((fn) => {
+    openersRef.current.order = fn;
+  }, []);
+
+  const sectionHeightStyle = { height: 'var(--unified-section-min-h)' };
+
   return (
     <>
-      <ConsultationLandingPage onOpenFullPrivacyPolicy={onOpenPrivacyPolicy} />
+      <div
+        className="fixed inset-0 z-0 flex w-full flex-col overflow-hidden bg-[#F5F5F5] text-[#101010]"
+        style={{ height: '100dvh', maxHeight: '100dvh' }}
+      >
+        <header className="relative z-40 shrink-0 bg-[#F5F5F5] pt-[var(--sat)]">
+          <div
+            className="relative mx-auto w-full max-w-[425px]"
+            style={{ height: 'calc(var(--header-top) + var(--header-height) + 8px)' }}
+          >
+            <LandingHeaderBar onConsultationClick={handleHeaderConsultation} menuHref="#section-hero" />
+          </div>
+        </header>
+
+        <div
+          ref={scrollRef}
+          className="min-h-0 flex-1 snap-y snap-mandatory overflow-y-auto overflow-x-hidden overscroll-y-contain"
+        >
+          <section
+            id={SECTION_IDS.hero}
+            className={`${sectionShellClass} mx-auto w-full max-w-[425px]`}
+            style={sectionHeightStyle}
+          >
+            <ConsultationLandingPage
+              layout="stacked"
+              onOpenFullPrivacyPolicy={onOpenPrivacyPolicy}
+              onAfterLeadSuccess={scrollNavigate.toTariffs}
+              exposeOpenConsultation={exposeHero}
+              scrollNavigate={scrollNavigate}
+            />
+          </section>
+
+          <section
+            id={SECTION_IDS.tariffs}
+            className={`${sectionShellClass} mx-auto w-full max-w-[425px]`}
+            style={sectionHeightStyle}
+          >
+            <GroupTrainingPage
+              layout="stacked"
+              exposeOpenConsultation={exposeTariffs}
+              scrollNavigate={scrollNavigate}
+            />
+          </section>
+
+          <section
+            id={SECTION_IDS.order}
+            className={`${sectionShellClass} mx-auto w-full max-w-[425px]`}
+            style={sectionHeightStyle}
+          >
+            <OrderCreationLandingPage
+              layout="stacked"
+              exposeOpenConsultation={exposeOrder}
+              onAfterPhoneLead={scrollNavigate.toHero}
+            />
+          </section>
+
+          <section id={SECTION_IDS.orders} className={`${sectionShellClass} w-full px-2`} style={sectionHeightStyle}>
+            <OrdersPanelPage embedded />
+          </section>
+
+          <section
+            id={SECTION_IDS.privacy}
+            className={`${sectionShellClass} mx-auto w-full max-w-[425px]`}
+            style={sectionHeightStyle}
+          >
+            <PrivacyPolicyPage
+              embedded
+              onCollapse={() => scrollSectionIntoView(SECTION_IDS.order, 'auto')}
+            />
+          </section>
+        </div>
+      </div>
+
       {privacyPolicyOpen ? (
         <div className="fixed inset-0 z-[10000] w-full min-w-0 overflow-y-auto overflow-x-hidden">
           <PrivacyPolicyPage onCollapse={onPrivacyCollapse} />

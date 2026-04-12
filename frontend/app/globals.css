@@ -21,6 +21,12 @@
   --notification-top: calc(var(--header-top) + var(--header-height) + 10px);
   --header-zone: 50px;
   --sab: env(safe-area-inset-bottom, 0px);
+  /**
+   * Единый вертикальный скролл (главная): липкая шапка + секции на высоту вьюпорта.
+   * header-top + header-height + небольшой зазор под зону клика.
+   */
+  --unified-sticky-header-h: calc(var(--sat) + var(--header-top) + var(--header-height) + 10px);
+  --unified-section-min-h: calc(100dvh - var(--unified-sticky-header-h));
 }
 
 @media (prefers-color-scheme: dark) {

@@ -16,7 +16,7 @@ function CollapseIcon() {
   );
 }
 
-export default function PrivacyPolicyPage({ onCollapse }) {
+export default function PrivacyPolicyPage({ onCollapse, embedded = false }) {
   const router = useRouter();
 
   const handleCollapse = () => {
@@ -32,11 +32,17 @@ export default function PrivacyPolicyPage({ onCollapse }) {
   };
 
   return (
-    <div className="box-border min-h-[100dvh] w-full max-w-full bg-[#F5F5F5] text-[#101010]">
+    <div
+      className={`box-border w-full max-w-full bg-[#F5F5F5] text-[#101010] ${
+        embedded ? 'flex h-full min-h-0 flex-col overflow-hidden' : 'min-h-[100dvh]'
+      }`}
+    >
       {/* Как GroupTraining / модалки: колонна на ширину телефона до 425px, боковые var(--main-block-margin) */}
       <div
-        className="box-border mx-auto w-full min-w-0 max-w-[425px] px-[var(--main-block-margin)] pb-[calc(var(--main-block-margin)+env(safe-area-inset-bottom,0px)))]"
-        style={{ paddingTop: 'calc(var(--sat) + 10px)' }}
+        className={`box-border mx-auto w-full min-w-0 max-w-[425px] px-[var(--main-block-margin)] pb-[calc(var(--main-block-margin)+env(safe-area-inset-bottom,0px))] ${
+          embedded ? 'flex min-h-0 flex-1 flex-col overflow-hidden pt-[10px]' : ''
+        }`}
+        style={embedded ? undefined : { paddingTop: 'calc(var(--sat) + 10px)' }}
       >
         <button
           type="button"
@@ -56,12 +62,14 @@ export default function PrivacyPolicyPage({ onCollapse }) {
         <div className="h-[10px]" aria-hidden />
 
         <article
-          className="subpixel-antialiased mb-[70px] box-border w-full max-w-full rounded-[20px] border-[0.5px] border-solid border-white/50 bg-white backdrop-blur-[12.5px]"
+          className={`subpixel-antialiased box-border w-full max-w-full rounded-[20px] border-[0.5px] border-solid border-white/50 bg-white backdrop-blur-[12.5px] ${
+            embedded ? 'mb-0 flex min-h-0 flex-1 flex-col overflow-hidden' : 'mb-[70px]'
+          }`}
           style={{
             boxShadow: '0 0 0 0.5px rgba(255, 255, 255, 0.5)',
           }}
         >
-          <div className="box-border px-[15px] pt-5">
+          <div className={`box-border px-[15px] pt-5 ${embedded ? 'flex min-h-0 flex-1 flex-col overflow-hidden' : ''}`}>
             <h1
               className="mb-[15px] text-[18px] font-normal leading-[110%] text-[#101010]"
               style={{
@@ -75,7 +83,9 @@ export default function PrivacyPolicyPage({ onCollapse }) {
               Политика приватности
             </h1>
             <div
-              className="w-full max-w-full whitespace-pre-line pb-[245px] font-normal"
+              className={`w-full max-w-full whitespace-pre-line font-normal ${
+                embedded ? 'min-h-0 flex-1 overflow-y-auto pb-6' : 'pb-[245px]'
+              }`}
               style={{
                 fontFamily: 'var(--font-involve), system-ui, sans-serif',
                 fontStyle: 'normal',
