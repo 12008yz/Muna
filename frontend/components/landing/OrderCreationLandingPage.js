@@ -484,7 +484,7 @@ export default function OrderCreationLandingPage({
             Я, полностью соглашаюсь с условиями
             <br />
             <Link
-              href={isStacked ? '#section-privacy' : '/privacy-policy'}
+              href="/privacy-policy"
               className="text-[#2563eb] underline decoration-solid [text-underline-offset:3px]"
               style={{ textDecorationSkipInk: 'none' }}
               onClick={(e) => e.stopPropagation()}
@@ -578,7 +578,7 @@ export default function OrderCreationLandingPage({
               </div>
 
               <div
-                className="mt-auto flex w-full min-w-0 flex-shrink-0 flex-col rounded-[20px] bg-white"
+                className="scrollbar-hide mt-auto flex w-full min-w-0 flex-shrink-0 flex-col rounded-[20px] bg-white"
                 style={{
                   marginLeft: 'var(--main-block-margin)',
                   marginRight: 'var(--main-block-margin)',

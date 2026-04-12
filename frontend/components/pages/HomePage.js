@@ -1,29 +1,20 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import LandingHeaderBar from '@/components/landing/LandingHeaderBar';
 import ConsultationLandingPage from '@/components/landing/ConsultationLandingPage';
 import GroupTrainingPage from '@/components/landing/GroupTrainingPage';
 import OrderCreationLandingPage from '@/components/landing/OrderCreationLandingPage';
-import OrdersPanelPage from '@/components/orders/OrdersPanelPage';
 import PrivacyPolicyPage from '@/components/privacy/PrivacyPolicyPage';
 
 const SECTION_IDS = {
   hero: 'section-hero',
   tariffs: 'section-tariffs',
   order: 'section-order',
-  orders: 'section-orders',
-  privacy: 'section-privacy',
 };
 
-const SECTION_ORDER = [
-  SECTION_IDS.hero,
-  SECTION_IDS.tariffs,
-  SECTION_IDS.order,
-  SECTION_IDS.orders,
-  SECTION_IDS.privacy,
-];
+const SECTION_ORDER = [SECTION_IDS.hero, SECTION_IDS.tariffs, SECTION_IDS.order];
 
 function scrollSectionIntoView(id, behavior = 'auto') {
   if (typeof document === 'undefined') return;
@@ -36,20 +27,19 @@ function sectionIdToKey(id) {
   if (id === SECTION_IDS.hero) return 'hero';
   if (id === SECTION_IDS.tariffs) return 'tariffs';
   if (id === SECTION_IDS.order) return 'order';
-  if (id === SECTION_IDS.orders) return 'orders';
-  if (id === SECTION_IDS.privacy) return 'privacy';
   return 'hero';
 }
 
 const sectionShellClass = 'snap-start snap-always box-border shrink-0 overflow-hidden';
 
 /**
- * Главная: все ключевые экраны подряд в одном вертикальном скролле (жёсткий snap + поблочный wheel),
- * липкая шапка; политика из куки — отдельный оверлей.
+ * Главная: три экрана (герой, тарифы, заявка) в одном вертикальном скролле (snap + поблочный wheel);
+ * заявки и политика — отдельные маршруты /orders и /privacy-policy; политика из куки — оверлей.
  */
 export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPrivacyCollapse }) {
+  const router = useRouter();
   const scrollRef = useRef(null);
-  const openersRef = useRef({ hero: null, tariffs: null, order: null, orders: null, privacy: null });
+  const openersRef = useRef({ hero: null, tariffs: null, order: null });
   const [activeSection, setActiveSection] = useState('hero');
   const searchParams = useSearchParams();
 
@@ -58,8 +48,6 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
       toOrder: () => scrollSectionIntoView(SECTION_IDS.order, 'auto'),
       toHero: () => scrollSectionIntoView(SECTION_IDS.hero, 'auto'),
       toTariffs: () => scrollSectionIntoView(SECTION_IDS.tariffs, 'auto'),
-      toOrders: () => scrollSectionIntoView(SECTION_IDS.orders, 'auto'),
-      toPrivacy: () => scrollSectionIntoView(SECTION_IDS.privacy, 'auto'),
     }),
     []
   );
@@ -123,44 +111,48 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
 
   useEffect(() => {
     const section = searchParams.get('section');
+    if (section === 'orders') {
+      router.replace('/orders');
+      return;
+    }
+    if (section === 'privacy') {
+      router.replace('/privacy-policy');
+      return;
+    }
     const idMap = {
       tariffs: SECTION_IDS.tariffs,
       order: SECTION_IDS.order,
-      orders: SECTION_IDS.orders,
-      privacy: SECTION_IDS.privacy,
     };
     const id = idMap[section];
     if (id) requestAnimationFrame(() => scrollSectionIntoView(id, 'auto'));
-  }, [searchParams]);
+  }, [searchParams, router]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const raw = window.location.hash.replace(/^#/, '');
+    if (raw === 'section-orders') {
+      router.replace('/orders');
+      return;
+    }
+    if (raw === 'section-privacy') {
+      router.replace('/privacy-policy');
+      return;
+    }
     const idMap = {
       [SECTION_IDS.tariffs]: SECTION_IDS.tariffs,
       [SECTION_IDS.order]: SECTION_IDS.order,
-      [SECTION_IDS.orders]: SECTION_IDS.orders,
-      [SECTION_IDS.privacy]: SECTION_IDS.privacy,
       tariffs: SECTION_IDS.tariffs,
       order: SECTION_IDS.order,
-      orders: SECTION_IDS.orders,
-      privacy: SECTION_IDS.privacy,
     };
     const id = idMap[raw];
     if (id) requestAnimationFrame(() => scrollSectionIntoView(id, 'auto'));
-  }, []);
+  }, [router]);
 
   const handleHeaderConsultation = useCallback(() => {
     const fn = openersRef.current[activeSection];
     if (typeof fn === 'function') {
       fn();
       return;
-    }
-    if (activeSection === 'orders' || activeSection === 'privacy') {
-      scrollSectionIntoView(SECTION_IDS.hero, 'auto');
-      requestAnimationFrame(() => {
-        queueMicrotask(() => openersRef.current.hero?.());
-      });
     }
   }, [activeSection]);
 
@@ -195,7 +187,7 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
 
         <div
           ref={scrollRef}
-          className="min-h-0 flex-1 snap-y snap-mandatory overflow-y-auto overflow-x-hidden overscroll-y-contain"
+          className="scrollbar-hide min-h-0 flex-1 snap-y snap-mandatory overflow-y-auto overflow-x-hidden overscroll-y-contain"
         >
           <section
             id={SECTION_IDS.hero}
@@ -235,25 +227,11 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
             />
           </section>
 
-          <section id={SECTION_IDS.orders} className={`${sectionShellClass} w-full px-2`} style={sectionHeightStyle}>
-            <OrdersPanelPage embedded />
-          </section>
-
-          <section
-            id={SECTION_IDS.privacy}
-            className={`${sectionShellClass} mx-auto w-full max-w-[425px]`}
-            style={sectionHeightStyle}
-          >
-            <PrivacyPolicyPage
-              embedded
-              onCollapse={() => scrollSectionIntoView(SECTION_IDS.order, 'auto')}
-            />
-          </section>
         </div>
       </div>
 
       {privacyPolicyOpen ? (
-        <div className="fixed inset-0 z-[10000] w-full min-w-0 overflow-y-auto overflow-x-hidden">
+        <div className="scrollbar-hide fixed inset-0 z-[10000] w-full min-w-0 overflow-y-auto overflow-x-hidden">
           <PrivacyPolicyPage onCollapse={onPrivacyCollapse} />
         </div>
       ) : null}

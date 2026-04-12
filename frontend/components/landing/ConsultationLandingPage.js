@@ -265,7 +265,7 @@ export default function ConsultationLandingPage({
   };
 
   const notificationsTop = isStacked ? '12px' : 'var(--notification-top)';
-  const privacyLinkHref = isStacked ? '#section-privacy' : PRIVACY_HREF;
+  const privacyLinkHref = PRIVACY_HREF;
 
   return (
     <>

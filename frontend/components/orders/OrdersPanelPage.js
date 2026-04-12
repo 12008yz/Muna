@@ -109,7 +109,7 @@ export default function OrdersPanelPage({ embedded = false } = {}) {
 
         {!loading && !error && rows.length > 0 ? (
           <div
-            className={`overflow-auto rounded-[12px] border border-[rgba(16,16,16,0.16)] bg-white ${
+            className={`scrollbar-hide overflow-auto rounded-[12px] border border-[rgba(16,16,16,0.16)] bg-white ${
               embedded ? 'min-h-0 min-w-0 flex-1' : ''
             }`}
           >

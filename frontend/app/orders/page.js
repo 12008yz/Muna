@@ -1,4 +1,4 @@
-import RedirectToHomeSection from '@/components/navigation/RedirectToHomeSection';
+import OrdersPanelPage from '@/components/orders/OrdersPanelPage';
 
 export const metadata = {
   title: 'Заявки — МНОЖИТЕЛ',
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function OrdersRoute() {
-  return <RedirectToHomeSection hash="#section-orders" />;
+  return <OrdersPanelPage />;
 }

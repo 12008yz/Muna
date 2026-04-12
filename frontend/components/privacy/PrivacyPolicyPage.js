@@ -84,7 +84,7 @@ export default function PrivacyPolicyPage({ onCollapse, embedded = false }) {
             </h1>
             <div
               className={`w-full max-w-full whitespace-pre-line font-normal ${
-                embedded ? 'min-h-0 flex-1 overflow-y-auto pb-6' : 'pb-[245px]'
+                embedded ? 'scrollbar-hide min-h-0 flex-1 overflow-y-auto pb-6' : 'pb-[245px]'
               }`}
               style={{
                 fontFamily: 'var(--font-involve), system-ui, sans-serif',

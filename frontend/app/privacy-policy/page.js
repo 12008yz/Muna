@@ -1,5 +1,10 @@
-import RedirectToHomeSection from '@/components/navigation/RedirectToHomeSection';
+import PrivacyPolicyPage from '@/components/privacy/PrivacyPolicyPage';
+
+export const metadata = {
+  title: 'Политика приватности — МНОЖИТЕЛ',
+  description: 'Обработка персональных данных',
+};
 
 export default function PrivacyPolicyRoute() {
-  return <RedirectToHomeSection hash="#section-privacy" />;
+  return <PrivacyPolicyPage />;
 }

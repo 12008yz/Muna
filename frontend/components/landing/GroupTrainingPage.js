@@ -144,7 +144,7 @@ function TariffDetailsOverlay({ tariff, onCollapse, onConsultation }) {
         </div>
 
         {/* min-w-0: не растягивать flex по ширине карусели; без overflow-x-hidden — не срезать скругления карточек по краям */}
-        <div className="min-h-0 min-w-0 flex-1 overflow-y-auto">
+        <div className="scrollbar-hide min-h-0 min-w-0 flex-1 overflow-y-auto">
           <div
             ref={scrollRef}
             className="carousel-container scrollbar-hide flex min-h-min flex-nowrap items-start overflow-x-auto overflow-y-hidden"
