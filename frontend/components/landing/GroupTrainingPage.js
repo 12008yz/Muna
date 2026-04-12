@@ -257,7 +257,7 @@ function FeatureRow({ title, subtitle, enabled }) {
 
 /**
  * Карточка тарифа — 360×550, структура как Frame3 (шапка / фичи / футер).
- * Галочки — контурные (OutlineListIcons), не как TT Firs в Frame3.
+ * Иконки строк — OutlineListIcons (Figma path, кольцо + галочка/крест).
  */
 function EducationTariffCard({
   eyebrow,
