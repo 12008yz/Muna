@@ -13,9 +13,6 @@ const involve = {
   fontSynthesis: 'none',
 };
 
-/** Карусель тарифов: снизу var(--main-block-margin) + safe area */
-const CARD_HEIGHT_PX = 550;
-
 const GROUP_FEATURES = [
   { title: '8 уроков в мес. в формате «1х11»', subtitle: 'Продолжение подготовки', enabled: true },
   { title: 'Наставление от экспертов', subtitle: 'Ведение подготовки', enabled: true },
@@ -258,8 +255,8 @@ function FeatureRow({ title, subtitle, enabled }) {
 }
 
 /**
- * Карточка тарифа — 360×550, структура как Frame3 (шапка / фичи / футер).
- * Иконки строк — OutlineListIcons (Figma path, кольцо + галочка/крест).
+ * Карточка тарифа — структура как Frame3 (шапка / фичи / футер).
+ * Высота по контенту: фиксированная 550px + flex-1 на середине давали пустоту между списком и ценой.
  */
 function EducationTariffCard({
   eyebrow,
@@ -274,8 +271,8 @@ function EducationTariffCard({
     <div
       className="carousel-card relative flex shrink-0 flex-col overflow-hidden"
       style={{
-        height: CARD_HEIGHT_PX,
-        minHeight: CARD_HEIGHT_PX,
+        height: 'auto',
+        alignSelf: 'flex-end',
         background: '#FFFFFF',
         borderRadius: 20,
         scrollSnapAlign: 'start',
@@ -326,7 +323,7 @@ function EducationTariffCard({
       </div>
 
       <div
-        className="features-section scrollbar-hide flex min-h-0 flex-1 flex-col overflow-hidden"
+        className="features-section scrollbar-hide flex flex-col overflow-hidden"
         style={{ marginTop: 10, padding: '0 15px 0 15px' }}
       >
         <div className="features-container flex flex-col" style={{ gap: 5 }}>
@@ -345,7 +342,15 @@ function EducationTariffCard({
         />
       </div>
 
-      <div style={{ padding: '15px 15px 15px 15px', flexShrink: 0 }}>
+      <div
+        style={{
+          paddingLeft: 15,
+          paddingRight: 15,
+          paddingTop: 15,
+          paddingBottom: 20,
+          flexShrink: 0,
+        }}
+      >
         <p
           className="m-0"
           style={{
@@ -467,7 +472,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
 
             {/* Контейнер карусели: адаптивный верхний отступ, чтобы в in-app браузерах карточки не обрезались */}
             <div
-              className="carousel-wrapper"
+              className="carousel-wrapper flex min-h-0 min-w-0 flex-col justify-end"
               style={{
                 position: 'absolute',
                 left: 0,
@@ -478,20 +483,20 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                 background: '#F5F5F5',
               }}
             >
+              {/* Ряд без h-full: иначе cross-size строки = высота вьюпорта и карточка «растягивается» с пустотой под контентом */}
               <div
-                className="carousel-container carousel-learning scrollbar-hide box-border flex h-full min-h-0 flex-nowrap items-end overflow-x-auto overflow-y-hidden"
+                className="carousel-container carousel-learning scrollbar-hide box-border flex w-full max-h-full min-h-0 flex-nowrap items-end overflow-x-auto overflow-y-visible"
                 style={{
+                  height: 'auto',
                   gap: 5,
                   scrollSnapType: 'x mandatory',
                   WebkitOverflowScrolling: 'touch',
                   scrollbarWidth: 'none',
                   msOverflowStyle: 'none',
                   overscrollBehaviorX: 'contain',
-                  /* Нижний зазор под карточками (margin у карточек режется overflow-y-hidden у ряда) */
-                  paddingBottom: 'var(--main-block-margin)',
                 }}
               >
-                <div className="carousel-spacer-left shrink-0" aria-hidden style={{ alignSelf: 'stretch' }} />
+                <div className="carousel-spacer-left shrink-0" aria-hidden />
 
                 <EducationTariffCard
                   eyebrow="Подготовка к государственным экзаменам"
@@ -513,7 +518,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                   onButtonClick={() => openTariffDetails('personal')}
                 />
 
-                <div className="carousel-spacer-right shrink-0" aria-hidden style={{ alignSelf: 'stretch' }} />
+                <div className="carousel-spacer-right shrink-0" aria-hidden />
               </div>
             </div>
           </div>
