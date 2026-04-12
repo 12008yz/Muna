@@ -197,7 +197,6 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
             <ConsultationLandingPage
               layout="stacked"
               onOpenFullPrivacyPolicy={onOpenPrivacyPolicy}
-              onAfterLeadSuccess={scrollNavigate.toTariffs}
               exposeOpenConsultation={exposeHero}
               scrollNavigate={scrollNavigate}
             />

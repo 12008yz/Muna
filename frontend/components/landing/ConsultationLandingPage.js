@@ -199,7 +199,7 @@ export default function ConsultationLandingPage({
   }, [leadSuccessClosing]);
 
   useEffect(() => {
-    if (!showLeadSuccessBanner) return;
+    if (!showLeadSuccessBanner || isStacked) return;
     const id = setTimeout(() => {
       if (typeof onAfterLeadSuccess === 'function') {
         onAfterLeadSuccess();
@@ -208,7 +208,7 @@ export default function ConsultationLandingPage({
       }
     }, 1000);
     return () => clearTimeout(id);
-  }, [showLeadSuccessBanner, router, onAfterLeadSuccess]);
+  }, [showLeadSuccessBanner, router, onAfterLeadSuccess, isStacked]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
