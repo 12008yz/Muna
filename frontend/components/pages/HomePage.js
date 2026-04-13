@@ -35,7 +35,7 @@ function sectionIdToKey(id) {
 const sectionShellClass = 'snap-start snap-always box-border shrink-0 overflow-hidden';
 
 /**
- * Главная: три экрана (герой, тарифы, заявка) в одном вертикальном скролле (snap + поблочный wheel);
+ * Главная: герой, тарифы, мастер заявки и финальный экран в одном вертикальном скролле (snap + поблочный wheel);
  * заявки и политика — отдельные маршруты /orders и /privacy-policy; политика из куки — оверлей.
  */
 export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPrivacyCollapse }) {
@@ -49,7 +49,7 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
     () => ({
       toOrder: () => scrollSectionIntoView(SECTION_IDS.order, 'auto'),
       toOrderFinal: () => scrollSectionIntoView(SECTION_IDS.orderFinal, 'auto'),
-      toHero: () => scrollSectionIntoView(SECTION_IDS.hero, 'auto'),
+      toHero: () => scrollSectionIntoView(SECTION_IDS.hero, 'smooth'),
       toTariffs: () => scrollSectionIntoView(SECTION_IDS.tariffs, 'auto'),
     }),
     []
@@ -173,6 +173,7 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
   const exposeOrder = useCallback((fn) => {
     openersRef.current.order = fn;
   }, []);
+
   const exposeOrderFinal = useCallback((fn) => {
     openersRef.current.orderFinal = fn;
   }, []);
@@ -248,8 +249,6 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
           >
             <OrderCreationLandingPage
               layout="stacked"
-              separateFinalStep
-              onReachFinalStep={scrollNavigate.toOrderFinal}
               exposeOpenConsultation={exposeOrder}
               onAfterPhoneLead={scrollNavigate.toHero}
               onStackedWizardStepsActive={setOrderStackedWizardSteps}

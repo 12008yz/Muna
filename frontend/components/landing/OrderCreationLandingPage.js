@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import LandingHeaderBar from '@/components/landing/LandingHeaderBar';
-import ConsultationFlow from '@/components/modals/ConsultationFlow';
+import ConsultationModal from '@/components/modals/ConsultationModal';
 import { HINT_TOP } from '@/components/common/ClickOutsideHint';
 const involve = {
   fontFamily: 'var(--font-involve), system-ui, sans-serif',
@@ -41,7 +41,7 @@ const wizardSubtitleStyle = {
   marginBottom: 20,
 };
 
-/** Как в ConsultationFlow / GroupTrainingPage / PrivacyPolicyPage (кнопка: safe area + 10px). */
+/** Как в ConsultationModal / GroupTrainingPage / PrivacyPolicyPage (кнопка: safe area + 10px). */
 function CollapseIcon() {
   return (
     <span className="flex h-5 w-5 shrink-0 items-center justify-center" aria-hidden>
@@ -229,17 +229,16 @@ const SUBJECT_OPTIONS = [
 
 export default function OrderCreationLandingPage({
   layout = 'viewport',
+  /** Напр. 5 — только финальная карточка (четвёртый экран скролла на главной) */
   initialOrderStep = 0,
-  separateFinalStep = false,
   exposeOpenConsultation,
   onAfterPhoneLead,
-  onReachFinalStep,
   /** Только stacked: шаги 1–4 мастера — родитель скрывает глобальную шапку и показывает слот под портал */
   onStackedWizardStepsActive,
 } = {}) {
   const router = useRouter();
   const isStacked = layout === 'stacked';
-  /** 0 — лендинг; 1 — тип; 2 — класс; 3 — предметы; 4 — срок тарифа; 5 — финальный экран */
+  /** 0 — лендинг; 1–4 — мастер; 5 — финальная карточка; после «Далее» на шаге 4 — модалка */
   const [orderStep, setOrderStep] = useState(initialOrderStep);
   /** 'group' | 'personal' | null — без выбора по умолчанию */
   const [prepType, setPrepType] = useState(null);
@@ -260,7 +259,7 @@ export default function OrderCreationLandingPage({
   const [privacyConsentTouched, setPrivacyConsentTouched] = useState(false);
   /** До первой неуспешной попытки кнопка тёмная; после клика без согласия — белая до валидного состояния */
   const [submitAttemptedWithoutPrivacy, setSubmitAttemptedWithoutPrivacy] = useState(false);
-  const [consultationFlowOpen, setConsultationFlowOpen] = useState(false);
+  const [consultationModalOpen, setConsultationModalOpen] = useState(false);
   const [leadSubmitting, setLeadSubmitting] = useState(false);
 
   useEffect(() => {
@@ -310,7 +309,7 @@ export default function OrderCreationLandingPage({
 
   useEffect(() => {
     if (!isStacked || typeof exposeOpenConsultation !== 'function') return;
-    exposeOpenConsultation(() => setConsultationFlowOpen(true));
+    exposeOpenConsultation(() => setConsultationModalOpen(true));
     return () => exposeOpenConsultation(null);
   }, [isStacked, exposeOpenConsultation]);
 
@@ -400,12 +399,7 @@ export default function OrderCreationLandingPage({
     } catch {
       // игнорируем
     }
-    if (separateFinalStep && isStacked) {
-      if (typeof onReachFinalStep === 'function') onReachFinalStep();
-      setOrderStep(0);
-      return;
-    }
-    setOrderStep(5);
+    setConsultationModalOpen(true);
   };
 
   const submitOrderLead = async ({ name, phone, contactMethod = 'phone' }) => {
@@ -610,11 +604,11 @@ export default function OrderCreationLandingPage({
           }}
         >
           {(orderStep === 0 || orderStep === 5) && !isStacked ? (
-            <LandingHeaderBar onConsultationClick={openConsultation} />
+            <LandingHeaderBar onConsultationClick={() => setConsultationModalOpen(true)} />
           ) : null}
 
           {orderStep === 0 && renderLeadCard(goToTariffStep, 'default')}
-        {orderStep === 5 && renderLeadCard(() => setConsultationFlowOpen(true), 'final')}
+          {orderStep === 5 && renderLeadCard(() => setConsultationModalOpen(true), 'final')}
 
         {(orderStep === 1 || orderStep === 2 || orderStep === 3 || orderStep === 4) && (
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden" style={{ boxSizing: 'border-box' }}>
@@ -842,26 +836,18 @@ export default function OrderCreationLandingPage({
 
       {stackedWizardCollapsePortal}
 
-      {consultationFlowOpen ? (
-        <ConsultationFlow
-          onClose={() => setConsultationFlowOpen(false)}
-          onSkip={() => setConsultationFlowOpen(false)}
-          onSubmit={async (payload) => {
-            const method =
-              payload?.method === 'telegram' ? 'telegram' : payload?.method === 'phone' ? 'phone' : 'phone';
-            await submitOrderLead({ name: null, phone: payload?.phone, contactMethod: method });
-            setConsultationFlowOpen(false);
-            if (method === 'phone') {
-              if (typeof onAfterPhoneLead === 'function') {
-                onAfterPhoneLead();
-              } else {
-                router.push('/');
-              }
-            }
-          }}
-          initialStep="contact-method"
-        />
-      ) : null}
+      <ConsultationModal
+        isOpen={consultationModalOpen}
+        onClose={() => setConsultationModalOpen(false)}
+        onComplete={async ({ name, phone }) => {
+          await submitOrderLead({ name, phone, contactMethod: 'phone' });
+          if (typeof onAfterPhoneLead === 'function') {
+            onAfterPhoneLead();
+          } else {
+            router.push('/');
+          }
+        }}
+      />
     </>
   );
 }
