@@ -94,7 +94,9 @@ function LongTariffCard({ title, features }) {
 
 function TariffDetailsOverlay({ tariff, onCollapse, onConsultation }) {
   const scrollRef = useRef(null);
+  const verticalScrollRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(tariff === 'personal' ? 1 : 0);
+  const [priceBlockGray, setPriceBlockGray] = useState(false);
 
   const tariffMeta = [
     { price: '4800 руб.', buttonLabel: 'Консультирование' },
@@ -110,6 +112,27 @@ function TariffDetailsOverlay({ tariff, onCollapse, onConsultation }) {
     if (!targetCard) return;
     el.scrollTo({ left: targetCard.offsetLeft, behavior: 'auto' });
     setActiveIndex(targetIndex);
+  }, [tariff]);
+
+  useEffect(() => {
+    const el = verticalScrollRef.current;
+    if (!el) return;
+    const update = () => {
+      const { scrollTop, clientHeight, scrollHeight } = el;
+      const canScroll = scrollHeight > clientHeight + 2;
+      const atBottom = scrollTop + clientHeight >= scrollHeight - 3;
+      setPriceBlockGray(canScroll && atBottom);
+    };
+    update();
+    el.addEventListener('scroll', update, { passive: true });
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(update) : null;
+    ro?.observe(el);
+    window.addEventListener('resize', update);
+    return () => {
+      el.removeEventListener('scroll', update);
+      ro?.disconnect();
+      window.removeEventListener('resize', update);
+    };
   }, [tariff]);
 
   return (
@@ -141,7 +164,7 @@ function TariffDetailsOverlay({ tariff, onCollapse, onConsultation }) {
         </div>
 
         {/* min-w-0: не растягивать flex по ширине карусели; без overflow-x-hidden — не срезать скругления карточек по краям */}
-        <div className="scrollbar-hide min-h-0 min-w-0 flex-1 overflow-y-auto">
+        <div ref={verticalScrollRef} className="scrollbar-hide min-h-0 min-w-0 flex-1 overflow-y-auto">
           <div className="tariff-carousel-cq-host min-w-0 w-full">
           <div
             ref={scrollRef}
@@ -178,30 +201,35 @@ function TariffDetailsOverlay({ tariff, onCollapse, onConsultation }) {
           </div>
         </div>
 
-        {/* Без тени с отрицательным offset по Y — она даёт тёмные «ушки» в скруглении; только border + overlap на 1px */}
-        <div className="relative z-[1] -mt-px box-border w-full shrink-0 overflow-hidden rounded-t-[20px] border-t border-[rgba(16,16,16,0.08)] bg-white">
-          <div
-            className="box-border w-full pt-5"
-            style={{
-              paddingLeft: 'calc(var(--main-block-margin) + 15px)',
-              paddingRight: 'calc(var(--main-block-margin) + 15px)',
-              paddingBottom: 'calc(15px + env(safe-area-inset-bottom, 0px))',
-            }}
-          >
-            <p className="m-0 mb-1 text-[20px] leading-[125%] text-[#101010]" style={involve}>
-              {tariffMeta[activeIndex].price}
-            </p>
-            <p className="m-0 mb-5 text-[14px] leading-[105%] text-[rgba(16,16,16,0.5)]" style={involve}>
-              Месячная плата за один предмет
-            </p>
-            <button
-              type="button"
-              onClick={onConsultation}
-              className="box-border flex h-[50px] w-full items-center justify-center rounded-[10px] border border-[#101010] bg-[#101010] text-center text-[16px] leading-[315%] text-white outline-none"
-              style={involve}
+        {/* Задний full-bleed слой: внизу скролла — #F5F5F5; сама плашка с ценой внутри всегда белая */}
+        <div
+          className={`relative z-[1] -mt-px w-full shrink-0 transition-colors duration-150 ${priceBlockGray ? 'bg-[#F5F5F5]' : 'bg-white'}`}
+        >
+          {/* Без тени с отрицательным offset по Y — она даёт тёмные «ушки» в скруглении; только border + overlap на 1px */}
+          <div className="mx-auto box-border w-full max-w-[425px] overflow-hidden rounded-t-[20px] border-t border-[rgba(16,16,16,0.08)] bg-white">
+            <div
+              className="box-border w-full pt-5"
+              style={{
+                paddingLeft: 'calc(var(--main-block-margin) + 15px)',
+                paddingRight: 'calc(var(--main-block-margin) + 15px)',
+                paddingBottom: 'calc(15px + env(safe-area-inset-bottom, 0px))',
+              }}
             >
-              {tariffMeta[activeIndex].buttonLabel}
-            </button>
+              <p className="m-0 mb-1 text-[20px] leading-[125%] text-[#101010]" style={involve}>
+                {tariffMeta[activeIndex].price}
+              </p>
+              <p className="m-0 mb-5 text-[14px] leading-[105%] text-[rgba(16,16,16,0.5)]" style={involve}>
+                Месячная плата за один предмет
+              </p>
+              <button
+                type="button"
+                onClick={onConsultation}
+                className="box-border flex h-[50px] w-full items-center justify-center rounded-[10px] border border-[#101010] bg-[#101010] text-center text-[16px] leading-[315%] text-white outline-none"
+                style={involve}
+              >
+                {tariffMeta[activeIndex].buttonLabel}
+              </button>
+            </div>
           </div>
         </div>
       </div>
