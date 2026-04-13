@@ -12,9 +12,10 @@ const SECTION_IDS = {
   hero: 'section-hero',
   tariffs: 'section-tariffs',
   order: 'section-order',
+  orderFinal: 'section-order-final',
 };
 
-const SECTION_ORDER = [SECTION_IDS.hero, SECTION_IDS.tariffs, SECTION_IDS.order];
+const SECTION_ORDER = [SECTION_IDS.hero, SECTION_IDS.tariffs, SECTION_IDS.order, SECTION_IDS.orderFinal];
 
 function scrollSectionIntoView(id, behavior = 'auto') {
   if (typeof document === 'undefined') return;
@@ -27,6 +28,7 @@ function sectionIdToKey(id) {
   if (id === SECTION_IDS.hero) return 'hero';
   if (id === SECTION_IDS.tariffs) return 'tariffs';
   if (id === SECTION_IDS.order) return 'order';
+  if (id === SECTION_IDS.orderFinal) return 'orderFinal';
   return 'hero';
 }
 
@@ -39,13 +41,14 @@ const sectionShellClass = 'snap-start snap-always box-border shrink-0 overflow-h
 export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPrivacyCollapse }) {
   const router = useRouter();
   const scrollRef = useRef(null);
-  const openersRef = useRef({ hero: null, tariffs: null, order: null });
+  const openersRef = useRef({ hero: null, tariffs: null, order: null, orderFinal: null });
   const [activeSection, setActiveSection] = useState('hero');
   const searchParams = useSearchParams();
 
   const scrollNavigate = useMemo(
     () => ({
       toOrder: () => scrollSectionIntoView(SECTION_IDS.order, 'auto'),
+      toOrderFinal: () => scrollSectionIntoView(SECTION_IDS.orderFinal, 'auto'),
       toHero: () => scrollSectionIntoView(SECTION_IDS.hero, 'auto'),
       toTariffs: () => scrollSectionIntoView(SECTION_IDS.tariffs, 'auto'),
     }),
@@ -122,6 +125,7 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
     const idMap = {
       tariffs: SECTION_IDS.tariffs,
       order: SECTION_IDS.order,
+      orderFinal: SECTION_IDS.orderFinal,
     };
     const id = idMap[section];
     if (id) requestAnimationFrame(() => scrollSectionIntoView(id, 'auto'));
@@ -141,8 +145,10 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
     const idMap = {
       [SECTION_IDS.tariffs]: SECTION_IDS.tariffs,
       [SECTION_IDS.order]: SECTION_IDS.order,
+      [SECTION_IDS.orderFinal]: SECTION_IDS.orderFinal,
       tariffs: SECTION_IDS.tariffs,
       order: SECTION_IDS.order,
+      orderFinal: SECTION_IDS.orderFinal,
     };
     const id = idMap[raw];
     if (id) requestAnimationFrame(() => scrollSectionIntoView(id, 'auto'));
@@ -166,6 +172,9 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
 
   const exposeOrder = useCallback((fn) => {
     openersRef.current.order = fn;
+  }, []);
+  const exposeOrderFinal = useCallback((fn) => {
+    openersRef.current.orderFinal = fn;
   }, []);
 
   /** Мастер заявки (шаги 1–4) на главной: вместо шапки — только «сворачивание окна» */
@@ -240,6 +249,18 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
               exposeOpenConsultation={exposeOrder}
               onAfterPhoneLead={scrollNavigate.toHero}
               onStackedWizardStepsActive={setOrderStackedWizardSteps}
+            />
+          </section>
+
+          <section
+            id={SECTION_IDS.orderFinal}
+            className={`${sectionShellClass} mx-auto w-full max-w-[425px]`}
+            style={sectionHeightStyle}
+          >
+            <OrderCreationLandingPage
+              layout="stacked"
+              initialOrderStep={5}
+              exposeOpenConsultation={exposeOrderFinal}
             />
           </section>
 

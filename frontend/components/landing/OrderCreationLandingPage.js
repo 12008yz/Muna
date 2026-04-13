@@ -225,6 +225,7 @@ const SUBJECT_OPTIONS = [
 
 export default function OrderCreationLandingPage({
   layout = 'viewport',
+  initialOrderStep = 0,
   exposeOpenConsultation,
   onAfterPhoneLead,
   /** Только stacked: шаги 1–4 мастера — родитель скрывает глобальную шапку и показывает слот под портал */
@@ -233,7 +234,7 @@ export default function OrderCreationLandingPage({
   const router = useRouter();
   const isStacked = layout === 'stacked';
   /** 0 — лендинг; 1 — тип; 2 — класс; 3 — предметы; 4 — срок тарифа; 5 — финальный экран */
-  const [orderStep, setOrderStep] = useState(0);
+  const [orderStep, setOrderStep] = useState(initialOrderStep);
   /** 'group' | 'personal' | null — без выбора по умолчанию */
   const [prepType, setPrepType] = useState(null);
   /** 5–11 | null */
@@ -457,7 +458,7 @@ export default function OrderCreationLandingPage({
       );
     })();
 
-  const renderFinalCard = (buttonHandler) => (
+  const renderLeadCard = (buttonHandler, headingVariant = 'default') => (
     <div
       className="absolute box-border bg-white"
       style={{
@@ -473,13 +474,19 @@ export default function OrderCreationLandingPage({
       }}
     >
       <h1 className="m-0 flex-shrink-0" style={{ ...involve, fontSize: 20, lineHeight: '125%', color: '#101010', paddingBottom: 15 }}>
-        Подготавливание школьников
+        {headingVariant === 'final' ? 'Призвание школьников,' : 'Подготавливание школьников'}
         <br />
-        с 5 по 11 класс, чтобы все
+        {headingVariant === 'final' ? 'с 7 по 11 класс, чтобы все жизненные и деловые мечты' : 'с 5 по 11 класс, чтобы все'}
         <br />
-        государственные экзамены
-        <br />
-        сдали на топ баллов
+        {headingVariant === 'final' ? (
+          'воплотились на сто процентов'
+        ) : (
+          <>
+            государственные экзамены
+            <br />
+            сдали на топ баллов
+          </>
+        )}
       </h1>
 
       <div
@@ -595,8 +602,8 @@ export default function OrderCreationLandingPage({
             <LandingHeaderBar onConsultationClick={openConsultation} />
           ) : null}
 
-          {orderStep === 0 && renderFinalCard(goToTariffStep)}
-        {orderStep === 5 && renderFinalCard(() => setConsultationFlowOpen(true))}
+          {orderStep === 0 && renderLeadCard(goToTariffStep, 'default')}
+        {orderStep === 5 && renderLeadCard(() => setConsultationFlowOpen(true), 'final')}
 
         {(orderStep === 1 || orderStep === 2 || orderStep === 3 || orderStep === 4) && (
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden" style={{ boxSizing: 'border-box' }}>
