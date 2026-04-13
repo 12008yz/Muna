@@ -246,6 +246,8 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
           >
             <OrderCreationLandingPage
               layout="stacked"
+              separateFinalStep
+              onReachFinalStep={scrollNavigate.toOrderFinal}
               exposeOpenConsultation={exposeOrder}
               onAfterPhoneLead={scrollNavigate.toHero}
               onStackedWizardStepsActive={setOrderStackedWizardSteps}

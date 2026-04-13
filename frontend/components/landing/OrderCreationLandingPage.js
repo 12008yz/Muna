@@ -226,8 +226,10 @@ const SUBJECT_OPTIONS = [
 export default function OrderCreationLandingPage({
   layout = 'viewport',
   initialOrderStep = 0,
+  separateFinalStep = false,
   exposeOpenConsultation,
   onAfterPhoneLead,
+  onReachFinalStep,
   /** Только stacked: шаги 1–4 мастера — родитель скрывает глобальную шапку и показывает слот под портал */
   onStackedWizardStepsActive,
 } = {}) {
@@ -393,6 +395,11 @@ export default function OrderCreationLandingPage({
       }
     } catch {
       // игнорируем
+    }
+    if (separateFinalStep && isStacked) {
+      if (typeof onReachFinalStep === 'function') onReachFinalStep();
+      setOrderStep(0);
+      return;
     }
     setOrderStep(5);
   };
