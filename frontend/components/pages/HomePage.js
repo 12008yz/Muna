@@ -218,9 +218,25 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
         className="fixed inset-0 z-0 flex w-full flex-col overflow-hidden bg-[#F5F5F5] text-[#101010]"
         style={{ height: '100dvh', maxHeight: '100dvh' }}
       >
-        <header className="pointer-events-none absolute left-0 right-0 top-0 z-40 bg-[#F5F5F5]/92 pt-[var(--sat)] backdrop-blur-[14px]">
+        <header className="pointer-events-none absolute left-0 right-0 top-0 z-40">
+          {/*
+            Размытие на отдельном слое + mask-image: плавное затухание снизу — иначе контент «режется»
+            по нижнему краю шапки. Иконки/лого выше, без маски.
+          */}
           <div
-            className="relative mx-auto w-full max-w-[425px] pointer-events-auto"
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 z-0 bg-[#F5F5F5]/88 backdrop-blur-[14px]"
+            style={{
+              height:
+                'calc(var(--sat) + var(--header-top) + var(--header-height) + 8px + 44px)',
+              WebkitMaskImage:
+                'linear-gradient(to bottom, #000 0%, #000 38%, rgba(0,0,0,0.55) 68%, transparent 100%)',
+              maskImage:
+                'linear-gradient(to bottom, #000 0%, #000 38%, rgba(0,0,0,0.55) 68%, transparent 100%)',
+            }}
+          />
+          <div
+            className="relative z-10 mx-auto w-full max-w-[425px] pt-[var(--sat)] pointer-events-auto"
             style={{ height: 'calc(var(--header-top) + var(--header-height) + 8px)' }}
           >
             <div
