@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
+  /* Совпадает с макетом (#F5F5F5): под системной панелью Safari видны эти пиксели → «стекло» не белое */
+  --background: #f5f5f5;
   --foreground: #171717;
   /* --font-involve задаётся в layout.js через next/font/local (Involve.woff2) */
   /* Как в next/frontend/src/app/globals.css — макет Frame1 */
@@ -44,6 +45,9 @@
 }
 
 html {
+  min-height: 100%;
+  min-height: 100dvh;
+  background: var(--background);
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -52,6 +56,8 @@ html::-webkit-scrollbar {
 }
 
 body {
+  min-height: 100%;
+  min-height: 100dvh;
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;

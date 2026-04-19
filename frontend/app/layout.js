@@ -26,6 +26,17 @@ export const metadata = {
   description: "Подготовка к экзаменам",
 };
 
+/**
+ * theme-color — там, где браузер учитывает (часто Android Chrome), панель ближе к фону страницы.
+ * viewportFit: cover — учёт вырезов / safe-area (не делает прозрачной нижнюю панель Safari — её сайт не красит).
+ */
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#F5F5F5",
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="ru">
