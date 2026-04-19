@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 :root {
+  /* Один и тот же фон у html и у full-viewport fixed-оболочки (HomePage): иначе Safari сэмплирует
+     плоский #F5 с fixed-слоя, а не градиент документа — «стекло» и полосы хрома расходятся с другими сайтами. */
+  --page-canvas-gradient: linear-gradient(180deg, #f6f6f6 0%, #f5f5f5 45%, #ebebeb 100%);
   /* Совпадает с макетом (#F5F5F5): под системной панелью Safari видны эти пиксели → «стекло» не белое */
   --background: #f5f5f5;
   --foreground: #171717;
@@ -45,7 +48,7 @@ html {
   min-height: 100%;
   min-height: 100dvh;
   color-scheme: light;
-  background: linear-gradient(180deg, #f6f6f6 0%, #f5f5f5 45%, #ebebeb 100%);
+  background: var(--page-canvas-gradient);
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -70,10 +73,11 @@ body::-webkit-scrollbar {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --page-canvas-gradient: linear-gradient(180deg, #0c0c0c 0%, #0a0a0a 50%, #121212 100%);
   }
   html {
     color-scheme: dark;
-    background: linear-gradient(180deg, #0c0c0c 0%, #0a0a0a 50%, #121212 100%);
+    background: var(--page-canvas-gradient);
   }
 }
 

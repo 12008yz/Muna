@@ -215,8 +215,12 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
   return (
     <>
       <div
-        className="fixed inset-0 z-0 flex w-full flex-col overflow-hidden bg-[#F5F5F5] text-[#101010]"
-        style={{ height: '100dvh', maxHeight: '100dvh' }}
+        className="fixed inset-0 z-0 flex w-full flex-col overflow-hidden text-[#101010]"
+        style={{
+          height: '100dvh',
+          maxHeight: '100dvh',
+          background: 'var(--page-canvas-gradient)',
+        }}
       >
         {/*
           Шапка: fixed + bg-transparent на корне — по практике Safari (см. iOS 26 / «Liquid Glass»):
