@@ -218,11 +218,13 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
         className="fixed inset-0 z-0 flex w-full flex-col overflow-hidden bg-[#F5F5F5] text-[#101010]"
         style={{ height: '100dvh', maxHeight: '100dvh' }}
       >
-        <header className="pointer-events-none absolute left-0 right-0 top-0 z-40">
-          {/*
-            Размытие на отдельном слое + mask-image: плавное затухание снизу — иначе контент «режется»
-            по нижнему краю шапки. Иконки/лого выше, без маски.
-          */}
+        {/*
+          Шапка: fixed + bg-transparent на корне — по практике Safari (см. iOS 26 / «Liquid Glass»):
+          тинт статус-бара/панели берётся с position:fixed у края; фон и backdrop-filter
+          должны быть на position:absolute-ребёнке, иначе хром браузера «ломается».
+          Размытие + mask — плавный сход с контентом при скролле.
+        */}
+        <header className="pointer-events-none fixed left-0 right-0 top-0 z-40 w-full bg-transparent">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 z-0 bg-[#F5F5F5]/88 backdrop-blur-[14px]"

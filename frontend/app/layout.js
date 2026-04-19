@@ -27,8 +27,10 @@ export const metadata = {
 };
 
 /**
- * theme-color — там, где браузер учитывает (часто Android Chrome), панель ближе к фону страницы.
- * viewportFit: cover — учёт вырезов / safe-area (не делает прозрачной нижнюю панель Safari — её сайт не красит).
+ * viewportFit: cover — контент может заходить в safe-area; без этого Safari часто рисует
+ * сплошную полосу у нижней панели (см. обсуждения Safari / «Liquid Glass»).
+ * theme-color — для Chrome/Android и старых Safari; в новых версиях Safari оттенок часто
+ * берётся из CSS (fixed у края экрана + фон html), не только из meta.
  */
 export const viewport = {
   width: "device-width",
