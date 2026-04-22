@@ -32,7 +32,7 @@ function sectionIdToKey(id) {
   return 'hero';
 }
 
-const sectionShellClass = 'snap-start snap-always box-border shrink-0 overflow-hidden';
+const sectionShellClass = 'snap-start snap-normal md:snap-always box-border shrink-0 overflow-hidden';
 
 /**
  * Главная: герой, тарифы, мастер заявки и финальный экран в одном вертикальном скролле (snap + поблочный wheel);
@@ -263,9 +263,10 @@ export default function HomePage({ privacyPolicyOpen, onOpenPrivacyPolicy, onPri
 
         <div
           ref={scrollRef}
-          className={`scrollbar-hide min-h-0 flex-1 snap-y snap-mandatory overflow-x-hidden overscroll-y-contain pb-main-scroll-bottom ${
+          className={`scrollbar-hide min-h-0 flex-1 snap-y snap-proximity md:snap-mandatory overflow-x-hidden overscroll-y-contain pb-main-scroll-bottom ${
             orderStackedWizardSteps ? 'overflow-y-hidden' : 'overflow-y-auto'
           }`}
+          style={{ WebkitOverflowScrolling: 'touch' }}
         >
           <section
             id={SECTION_IDS.hero}
