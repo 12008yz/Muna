@@ -188,12 +188,11 @@ export default function HomePage({
   }, [router]);
 
   const handleHeaderConsultation = useCallback(() => {
-    const fn = openersRef.current[activeSection];
-    if (typeof fn === 'function') {
-      fn();
-      return;
-    }
-  }, [activeSection]);
+    // По клику на "самолётик" всегда открываем именно flow консультации
+    // (MAX / Telegram / номер), независимо от активной секции.
+    const fn = openersRef.current.hero;
+    if (typeof fn === 'function') fn();
+  }, []);
 
   const exposeHero = useCallback((fn) => {
     openersRef.current.hero = fn;

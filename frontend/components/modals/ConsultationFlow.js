@@ -148,12 +148,10 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
               dispatchNavigateToOrderLanding();
               onClose();
             }}
-            className="box-border flex h-10 max-w-[175px] items-center gap-2 rounded-[20px] border border-white/50 bg-white pl-2 pr-3 backdrop-blur-[5px] transition-opacity hover:opacity-90"
+            className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-white/50 bg-white backdrop-blur-[5px] transition-opacity hover:opacity-90"
+            aria-label="Свернуть окно"
           >
             <CollapseIcon />
-            <span className="text-[12px] leading-[40px] text-[rgba(16,16,16,0.5)]" style={{ fontFamily: 'var(--font-involve), system-ui, sans-serif', fontSize: 12 }}>
-              сворачивание окна
-            </span>
           </button>
         </div>
       </div>
@@ -278,12 +276,10 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
               dispatchNavigateToOrderLanding();
               onClose();
             }}
-            className="box-border flex h-10 max-w-[175px] items-center gap-2 rounded-[20px] border border-white/50 bg-white pl-2 pr-3 backdrop-blur-[5px] transition-opacity hover:opacity-90"
+            className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-white/50 bg-white backdrop-blur-[5px] transition-opacity hover:opacity-90"
+            aria-label="Свернуть окно"
           >
             <CollapseIcon />
-            <span className="text-[12px] leading-[40px] text-[rgba(16,16,16,0.5)]" style={{ fontFamily: 'var(--font-involve), system-ui, sans-serif', fontSize: 12 }}>
-              сворачивание окна
-            </span>
           </button>
         </div>
       </div>
@@ -341,12 +337,10 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
               dispatchNavigateToOrderLanding();
               onClose();
             }}
-            className="box-border flex h-10 max-w-[175px] items-center gap-2 rounded-[20px] border border-white/50 bg-white pl-2 pr-3 backdrop-blur-[5px] transition-opacity hover:opacity-90"
+            className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-white/50 bg-white backdrop-blur-[5px] transition-opacity hover:opacity-90"
+            aria-label="Свернуть окно"
           >
             <CollapseIcon />
-            <span className="text-[12px] leading-[40px] text-[rgba(16,16,16,0.5)]" style={{ fontFamily: 'var(--font-involve), system-ui, sans-serif', fontSize: 12 }}>
-              сворачивание окна
-            </span>
           </button>
         </div>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -219,6 +219,9 @@ const DURATION_OPTIONS = [
   { id: '9m', label: 'на 9 мес. · скидка «17 проц.»', disabled: true },
 ];
 
+const STEP_DISSOLVE_OUT_MS = 170;
+const STEP_DISSOLVE_IN_MS = 220;
+
 /** Предметы — мультивыбор */
 const SUBJECT_OPTIONS = [
   { id: 'russian', label: 'Русский язык' },
@@ -262,6 +265,46 @@ export default function OrderCreationLandingPage({
   const [submitAttemptedWithoutPrivacy, setSubmitAttemptedWithoutPrivacy] = useState(false);
   const [consultationFlowOpen, setConsultationFlowOpen] = useState(false);
   const [leadSubmitting, setLeadSubmitting] = useState(false);
+  const [stepVisualState, setStepVisualState] = useState('in');
+  const stepTransitionTimerRef = useRef(null);
+  const stepEnterRafRef = useRef(null);
+
+  const clearStepTransitionHandles = () => {
+    if (stepTransitionTimerRef.current) {
+      clearTimeout(stepTransitionTimerRef.current);
+      stepTransitionTimerRef.current = null;
+    }
+    if (stepEnterRafRef.current) {
+      cancelAnimationFrame(stepEnterRafRef.current);
+      stepEnterRafRef.current = null;
+    }
+  };
+
+  const startStepEnterAnimation = () => {
+    setStepVisualState('enter');
+    stepEnterRafRef.current = requestAnimationFrame(() => {
+      stepEnterRafRef.current = requestAnimationFrame(() => {
+        setStepVisualState('in');
+        stepEnterRafRef.current = null;
+      });
+    });
+  };
+
+  const setOrderStepAnimated = (nextStep, { immediate = false } = {}) => {
+    if (nextStep === orderStep && !immediate) return;
+    clearStepTransitionHandles();
+    if (immediate) {
+      setOrderStep(nextStep);
+      startStepEnterAnimation();
+      return;
+    }
+    setStepVisualState('out');
+    stepTransitionTimerRef.current = setTimeout(() => {
+      setOrderStep(nextStep);
+      startStepEnterAnimation();
+      stepTransitionTimerRef.current = null;
+    }, STEP_DISSOLVE_OUT_MS);
+  };
 
   useEffect(() => {
     if (prepType != null) setAttemptedStep1(false);
@@ -322,15 +365,17 @@ export default function OrderCreationLandingPage({
   useEffect(() => {
     /** Секция «финальная карточка» (initialOrderStep 5) — отдельный экземпляр, не сбрасывать при глобальном переходе */
     if (initialOrderStep === 5) return undefined;
-    const resetToLeadCard = () => setOrderStep(0);
+    const resetToLeadCard = () => setOrderStepAnimated(0, { immediate: true });
     window.addEventListener(NAVIGATE_TO_ORDER_LANDING_EVENT, resetToLeadCard);
     return () => window.removeEventListener(NAVIGATE_TO_ORDER_LANDING_EVENT, resetToLeadCard);
-  }, [initialOrderStep]);
+  }, [initialOrderStep, orderStep]);
 
   useEffect(() => {
     if (typeof onStackedWizardStepsActive !== 'function') return undefined;
     return () => onStackedWizardStepsActive(false);
   }, [onStackedWizardStepsActive]);
+
+  useEffect(() => () => clearStepTransitionHandles(), []);
 
   const goToTariffStep = () => {
     if (!privacyAccepted) {
@@ -338,11 +383,11 @@ export default function OrderCreationLandingPage({
       setSubmitAttemptedWithoutPrivacy(true);
       return;
     }
-    setOrderStep(1);
+    setOrderStepAnimated(1);
   };
 
   const collapseWizardToLanding = () => {
-    setOrderStep(0);
+    setOrderStepAnimated(0);
   };
 
   const handlePrepTypeNext = () => {
@@ -357,7 +402,7 @@ export default function OrderCreationLandingPage({
     } catch {
       // игнорируем
     }
-    setOrderStep(2);
+    setOrderStepAnimated(2);
   };
 
   const handleGradeNext = () => {
@@ -372,7 +417,7 @@ export default function OrderCreationLandingPage({
     } catch {
       // игнорируем
     }
-    setOrderStep(3);
+    setOrderStepAnimated(3);
   };
 
   const toggleSubject = (subjectId) => {
@@ -393,7 +438,7 @@ export default function OrderCreationLandingPage({
     } catch {
       // игнорируем
     }
-    setOrderStep(4);
+    setOrderStepAnimated(4);
   };
 
   const handleDurationNext = () => {
@@ -447,7 +492,7 @@ export default function OrderCreationLandingPage({
     setConsultationFlowOpen(false);
     if (!payload?.phone) return;
     // Сбрасываем мастер, чтобы родитель снял блокировку вертикального скролла (overflow-y-hidden).
-    setOrderStep(0);
+    setOrderStepAnimated(0, { immediate: true });
     // Не блокируем переход на первую страницу сетевым запросом:
     // UI должен продолжаться сразу после закрытия модалки.
     void submitOrderLead({ name: payload.name || null, phone: payload.phone, contactMethod: 'phone' });
@@ -462,15 +507,23 @@ export default function OrderCreationLandingPage({
     <button
       type="button"
       onClick={collapseWizardToLanding}
-      className="box-border flex h-10 max-w-[175px] items-center gap-2 rounded-[20px] border border-white/50 bg-white pl-2 pr-3 backdrop-blur-[5px] transition-opacity hover:opacity-90 outline-none focus:outline-none"
+      className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-white/50 bg-white backdrop-blur-[5px] transition-opacity hover:opacity-90 outline-none focus:outline-none"
       aria-label="Свернуть окно"
     >
       <CollapseIcon />
-      <span className="text-[12px] leading-[40px] text-[rgba(16,16,16,0.5)]" style={{ ...involve, fontSize: 12 }}>
-        сворачивание окна
-      </span>
     </button>
   );
+
+  const wizardDissolveStyle = {
+    opacity: stepVisualState === 'in' ? 1 : 0,
+    filter: stepVisualState === 'in' ? 'blur(0px)' : 'blur(5px)',
+    transform: stepVisualState === 'in' ? 'translateY(0px) scale(1)' : 'translateY(8px) scale(0.992)',
+    transition:
+      stepVisualState === 'out'
+        ? `opacity ${STEP_DISSOLVE_OUT_MS}ms ease-out, filter ${STEP_DISSOLVE_OUT_MS}ms ease-out, transform ${STEP_DISSOLVE_OUT_MS}ms ease-out`
+        : `opacity ${STEP_DISSOLVE_IN_MS}ms ease-out, filter ${STEP_DISSOLVE_IN_MS}ms ease-out, transform ${STEP_DISSOLVE_IN_MS}ms ease-out`,
+    willChange: 'opacity, transform',
+  };
 
   const stackedWizardCollapsePortal =
     isStacked &&
@@ -665,6 +718,7 @@ export default function OrderCreationLandingPage({
                         WebkitOverflowScrolling: 'touch',
                       }
                     : {}),
+                  ...wizardDissolveStyle,
                 }}
               >
                 <h2 className="m-0 flex max-w-full flex-shrink-0 items-center self-stretch" style={wizardTitleStyle}>
@@ -695,7 +749,7 @@ export default function OrderCreationLandingPage({
                     <div className="flex items-center gap-[5px]">
                       <button
                         type="button"
-                        onClick={() => setOrderStep(0)}
+                        onClick={() => setOrderStepAnimated(0)}
                         className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(16,16,16,0.15)] bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
                         aria-label="Назад"
                       >
@@ -739,7 +793,7 @@ export default function OrderCreationLandingPage({
                     <div className="flex items-center gap-[5px]">
                       <button
                         type="button"
-                        onClick={() => setOrderStep(1)}
+                        onClick={() => setOrderStepAnimated(1)}
                         className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(16,16,16,0.15)] bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
                         aria-label="Назад"
                       >
@@ -783,7 +837,7 @@ export default function OrderCreationLandingPage({
                     <div className="flex items-center gap-[5px]">
                       <button
                         type="button"
-                        onClick={() => setOrderStep(2)}
+                        onClick={() => setOrderStepAnimated(2)}
                         className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(16,16,16,0.15)] bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
                         aria-label="Назад"
                       >
@@ -830,7 +884,7 @@ export default function OrderCreationLandingPage({
                     <div className="flex items-center gap-[5px]">
                       <button
                         type="button"
-                        onClick={() => setOrderStep(3)}
+                        onClick={() => setOrderStepAnimated(3)}
                         className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(16,16,16,0.15)] bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
                         aria-label="Назад"
                       >
