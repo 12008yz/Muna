@@ -575,6 +575,7 @@ export default function OrderCreationLandingPage({
         padding: 15,
         boxSizing: 'border-box',
         gap: 5,
+        ...wizardDissolveStyle,
       }}
     >
       <h1 className="m-0 flex-shrink-0" style={{ ...involve, fontSize: 20, lineHeight: '125%', color: '#101010', paddingBottom: 15 }}>
