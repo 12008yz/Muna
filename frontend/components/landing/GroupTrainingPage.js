@@ -180,7 +180,7 @@ function TariffDetailsOverlay({ tariff, onCollapse, onConsultation }) {
             ref={scrollRef}
             className="carousel-container scrollbar-hide flex min-h-min flex-nowrap items-start overflow-x-auto overflow-y-hidden"
             style={{
-              gap: 5,
+              gap: 10,
               scrollSnapType: 'x mandatory',
               scrollBehavior: 'smooth',
               scrollSnapStop: 'always',
@@ -966,7 +966,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                 className="carousel-container carousel-learning scrollbar-hide box-border flex w-full max-h-full min-h-0 flex-nowrap items-end overflow-x-auto overflow-y-visible"
                 style={{
                   height: 'auto',
-                  gap: 5,
+                  gap: 10,
                   scrollSnapType: 'x mandatory',
                   scrollBehavior: 'smooth',
                   scrollSnapStop: 'always',
