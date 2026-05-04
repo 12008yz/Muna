@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
 import ConsultationFlow from '@/components/modals/ConsultationFlow';
 import CookieBanner from '@/components/notifications/CookieBanner';
-import LandingHeaderBar from '@/components/landing/LandingHeaderBar';
 import ManaMarketingHeader from '@/components/landing/ManaMarketingHeader';
 
 const involve = {
@@ -631,7 +630,7 @@ export default function ConsultationLandingPage({
           }}
         >
           <div className="relative box-border flex h-full min-h-0 w-full min-w-0 flex-col bg-background" style={{ boxSizing: 'border-box' }}>
-            <LandingHeaderBar onConsultationClick={() => setConsultationFlowOpen(true)} />
+            <ManaMarketingHeader onConsultationClick={() => setConsultationFlowOpen(true)} menuHref="/" />
 
             {notificationsEnabled ? notificationsNode : null}
 

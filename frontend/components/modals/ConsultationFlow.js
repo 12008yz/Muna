@@ -104,6 +104,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
   const [flowToast, setFlowToast] = useState(null);
   const successSubmitTimerRef = useRef(null);
 
+  /* Таймер тоста привязан к toastKey нового показа, не к каждому тику countdown */
   useEffect(() => {
     if (!flowToast || flowToast.countdown <= 0) return undefined;
     const id = window.setInterval(() => {
@@ -114,6 +115,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
       });
     }, 1000);
     return () => window.clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally only on new toast
   }, [flowToast?.toastKey]);
 
   useEffect(() => {

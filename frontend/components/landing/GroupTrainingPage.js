@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { dispatchNavigateToOrderLanding } from '@/lib/navigateToOrderLanding';
 import ConsultationFlow from '@/components/modals/ConsultationFlow';
-import LandingHeaderBar from '@/components/landing/LandingHeaderBar';
+import ManaMarketingHeader from '@/components/landing/ManaMarketingHeader';
 import { OutlineCheckCircle16, OutlineCrossCircle16 } from '@/components/landing/OutlineListIcons';
 
 const involve = {
@@ -14,7 +14,7 @@ const involve = {
   fontSynthesis: 'none',
 };
 
-const GROUP_FEATURES = [
+const EXAM_GROUP_FEATURES = [
   { title: '8 уроков в мес. в формате «1х11»', subtitle: 'Продолжение подготовки', enabled: true },
   { title: 'Наставление от экспертов', subtitle: 'Ведение подготовки', enabled: true },
   { title: '1 экзамен в квартал с отчетом', subtitle: 'Подтверждение подготовки', enabled: true },
@@ -24,7 +24,7 @@ const GROUP_FEATURES = [
   { title: 'Не предусмотрено', subtitle: 'Не заполнено', enabled: false },
 ];
 
-const PERSONAL_FEATURES = [
+const EXAM_PERSONAL_FEATURES = [
   { title: '8 уроков в мес. в формате «1х1»', subtitle: 'Продолжение подготовки', enabled: true },
   { title: 'Наставление от экспертов', subtitle: 'Ведение подготовки', enabled: true },
   { title: '1 экзамен в квартал с отчетом', subtitle: 'Подтверждение подготовки', enabled: true },
@@ -32,6 +32,20 @@ const PERSONAL_FEATURES = [
   { title: '1000+ тестов повышенной сложности', subtitle: 'Повышение подготовки', enabled: true },
   { title: 'Место', subtitle: 'Дополнение подготовки', enabled: true },
   { title: 'Место', subtitle: 'Не заполнено', enabled: true },
+];
+
+const involveMana = {
+  fontFamily: 'var(--font-involve), system-ui, sans-serif',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSynthesis: 'none',
+};
+
+/** Раскрывающийся блок «Информирование» — как Frame 2 в макете. */
+const MANA_GLASS_INFORM_ROWS = [
+  { title: 'Не заполнено', hint: 'Не заполнено' },
+  { title: 'Не заполнено', hint: 'Не заполнено' },
+  { title: 'Не заполнено', hint: 'Не заполнено' },
 ];
 
 const DETAIL_TEXT =
@@ -193,8 +207,8 @@ function TariffDetailsOverlay({ tariff, onCollapse, onConsultation }) {
             }}
           >
             <div className="carousel-spacer-left" aria-hidden style={{ alignSelf: 'stretch' }} />
-            <LongTariffCard title="Групповая подготовка" features={GROUP_FEATURES} />
-            <LongTariffCard title="Персональная подготовка" features={PERSONAL_FEATURES} />
+            <LongTariffCard title="Групповая подготовка" features={EXAM_GROUP_FEATURES} />
+            <LongTariffCard title="Персональная подготовка" features={EXAM_PERSONAL_FEATURES} />
             <div className="carousel-spacer-right" aria-hidden style={{ alignSelf: 'stretch' }} />
           </div>
           </div>
@@ -283,6 +297,401 @@ function FeatureRow({ title, subtitle, enabled }) {
   );
 }
 
+function ManaGlassDivider() {
+  return <div className="h-0 w-full max-w-[330px] border-t border-[rgba(255,255,255,0.1)]" />;
+}
+
+/** Как в макете Frame 2: три одинаковые строки. */
+const MANA_GLASS_PLACEHOLDER_ROWS = [
+  { title: 'Не заполнено', hint: 'Не заполнено' },
+  { title: 'Не заполнено', hint: 'Не заполнено' },
+  { title: 'Не заполнено', hint: 'Не заполнено' },
+];
+
+function ManaGlassCheckCircle16() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden className="shrink-0 text-white">
+      <path
+        d="M11.5123 5.71846C11.5695 5.77561 11.6149 5.84348 11.6459 5.91819C11.6769 5.9929 11.6928 6.07297 11.6928 6.15384C11.6928 6.23472 11.6769 6.31479 11.6459 6.3895C11.6149 6.46421 11.5695 6.53208 11.5123 6.58923L7.20462 10.8969C7.14746 10.9541 7.07959 10.9995 7.00489 11.0305C6.93018 11.0615 6.8501 11.0774 6.76923 11.0774C6.68836 11.0774 6.60828 11.0615 6.53358 11.0305C6.45887 10.9995 6.391 10.9541 6.33385 10.8969L4.48769 9.05077C4.37222 8.9353 4.30735 8.77868 4.30735 8.61538C4.30735 8.45208 4.37222 8.29547 4.48769 8.18C4.60317 8.06453 4.75978 7.99966 4.92308 7.99966C5.08638 7.99966 5.24299 8.06453 5.35846 8.18L6.76923 9.59154L10.6415 5.71846C10.6987 5.66124 10.7666 5.61585 10.8413 5.58489C10.916 5.55392 10.9961 5.53798 11.0769 5.53798C11.1578 5.53798 11.2379 5.55392 11.3126 5.58489C11.3873 5.61585 11.4552 5.66124 11.5123 5.71846ZM16 8C16 9.58225 15.5308 11.129 14.6518 12.4446C13.7727 13.7602 12.5233 14.7855 11.0615 15.391C9.59966 15.9965 7.99113 16.155 6.43928 15.8463C4.88743 15.5376 3.46197 14.7757 2.34315 13.6569C1.22433 12.538 0.462403 11.1126 0.153721 9.56072C-0.15496 8.00887 0.00346628 6.40034 0.608967 4.93853C1.21447 3.47672 2.23985 2.22729 3.55544 1.34824C4.87103 0.469192 6.41775 0 8 0C10.121 0.00223986 12.1546 0.845814 13.6544 2.34562C15.1542 3.84542 15.9978 5.87895 16 8ZM14.7692 8C14.7692 6.66117 14.3722 5.35241 13.6284 4.23922C12.8846 3.12602 11.8274 2.25839 10.5905 1.74605C9.35356 1.2337 7.99249 1.09965 6.67939 1.36084C5.36629 1.62203 4.16013 2.26674 3.21343 3.21343C2.26674 4.16012 1.62203 5.36629 1.36084 6.67939C1.09965 7.99249 1.2337 9.35356 1.74605 10.5905C2.2584 11.8274 3.12603 12.8846 4.23922 13.6284C5.35241 14.3722 6.66117 14.7692 8 14.7692C9.79469 14.7672 11.5153 14.0534 12.7843 12.7843C14.0534 11.5153 14.7672 9.79468 14.7692 8Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function ManaGiftHeartIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path
+        d="M10 17.5L8.825 16.45C4.5 12.6 1.75 10.2125 1.75 7.25C1.75 4.85 3.6 3 6 3C7.3 3 8.55 3.65 10 4.85C11.45 3.65 12.7 3 14 3C16.4 3 18.25 4.85 18.25 7.25C18.25 10.2125 15.5 12.6 11.175 16.45L10 17.5Z"
+        fill="#FFFFFF"
+      />
+    </svg>
+  );
+}
+
+function ManaGlassChevronRight({ open }) {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+      className="shrink-0 text-white transition-transform duration-200"
+      style={{ transform: open ? 'rotate(90deg)' : 'none' }}
+    >
+      <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function ManaGlassPriceFab({ onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[7.5px]"
+      aria-label="Далее к заявке"
+    >
+      <span className="relative flex h-[15px] w-[15px] items-center justify-center">
+        <span className="absolute h-[15px] w-[15px] rounded-full bg-[#2525FF]" />
+        <svg className="relative" width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <path d="M1 1L5 4L1 7V1Z" fill="#FFFFFF" />
+        </svg>
+      </span>
+    </button>
+  );
+}
+
+const manaGlassCardStyle = {
+  boxSizing: 'border-box',
+  background: 'rgba(5, 5, 5, 0.75)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'blur(7.5px)',
+  WebkitBackdropFilter: 'blur(7.5px)',
+  borderRadius: 20,
+};
+
+/**
+ * Первый слайд карусели на главной (MANA): тёмная стеклянная карточка по макету Figma (Rectangle 30).
+ */
+function ManaGlassMarketingCarouselCard({ onNavigateToOrder }) {
+  const [infoOpen, setInfoOpen] = useState(false);
+
+  return (
+    <div
+      className="carousel-card relative flex shrink-0 flex-col overflow-hidden"
+      style={{
+        height: 'auto',
+        alignSelf: 'flex-end',
+        scrollSnapAlign: 'start',
+        boxSizing: 'border-box',
+        maxWidth: 'min(360px, 100%)',
+      }}
+    >
+      <article className="box-border w-full px-[15px] pb-5 pt-[15px]" style={manaGlassCardStyle}>
+        <div className="w-full max-w-[330px]">
+          <p
+            className="m-0"
+            style={{
+              ...involveMana,
+              fontSize: 16,
+              lineHeight: '125%',
+              color: 'rgba(255, 255, 255, 0.25)',
+            }}
+          >
+            Маркетинговое сопровождение
+          </p>
+          <h2
+            className="m-0 mt-1"
+            style={{
+              ...involveMana,
+              fontSize: 18,
+              lineHeight: '140%',
+              color: '#FFFFFF',
+            }}
+          >
+            Формирование контента
+          </h2>
+          <p
+            className="m-0 mt-2"
+            style={{
+              ...involveMana,
+              fontSize: 16,
+              lineHeight: '125%',
+              color: 'rgba(255, 255, 255, 0.5)',
+            }}
+          >
+            Наличие заразного контента служит важным маркетинговым инструментом малого и среднего предпринимательства
+          </p>
+        </div>
+
+        <div className="mt-4">
+          <ManaGlassDivider />
+        </div>
+
+        <button
+          type="button"
+          className="mt-4 flex w-full max-w-[330px] cursor-pointer items-start gap-2 border-0 bg-transparent p-0 text-left outline-none"
+          onClick={() => setInfoOpen((v) => !v)}
+        >
+          <span className="mt-0.5 shrink-0">
+            <ManaGlassChevronRight open={infoOpen} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block" style={{ ...involveMana, fontSize: 16, lineHeight: '155%', color: '#FFFFFF' }}>
+              Информирование
+            </span>
+            <span className="mt-0.5 block" style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: 'rgba(255, 255, 255, 0.25)' }}>
+              Нажмите здесь, если хотите открыть
+            </span>
+          </span>
+        </button>
+
+        {infoOpen ? (
+          <div className="mt-3 flex max-w-[330px] flex-col gap-[5px] pl-1">
+            {MANA_GLASS_INFORM_ROWS.map((row, idx) => (
+              <div key={`mana-inform-${idx}`} className="flex gap-2">
+                <span className="mt-1 shrink-0 text-white">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                    <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                <span className="min-w-0">
+                  <span className="block" style={{ ...involveMana, fontSize: 16, lineHeight: '155%', color: '#FFFFFF' }}>
+                    {row.title}
+                  </span>
+                  <span className="mt-0.5 block" style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: 'rgba(255, 255, 255, 0.25)' }}>
+                    {row.hint}
+                  </span>
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : null}
+
+        <div className="mt-4">
+          <ManaGlassDivider />
+        </div>
+
+        <div className="mt-4 flex max-w-[330px] items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="m-0" style={{ ...involveMana, fontSize: 20, lineHeight: '125%', color: '#FFFFFF' }}>
+              около 45 тыс. р.
+            </p>
+            <p className="m-0 mt-1" style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: 'rgba(255, 255, 255, 0.5)' }}>
+              Рассрочка под ноль годовых до 3 мес.
+            </p>
+          </div>
+          {typeof onNavigateToOrder === 'function' ? <ManaGlassPriceFab onClick={onNavigateToOrder} /> : null}
+        </div>
+
+        <div className="mt-4">
+          <ManaGlassDivider />
+        </div>
+
+        <button
+          type="button"
+          disabled
+          className="mt-4 box-border flex h-[50px] w-full max-w-[330px] cursor-not-allowed items-center justify-center rounded-[10px] border border-solid border-white outline-none"
+          style={{
+            ...involveMana,
+            fontSize: 16,
+            lineHeight: '315%',
+            color: '#FFFFFF',
+            opacity: 0.25,
+          }}
+        >
+          Недоступно
+        </button>
+      </article>
+    </div>
+  );
+}
+
+/**
+ * Второй слайд карусели (MANA): тёмное стекло, Frame 2, «Информирование», плашки «Подарок» и стрелка.
+ */
+function ManaGlassMarketingCarouselCardTwo({ onGiftClick, onArrowClick, onNavigateToOrder }) {
+  const [infoOpen, setInfoOpen] = useState(false);
+
+  return (
+    <div
+      className="carousel-card relative flex shrink-0 flex-col overflow-hidden"
+      style={{
+        height: 'auto',
+        alignSelf: 'flex-end',
+        scrollSnapAlign: 'start',
+        boxSizing: 'border-box',
+        maxWidth: 'min(360px, 100%)',
+      }}
+    >
+      <div className="mb-3 flex w-full max-w-[330px] shrink-0 items-center justify-between self-start">
+        <button
+          type="button"
+          onClick={onGiftClick}
+          className="flex h-10 items-center gap-2 rounded-full border border-[rgba(255,255,255,0.1)] bg-[#050505] px-3 backdrop-blur-[5px]"
+          style={{ ...involveMana, fontSize: 14, lineHeight: '145%', color: '#FFFFFF' }}
+        >
+          <ManaGiftHeartIcon />
+          Подарок
+        </button>
+        <button
+          type="button"
+          onClick={onArrowClick}
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[5px]"
+          aria-label="Далее"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden
+            style={{ transform: 'scaleX(-1)' }}
+          >
+            <path
+              d="M10 0C8.02219 0 6.08879 0.58649 4.4443 1.6853C2.79981 2.78412 1.51809 4.3459 0.761209 6.17316C0.00433284 8.00042 -0.1937 10.0111 0.192152 11.9509C0.578004 13.8907 1.53041 15.6725 2.92894 17.0711C4.32746 18.4696 6.10929 19.422 8.0491 19.8078C9.98891 20.1937 11.9996 19.9957 13.8268 19.2388C15.6541 18.4819 17.2159 17.2002 18.3147 15.5557C19.4135 13.9112 20 11.9778 20 10C19.9972 7.34869 18.9427 4.80678 17.068 2.93202C15.1932 1.05727 12.6513 0.00279983 10 0ZM13.8462 10.7692H8.01058L9.775 12.5327C9.84647 12.6042 9.90316 12.689 9.94184 12.7824C9.98052 12.8758 10.0004 12.9758 10.0004 13.0769C10.0004 13.178 9.98052 13.2781 9.94184 13.3715C9.90316 13.4648 9.84647 13.5497 9.775 13.6212C9.70353 13.6926 9.61869 13.7493 9.52531 13.788C9.43193 13.8267 9.33184 13.8466 9.23077 13.8466C9.1297 13.8466 9.02962 13.8267 8.93624 13.788C8.84286 13.7493 8.75801 13.6926 8.68654 13.6212L5.60962 10.5442C5.5381 10.4728 5.48136 10.3879 5.44265 10.2946C5.40394 10.2012 5.38401 10.1011 5.38401 10C5.38401 9.89891 5.40394 9.79881 5.44265 9.70543C5.48136 9.61205 5.5381 9.52721 5.60962 9.45577L8.68654 6.37884C8.83088 6.23451 9.02665 6.15342 9.23077 6.15342C9.4349 6.15342 9.63066 6.23451 9.775 6.37884C9.91934 6.52318 10.0004 6.71895 10.0004 6.92308C10.0004 7.1272 9.91934 7.32297 9.775 7.46731L8.01058 9.23077H13.8462C14.0502 9.23077 14.2458 9.31181 14.3901 9.45607C14.5343 9.60033 14.6154 9.79599 14.6154 10C14.6154 10.204 14.5343 10.3997 14.3901 10.5439C14.2458 10.6882 14.0502 10.7692 13.8462 10.7692Z"
+              fill="#FFFFFF"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <article className="box-border w-full px-[15px] pb-5 pt-[15px]" style={manaGlassCardStyle}>
+        <div className="w-full max-w-[330px]">
+          <p
+            className="m-0"
+            style={{
+              ...involveMana,
+              fontSize: 16,
+              lineHeight: '125%',
+              color: 'rgba(255, 255, 255, 0.25)',
+            }}
+          >
+            Маркетинговое сопровождение
+          </p>
+          <h2
+            className="m-0 mt-1"
+            style={{
+              ...involveMana,
+              fontSize: 18,
+              lineHeight: '140%',
+              color: '#FFFFFF',
+            }}
+          >
+            Формирование контента
+          </h2>
+        </div>
+
+        <div className="mt-4">
+          <ManaGlassDivider />
+        </div>
+
+        <div className="mt-2 flex max-w-[330px] flex-col gap-[5px]">
+          {MANA_GLASS_PLACEHOLDER_ROWS.map((row, idx) => (
+            <div key={`mana-ph-${idx}`} className="flex items-start gap-2">
+              <span className="mt-0.5 shrink-0">
+                <ManaGlassCheckCircle16 />
+              </span>
+              <span className="min-w-0">
+                <span className="block" style={{ ...involveMana, fontSize: 16, lineHeight: '155%', color: '#FFFFFF' }}>
+                  {row.title}
+                </span>
+                <span className="mt-0.5 block" style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: 'rgba(255, 255, 255, 0.25)' }}>
+                  {row.hint}
+                </span>
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-4">
+          <ManaGlassDivider />
+        </div>
+
+        <button
+          type="button"
+          className="mt-2 flex w-full max-w-[330px] cursor-pointer items-start gap-2 border-0 bg-transparent p-0 text-left outline-none"
+          onClick={() => setInfoOpen((v) => !v)}
+        >
+          <span className="mt-0.5 shrink-0">
+            <ManaGlassChevronRight open={infoOpen} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block" style={{ ...involveMana, fontSize: 16, lineHeight: '155%', color: '#FFFFFF' }}>
+              Информирование
+            </span>
+            <span className="mt-0.5 block" style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: 'rgba(255, 255, 255, 0.25)' }}>
+              Нажмите здесь, если хотите открыть
+            </span>
+          </span>
+        </button>
+
+        {infoOpen ? (
+          <div className="mt-3 flex max-w-[330px] flex-col gap-[5px] pl-1">
+            {MANA_GLASS_INFORM_ROWS.map((row, idx) => (
+              <div key={`mana-inf2-${idx}`} className="flex gap-2">
+                <span className="mt-1 shrink-0 text-white">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                    <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                <span className="min-w-0">
+                  <span className="block" style={{ ...involveMana, fontSize: 16, lineHeight: '155%', color: '#FFFFFF' }}>
+                    {row.title}
+                  </span>
+                  <span className="mt-0.5 block" style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: 'rgba(255, 255, 255, 0.25)' }}>
+                    {row.hint}
+                  </span>
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : null}
+
+        <div className="mt-4">
+          <ManaGlassDivider />
+        </div>
+
+        <div className="mt-4 flex max-w-[330px] items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="m-0" style={{ ...involveMana, fontSize: 20, lineHeight: '125%', color: '#FFFFFF' }}>
+              около 45 тыс. р.
+            </p>
+            <p className="m-0 mt-1" style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: 'rgba(255, 255, 255, 0.5)' }}>
+              Рассрочка под ноль годовых до 3 мес.
+            </p>
+          </div>
+          {typeof onNavigateToOrder === 'function' ? <ManaGlassPriceFab onClick={onNavigateToOrder} /> : null}
+        </div>
+
+        <div className="mt-4">
+          <ManaGlassDivider />
+        </div>
+
+        <button
+          type="button"
+          disabled
+          className="mt-4 box-border flex h-[50px] w-full max-w-[330px] cursor-not-allowed items-center justify-center rounded-[10px] border border-solid border-white outline-none"
+          style={{
+            ...involveMana,
+            fontSize: 16,
+            lineHeight: '315%',
+            color: '#FFFFFF',
+            opacity: 0.25,
+          }}
+        >
+          Недоступно
+        </button>
+      </article>
+    </div>
+  );
+}
+
 /**
  * Карточка тарифа — структура как Frame3 (шапка / фичи / футер).
  * Высота по контенту: фиксированная 550px + flex-1 на середине давали пустоту между списком и ценой.
@@ -290,6 +699,7 @@ function FeatureRow({ title, subtitle, enabled }) {
 function EducationTariffCard({
   eyebrow,
   title,
+  intro,
   features,
   price,
   priceCaption,
@@ -309,7 +719,7 @@ function EducationTariffCard({
       }}
     >
       <div style={{ padding: '15px 15px 0 15px', flexShrink: 0 }}>
-        <div style={{ width: 330, height: 45, marginBottom: 10 }}>
+        <div style={{ width: 330, maxWidth: '100%', marginBottom: 10 }}>
         <p
           className="m-0"
           style={{
@@ -317,9 +727,6 @@ function EducationTariffCard({
             fontSize: 14,
             lineHeight: '145%',
             color: 'rgba(16, 16, 16, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            height: 20,
             marginBottom: 0,
           }}
         >
@@ -332,13 +739,24 @@ function EducationTariffCard({
             fontSize: 18,
             lineHeight: '140%',
             color: '#101010',
-            display: 'flex',
-            alignItems: 'center',
-            height: 25,
+            marginTop: 0,
           }}
         >
           {title}
         </h2>
+        {intro ? (
+          <p
+            className="m-0 mt-2"
+            style={{
+              ...involve,
+              fontSize: 16,
+              lineHeight: '125%',
+              color: 'rgba(16, 16, 16, 0.5)',
+            }}
+          >
+            {intro}
+          </p>
+        ) : null}
         </div>
         <div
           style={{
@@ -465,6 +883,28 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
 
   const mainColumnHeight = isStacked ? '100%' : '100dvh';
 
+  const examTariffCards = [
+    {
+      eyebrow: 'Подготовка к государственным экзаменам',
+      title: 'Групповая подготовка',
+      intro: undefined,
+      features: EXAM_GROUP_FEATURES,
+      price: '4800 руб.',
+      priceCaption: 'Месячная плата за один предмет',
+      buttonLabel: 'Консультирование',
+    },
+    {
+      eyebrow: 'Подготовка к государственным экзаменам',
+      title: 'Персональная подготовка',
+      intro: undefined,
+      features: EXAM_PERSONAL_FEATURES,
+      price: '20400 руб.',
+      priceCaption: 'Месячная плата за один предмет',
+      buttonLabel: 'Консультирование',
+    },
+  ];
+  const [examCardA, examCardB] = examTariffCards;
+
   return (
     <>
       {detailsTariff ? (
@@ -506,7 +946,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
               boxSizing: 'border-box',
             }}
           >
-            {!isStacked ? <LandingHeaderBar onConsultationClick={openConsultation} /> : null}
+            {!isStacked ? <ManaMarketingHeader onConsultationClick={openConsultation} menuHref="/" /> : null}
 
             {/* Контейнер карусели: адаптивный верхний отступ, чтобы в in-app браузерах карточки не обрезались */}
             <div
@@ -538,25 +978,39 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
               >
                 <div className="carousel-spacer-left shrink-0" aria-hidden />
 
-                <EducationTariffCard
-                  eyebrow="Подготовка к государственным экзаменам"
-                  title="Групповая подготовка"
-                  features={GROUP_FEATURES}
-                  price="4800 руб."
-                  priceCaption="Месячная плата за один предмет"
-                  buttonLabel="Консультирование"
-                  onButtonClick={openTariffDetails}
-                />
+                {isStacked ? (
+                  <ManaGlassMarketingCarouselCard onNavigateToOrder={() => scrollNavigate?.toOrder?.()} />
+                ) : (
+                  <EducationTariffCard
+                    eyebrow={examCardA.eyebrow}
+                    title={examCardA.title}
+                    intro={examCardA.intro}
+                    features={examCardA.features}
+                    price={examCardA.price}
+                    priceCaption={examCardA.priceCaption}
+                    buttonLabel={examCardA.buttonLabel}
+                    onButtonClick={openTariffDetails}
+                  />
+                )}
 
-                <EducationTariffCard
-                  eyebrow="Подготовка к государственным экзаменам"
-                  title="Персональная подготовка"
-                  features={PERSONAL_FEATURES}
-                  price="20400 руб."
-                  priceCaption="Месячная плата за один предмет"
-                  buttonLabel="Консультирование"
-                  onButtonClick={openTariffDetails}
-                />
+                {isStacked ? (
+                  <ManaGlassMarketingCarouselCardTwo
+                    onGiftClick={() => scrollNavigate?.toHero?.()}
+                    onArrowClick={() => scrollNavigate?.toOrder?.()}
+                    onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
+                  />
+                ) : (
+                  <EducationTariffCard
+                    eyebrow={examCardB.eyebrow}
+                    title={examCardB.title}
+                    intro={examCardB.intro}
+                    features={examCardB.features}
+                    price={examCardB.price}
+                    priceCaption={examCardB.priceCaption}
+                    buttonLabel={examCardB.buttonLabel}
+                    onButtonClick={openTariffDetails}
+                  />
+                )}
 
                 <div className="carousel-spacer-right shrink-0" aria-hidden />
               </div>

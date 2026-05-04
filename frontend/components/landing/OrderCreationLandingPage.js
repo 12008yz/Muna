@@ -4,7 +4,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import LandingHeaderBar from '@/components/landing/LandingHeaderBar';
+import ManaMarketingHeader from '@/components/landing/ManaMarketingHeader';
 import ConsultationModal from '@/components/modals/ConsultationModal';
 import { HINT_TOP } from '@/components/common/ClickOutsideHint';
 import { NAVIGATE_TO_ORDER_LANDING_EVENT } from '@/lib/navigateToOrderLanding';
@@ -704,7 +704,7 @@ export default function OrderCreationLandingPage({
           }}
         >
           {(orderStep === 0 || orderStep === 5) && !isStacked ? (
-            <LandingHeaderBar onConsultationClick={() => setConsultationFlowOpen(true)} />
+            <ManaMarketingHeader onConsultationClick={() => setConsultationFlowOpen(true)} menuHref="/" />
           ) : null}
 
           {orderStep === 0 && renderLeadCard(goToTariffStep, 'default')}

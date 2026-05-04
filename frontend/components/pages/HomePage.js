@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import LandingHeaderBar from '@/components/landing/LandingHeaderBar';
+import ManaMarketingHeader from '@/components/landing/ManaMarketingHeader';
 import ConsultationLandingPage from '@/components/landing/ConsultationLandingPage';
 import GroupTrainingPage from '@/components/landing/GroupTrainingPage';
 import OrderCreationLandingPage from '@/components/landing/OrderCreationLandingPage';
@@ -305,7 +305,7 @@ export default function HomePage({
             />
             {!hideAppHeaderForOrderWizard ? (
               <div className="relative z-20">
-                <LandingHeaderBar onConsultationClick={handleHeaderConsultation} menuHref="#section-hero" />
+                <ManaMarketingHeader onConsultationClick={handleHeaderConsultation} menuHref="#section-hero" />
               </div>
             ) : null}
           </div>
