@@ -1,17 +1,16 @@
 /**
  * Логотип для экрана загрузки (Figma export 152×32, белая графика на тёмном фоне).
  */
-export default function LoadingBrandLogo({ className = '' }) {
+export default function LoadingBrandLogo({ className = 'block h-8 w-[152px] max-w-full' }) {
   return (
     <svg
       className={className}
-      width="152"
-      height="32"
       viewBox="0 0 152 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      preserveAspectRatio="xMidYMid meet"
       role="img"
-      aria-label="МНОЖИТЕЛ"
+      aria-label="MANA"
     >
       <g clipPath="url(#clip0_14215_402)">
         <mask

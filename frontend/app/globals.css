@@ -27,9 +27,8 @@
    * Под фиксированной шапкой HomePage: pt(sat) + высота блока как у header в HomePage.js
    * + 10px зазор под уведомление.
    */
-  --notification-top-stacked: calc(
-    var(--sat) + var(--header-top) + var(--header-height) + 8px + 10px
-  );
+  /** Stacked MANA cookie (Figma Group 7476): top 125px, left = --main-block-margin (20px) */
+  --notification-top-stacked: 125px;
   --header-zone: 50px;
   --sab: env(safe-area-inset-bottom, 0px);
   /**

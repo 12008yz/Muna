@@ -50,6 +50,14 @@ const privacyLinkStyle = {
   textUnderlineOffset: '3px',
 };
 
+/** Тёмный стеклянный баннер (MANA hero, Figma Rectangle 67) */
+const manaDarkLinkStyle = {
+  color: '#FFFFFF',
+  textDecoration: 'underline',
+  textDecorationSkipInk: 'none',
+  textUnderlineOffset: '3px',
+};
+
 export default function CookieBanner({
   countdown,
   onClose,
@@ -59,7 +67,182 @@ export default function CookieBanner({
   children,
   compact = false,
   stacked = false,
+  /** Стеклянный тёмный вариант для первого экрана MANA */
+  manaDark = false,
 }) {
+  if (manaDark && stacked && !compact) {
+    /** Figma Group 7476 / Rectangle 67: 360×115; тексты left 35 − left(rect 20) = 15px inset */
+    return (
+      <div
+        className="relative z-20 box-border"
+        style={{
+          width: 360,
+          height: 115,
+          boxSizing: 'border-box',
+          background: 'rgba(5, 5, 5, 0.85)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(7.5px)',
+          WebkitBackdropFilter: 'blur(7.5px)',
+          borderRadius: 20,
+        }}
+        onClick={(e) => e.stopPropagation()}
+        role="region"
+        aria-label="Уведомление о файлах cookie"
+      >
+        <span
+          className="absolute z-0 box-border overflow-hidden text-ellipsis whitespace-nowrap"
+          style={{
+            left: 15,
+            top: 15,
+            width: 330,
+            height: 15,
+            margin: 0,
+            padding: 0,
+            fontFamily: involve.fontFamily,
+            fontStyle: 'normal',
+            fontWeight: 400,
+            fontSynthesis: 'none',
+            fontSize: 14,
+            lineHeight: '105%',
+            color: 'rgba(255, 255, 255, 0.25)',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          Автоматически закроется через {countdown}
+        </span>
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute z-[1] flex h-6 w-6 cursor-pointer items-center justify-center border-0 bg-transparent p-0 outline-none"
+          style={{ top: 12, right: 15 }}
+          aria-label="Закрыть"
+        >
+          <CloseIcon width={16} height={16} variant="dark" />
+        </button>
+        <div
+          className="absolute box-border min-w-0 overflow-hidden"
+          style={{
+            left: 15,
+            top: 40,
+            width: 330,
+            height: 60,
+            fontFamily: involve.fontFamily,
+            fontStyle: 'normal',
+            fontWeight: 400,
+            fontSynthesis: 'none',
+            fontSize: 14,
+            lineHeight: '110%',
+            color: '#FFFFFF',
+          }}
+        >
+          {children || (
+            <>
+              Если продолжаете использовать этот сайт, вы выражаете своё согласие на использование файлов куки, в
+              соответствии с условиями{' '}
+              {typeof onPrivacyLinkClick === 'function' ? (
+                <button
+                  type="button"
+                  onClick={onPrivacyLinkClick}
+                  className="cursor-pointer border-0 bg-transparent p-0"
+                  style={{
+                    ...manaDarkLinkStyle,
+                    fontFamily: involve.fontFamily,
+                    fontSize: 14,
+                    lineHeight: '110%',
+                    fontWeight: 400,
+                  }}
+                >
+                  политики конфиденциальности
+                </button>
+              ) : (
+                <Link href={privacyHref || '/privacy-policy'} style={manaDarkLinkStyle}>
+                  политики конфиденциальности
+                </Link>
+              )}{' '}
+              сайта
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (manaDark && stacked && compact) {
+    /** Figma Group 7476: 360×70; строки как у cookie-баннера, одна строка основного текста */
+    return (
+      <div
+        className="relative z-20 box-border"
+        style={{
+          width: 360,
+          height: 70,
+          boxSizing: 'border-box',
+          background: 'rgba(5, 5, 5, 0.85)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(7.5px)',
+          WebkitBackdropFilter: 'blur(7.5px)',
+          borderRadius: 20,
+        }}
+        onClick={(e) => e.stopPropagation()}
+        role="region"
+        aria-label="Уведомление"
+      >
+        <span
+          className="absolute z-0 box-border overflow-hidden text-ellipsis whitespace-nowrap"
+          style={{
+            left: 15,
+            top: 15,
+            width: 330,
+            height: 15,
+            margin: 0,
+            padding: 0,
+            fontFamily: involve.fontFamily,
+            fontStyle: 'normal',
+            fontWeight: 400,
+            fontSynthesis: 'none',
+            fontSize: 14,
+            lineHeight: '105%',
+            color: 'rgba(255, 255, 255, 0.25)',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          Автоматически закроется через {countdown}
+        </span>
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute z-[1] flex h-6 w-6 cursor-pointer items-center justify-center border-0 bg-transparent p-0 outline-none"
+          style={{ top: 12, right: 15 }}
+          aria-label="Закрыть"
+        >
+          <CloseIcon width={16} height={16} variant="dark" />
+        </button>
+        <p
+          className="absolute m-0 box-border min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
+          style={{
+            left: 15,
+            top: 40,
+            width: 330,
+            height: 15,
+            padding: 0,
+            fontFamily: involve.fontFamily,
+            fontStyle: 'normal',
+            fontWeight: 400,
+            fontSynthesis: 'none',
+            fontSize: 14,
+            lineHeight: '110%',
+            color: '#FFFFFF',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          {children}
+        </p>
+      </div>
+    );
+  }
+
   if (compact) {
     return (
       <div
