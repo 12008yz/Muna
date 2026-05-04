@@ -176,7 +176,7 @@ export default function ConsultationModal({ isOpen, onClose, onComplete }) {
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex w-full min-w-0 flex-col items-stretch overflow-hidden cursor-pointer bg-[#F5F5F5]"
+      className="fixed inset-0 z-[9999] flex w-full min-w-0 flex-col items-stretch overflow-hidden cursor-pointer bg-background"
       style={{
         opacity: isAnimating ? 1 : 0,
         transition: 'opacity 220ms ease-out',
@@ -187,7 +187,7 @@ export default function ConsultationModal({ isOpen, onClose, onComplete }) {
       }}
       onClick={closeWithAnimation}
     >
-      <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#F5F5F5]">
+      <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-background">
         <div className="relative flex-shrink-0 cursor-pointer" style={{ minHeight: '105px' }}>
           <div
             className="absolute left-0 right-0"

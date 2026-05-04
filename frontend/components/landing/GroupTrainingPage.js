@@ -138,7 +138,7 @@ function TariffDetailsOverlay({ tariff, onCollapse, onConsultation }) {
 
   return (
     <div
-      className="fixed inset-0 z-[10000] box-border flex w-full flex-col overflow-hidden bg-[#F5F5F5] text-[#101010]"
+      className="fixed inset-0 z-[10000] box-border flex w-full flex-col overflow-hidden bg-background text-[#101010]"
       style={{
         height: '100dvh',
         maxHeight: '100dvh',
@@ -200,9 +200,9 @@ function TariffDetailsOverlay({ tariff, onCollapse, onConsultation }) {
           </div>
         </div>
 
-        {/* Задний full-bleed слой: внизу скролла — #F5F5F5; сама плашка с ценой внутри всегда белая */}
+        {/* Задний full-bleed слой: внизу скролла — фон канваса; плашка с ценой внутри белая */}
         <div
-          className={`relative z-[1] -mt-px w-full shrink-0 transition-colors duration-150 ${priceBlockGray ? 'bg-[#F5F5F5]' : 'bg-white'}`}
+          className={`relative z-[1] -mt-px w-full shrink-0 transition-colors duration-150 ${priceBlockGray ? 'bg-background' : 'bg-white'}`}
         >
           {/* Без тени с отрицательным offset по Y — она даёт тёмные «ушки» в скруглении; только border + overlap на 1px */}
           <div className="mx-auto box-border w-full max-w-[425px] overflow-hidden rounded-t-[20px] border-t border-[rgba(16,16,16,0.08)] bg-white">
@@ -477,8 +477,8 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
         <div
           className={
             isStacked
-              ? 'relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#F5F5F5]'
-              : 'fixed inset-0 z-[9999] flex w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#F5F5F5]'
+              ? 'relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-background'
+              : 'fixed inset-0 z-[9999] flex w-full min-w-0 flex-col items-stretch overflow-hidden bg-background'
           }
           style={
             isStacked
@@ -497,7 +497,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
           }
         >
           <div
-            className="relative min-h-0 min-w-0 shrink-0 overflow-hidden bg-[#F5F5F5]"
+            className="relative min-h-0 min-w-0 shrink-0 overflow-hidden bg-background"
             style={{
               width: '100%',
               maxWidth: '425px',
@@ -518,7 +518,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                 top: carouselTop,
                 bottom: 0,
                 zIndex: 1,
-                background: '#F5F5F5',
+                background: 'var(--background)',
               }}
             >
               {/* Ряд без h-full: иначе cross-size строки = высота вьюпорта и карточка «растягивается» с пустотой под контентом */}

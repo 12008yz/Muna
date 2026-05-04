@@ -38,8 +38,8 @@ export const viewport = {
   viewportFit: "cover",
   /** Один тон с --background / html: при тёмной теме ОС meta не должен оставаться «левым». */
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f5f5f5" },
-    { media: "(prefers-color-scheme: dark)", color: "#f5f5f5" },
+    { media: "(prefers-color-scheme: light)", color: "#000000" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
   ],
 };
 

@@ -5,10 +5,10 @@
 :root {
   /* Один и тот же фон у html и у full-viewport fixed-оболочки (HomePage): иначе Safari сэмплирует
      плоский #F5 с fixed-слоя, а не градиент документа — «стекло» и полосы хрома расходятся с другими сайтами. */
-  --page-canvas-gradient: linear-gradient(180deg, #f6f6f6 0%, #f5f5f5 45%, #ebebeb 100%);
-  /* Совпадает с макетом (#F5F5F5): под системной панелью Safari видны эти пиксели → «стекло» не белое */
-  --background: #f5f5f5;
-  --foreground: #171717;
+  --page-canvas-gradient: linear-gradient(180deg, #0a0a0a 0%, #000000 45%, #141414 100%);
+  /* Канвас и chrome Safari: единый тёмный тон у края экрана */
+  --background: #000000;
+  --foreground: #f5f5f5;
   /* --font-involve задаётся в layout.js через next/font/local (Involve.woff2) */
   /* Как в next/frontend/src/app/globals.css — макет Frame1 */
   --sat: env(safe-area-inset-top, 0px);
@@ -42,7 +42,7 @@
 
 /**
  * Лёгкий градиент по вертикали: под системной панелью Safari размываются разные пиксели —
- * при сплошном #F5F5F5 «стекло» визуально как непрозрачная серая полоса.
+ * при сплошном фоне канваса «стекло» Safari визуально как непрозрачная полоса.
  */
 html {
   min-height: 100%;

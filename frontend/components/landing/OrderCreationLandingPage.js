@@ -595,7 +595,7 @@ export default function OrderCreationLandingPage({
       </h1>
 
       <div
-        className="box-border flex min-w-0 shrink-0 items-center gap-[5px] self-start rounded-[100px] bg-[#F5F5F5] px-[5px]"
+        className="box-border flex min-w-0 shrink-0 items-center gap-[5px] self-start rounded-[100px] bg-[#ebebeb] px-[5px]"
         style={{ width: 'calc(100% - 10px)', maxWidth: '100%', height: 25 }}
       >
         <span className="flex h-[15px] w-[15px] shrink-0 items-center justify-center" aria-hidden>
@@ -678,8 +678,8 @@ export default function OrderCreationLandingPage({
       <div
         className={
           isStacked
-            ? 'relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#F5F5F5]'
-            : 'fixed inset-0 z-[9999] flex w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#F5F5F5]'
+            ? 'relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-background'
+            : 'fixed inset-0 z-[9999] flex w-full min-w-0 flex-col items-stretch overflow-hidden bg-background'
         }
         style={
           isStacked
@@ -698,7 +698,7 @@ export default function OrderCreationLandingPage({
         }
       >
         <div
-          className="relative box-border flex h-full min-h-0 w-full min-w-0 flex-col bg-[#F5F5F5]"
+          className="relative box-border flex h-full min-h-0 w-full min-w-0 flex-col bg-background"
           style={{
             boxSizing: 'border-box',
           }}
@@ -712,7 +712,7 @@ export default function OrderCreationLandingPage({
 
         {(orderStep === 1 || orderStep === 2 || orderStep === 3 || orderStep === 4) && (
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden" style={{ boxSizing: 'border-box' }}>
-            <div className="relative flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden bg-[#F5F5F5]">
+            <div className="relative flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden bg-background">
               {!isStacked ? (
                 <div className="relative flex-shrink-0 cursor-pointer" style={{ minHeight: '105px' }}>
                   <div

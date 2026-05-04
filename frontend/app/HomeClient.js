@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import LoadingScreen from '@/components/LoadingScreen';
+import PostLoadIntroScreen from '@/components/PostLoadIntroScreen';
 import HomePage from '@/components/pages/HomePage';
 
 export default function HomeClient() {
@@ -10,6 +11,7 @@ export default function HomeClient() {
   /** Полный текст политики — оверлей по клику на уведомление на лендинге */
   const [privacyPolicyOpen, setPrivacyPolicyOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasPassedIntro, setHasPassedIntro] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const isCompleteRef = useRef(false);
   const mainRef = useRef(null);
@@ -19,6 +21,7 @@ export default function HomeClient() {
       isCompleteRef.current = true;
       setLoadingProgress(100);
       setIsLoading(false);
+      setHasPassedIntro(true);
     }
   }, [searchParams]);
 
@@ -140,22 +143,25 @@ export default function HomeClient() {
   }, [searchParams]);
 
   const showAppLoading = searchParams.get('consultation') !== '1' && isLoading;
+  const showPostLoadIntro = searchParams.get('consultation') !== '1' && !isLoading && !hasPassedIntro;
+  const mainHiddenBehindGate = showAppLoading || showPostLoadIntro;
 
   return (
     <div ref={mainRef}>
       {showAppLoading && <LoadingScreen progress={loadingProgress} />}
+      {showPostLoadIntro && <PostLoadIntroScreen onContinue={() => setHasPassedIntro(true)} />}
       <main
         className="min-h-[100dvh] w-full overflow-x-hidden"
         style={{
-          visibility: showAppLoading ? 'hidden' : 'visible',
-          position: showAppLoading ? 'absolute' : undefined,
+          visibility: mainHiddenBehindGate ? 'hidden' : 'visible',
+          position: mainHiddenBehindGate ? 'absolute' : undefined,
         }}
       >
         <HomePage
           privacyPolicyOpen={privacyPolicyOpen}
           onOpenPrivacyPolicy={() => setPrivacyPolicyOpen(true)}
           onPrivacyCollapse={() => setPrivacyPolicyOpen(false)}
-          notificationsEnabled={!showAppLoading}
+          notificationsEnabled={!mainHiddenBehindGate}
         />
       </main>
     </div>

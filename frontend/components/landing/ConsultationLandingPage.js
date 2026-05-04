@@ -337,8 +337,8 @@ export default function ConsultationLandingPage({
       <div
         className={
           isStacked
-            ? 'relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#F5F5F5]'
-            : 'fixed inset-0 z-[9999] flex w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#F5F5F5]'
+            ? 'relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-background'
+            : 'fixed inset-0 z-[9999] flex w-full min-w-0 flex-col items-stretch overflow-hidden bg-background'
         }
         style={
           isStacked
@@ -357,7 +357,7 @@ export default function ConsultationLandingPage({
         }
       >
         <div
-          className="relative box-border flex h-full min-h-0 w-full min-w-0 flex-col bg-[#F5F5F5]"
+          className="relative box-border flex h-full min-h-0 w-full min-w-0 flex-col bg-background"
           style={{ boxSizing: 'border-box' }}
         >
           {!isStacked ? <LandingHeaderBar onConsultationClick={() => setConsultationFlowOpen(true)} /> : null}
@@ -413,7 +413,7 @@ export default function ConsultationLandingPage({
 
           {/* Соц.доказательство — на 10px уже полной ширины ряда (как 320 к 330 в макете) */}
           <div
-            className="box-border flex min-w-0 shrink-0 items-center gap-[5px] self-start rounded-[100px] bg-[#F5F5F5] px-[5px]"
+            className="box-border flex min-w-0 shrink-0 items-center gap-[5px] self-start rounded-[100px] bg-[#ebebeb] px-[5px]"
             style={{
               width: 'calc(100% - 10px)',
               maxWidth: '100%',

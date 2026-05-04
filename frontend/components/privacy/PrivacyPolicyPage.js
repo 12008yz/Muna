@@ -26,7 +26,7 @@ export default function PrivacyPolicyPage({ onCollapse, embedded = false }) {
 
   return (
     <div
-      className={`box-border w-full max-w-full bg-[#F5F5F5] text-[#101010] ${
+      className={`box-border w-full max-w-full bg-background text-[#101010] ${
         embedded ? 'flex h-full min-h-0 flex-col overflow-hidden' : 'min-h-[100dvh]'
       }`}
     >

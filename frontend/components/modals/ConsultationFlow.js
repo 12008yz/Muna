@@ -136,7 +136,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
   }, [onSkip, onClose]);
 
   const renderContactMethod = () => (
-    <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#F5F5F5]">
+    <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-background">
       <div className="relative flex-shrink-0" style={{ minHeight: '105px' }}>
         <div
           className="absolute left-0 right-0"
@@ -264,7 +264,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
   );
 
   const renderPhoneAfterMethod = () => (
-    <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#F5F5F5]">
+    <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-background">
       <div className="relative flex-shrink-0" style={{ minHeight: '105px' }}>
         <div
           className="absolute left-0 right-0"
@@ -325,7 +325,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
   );
 
   const renderPhoneFirst = () => (
-    <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#F5F5F5]">
+    <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-background">
       <div className="relative flex-shrink-0" style={{ minHeight: '105px' }}>
         <div
           className="absolute left-0 right-0"
@@ -399,7 +399,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
 
   return (
     <div
-      className="fixed inset-0 z-[10050] flex w-full min-w-0 cursor-pointer flex-col items-stretch overflow-hidden bg-[#F5F5F5]"
+      className="fixed inset-0 z-[10050] flex w-full min-w-0 cursor-pointer flex-col items-stretch overflow-hidden bg-background"
       style={{
         opacity: isAnimating ? 1 : 0,
         transition: 'opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -411,14 +411,14 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
       onClick={handleBackgroundClick}
     >
       <div
-        className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#F5F5F5]"
+        className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-background"
         style={{
           transform: isAnimating ? 'scale(1)' : 'scale(0.95)',
           transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
           boxSizing: 'border-box',
         }}
       >
-        <div className="absolute bottom-0 left-0 right-[0.06%] top-0 bg-[#F5F5F5]" aria-hidden />
+        <div className="absolute bottom-0 left-0 right-[0.06%] top-0 bg-background" aria-hidden />
         {step === 'contact-method' && renderContactMethod()}
         {step === 'phone-after-method' && renderPhoneAfterMethod()}
         {step === 'phone-first' && renderPhoneFirst()}

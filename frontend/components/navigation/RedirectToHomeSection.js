@@ -14,5 +14,5 @@ export default function RedirectToHomeSection({ hash }) {
     router.replace(`/${target}`);
   }, [hash, router]);
 
-  return <div className="min-h-[100dvh] w-full bg-[#F5F5F5]" aria-hidden />;
+  return <div className="min-h-[100dvh] w-full bg-background" aria-hidden />;
 }

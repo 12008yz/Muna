@@ -261,7 +261,7 @@ export default function HomePage({
   return (
     <>
       <div
-        className="fixed inset-0 z-0 flex w-full flex-col overflow-hidden text-[#101010]"
+        className="fixed inset-0 z-0 flex w-full flex-col overflow-hidden"
         style={{
           height: '100dvh',
           maxHeight: '100dvh',
@@ -281,7 +281,7 @@ export default function HomePage({
         >
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 z-0 bg-[#F5F5F5]/88 backdrop-blur-[14px]"
+            className="pointer-events-none absolute inset-x-0 top-0 z-0 bg-black/88 backdrop-blur-[14px]"
             style={{
               height:
                 'calc(var(--sat) + var(--header-top) + var(--header-height) + 8px + 160px)',
