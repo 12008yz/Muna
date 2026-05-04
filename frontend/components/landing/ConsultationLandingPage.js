@@ -413,7 +413,7 @@ export default function ConsultationLandingPage({
             <div className="relative min-h-0 w-full flex-1 shrink">
               <div
                 className="pointer-events-none absolute left-0 right-0 top-0 overflow-hidden"
-                style={{ bottom: 355 }}
+                style={{ bottom: 330 }}
               >
                 <div className="relative h-full w-full">
                   <Image
@@ -433,7 +433,7 @@ export default function ConsultationLandingPage({
                 left: 'var(--main-block-margin)',
                 right: 'var(--main-block-margin)',
                 bottom: 0,
-                height: 355,
+                height: 330,
                 borderRadius: 20,
                 display: 'flex',
                 flexDirection: 'column',
@@ -454,6 +454,7 @@ export default function ConsultationLandingPage({
                 className="m-0 flex-shrink-0"
                 style={{
                   ...involve,
+                  fontWeight: 400,
                   fontSize: 20,
                   lineHeight: '125%',
                   color: '#FFFFFF',
@@ -461,7 +462,7 @@ export default function ConsultationLandingPage({
                   paddingBottom: 15,
                 }}
               >
-                Маркетинговое сопровождение для захвата целевого клиента при помощи медиа и сайта
+                Маркетинговое сопровождение для захвата целевого клиента с помощью медиа и сайта
               </h1>
 
               <div
@@ -479,10 +480,10 @@ export default function ConsultationLandingPage({
                   <BadgeCheckIconMana />
                 </span>
                 <span
-                  className="flex min-h-0 min-w-0 flex-1 items-center overflow-hidden text-ellipsis whitespace-nowrap text-[12px] font-medium leading-[25px] text-white"
-                  style={involve}
+                  className="flex min-h-0 min-w-0 flex-1 items-center overflow-hidden text-ellipsis whitespace-nowrap text-[12px] leading-[25px] text-white"
+                  style={{ ...involve, fontWeight: 400 }}
                 >
-                  свыше 8+ лет в продвижении и организации
+                  имеется гарантийное сопровождение
                 </span>
               </div>
 
@@ -506,7 +507,7 @@ export default function ConsultationLandingPage({
                       setPhoneError(false);
                     }}
                     aria-invalid={phoneError}
-                    className={`box-border w-full min-w-0 rounded-[10px] border border-solid bg-transparent px-[15px] outline-none placeholder:text-[rgba(255,255,255,0.5)] ${
+                    className={`box-border w-full min-w-0 rounded-[10px] border border-solid bg-transparent px-[15px] outline-none placeholder:text-[rgba(255,255,255,0.25)] ${
                       phoneError ? 'border-[rgba(255,255,255,0.85)]' : 'border-[rgba(255,255,255,0.25)]'
                     }`}
                     style={{

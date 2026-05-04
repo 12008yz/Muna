@@ -1,8 +1,42 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import { HINT_TOP } from '@/components/common/ClickOutsideHint';
 import { dispatchNavigateToOrderLanding } from '@/lib/navigateToOrderLanding';
+
+const PRIVACY_HREF = '/privacy-policy';
+
+function ConsentCheckDarkIcon() {
+  return (
+    <svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M1 3L3 5L7 1" stroke="#050505" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function FieldErrorIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path
+        d="M8 0C6.41775 0 4.87103 0.469192 3.55544 1.34824C2.23985 2.22729 1.21447 3.47672 0.608967 4.93853C0.00346628 6.40034 -0.15496 8.00887 0.153721 9.56072C0.462403 11.1126 1.22433 12.538 2.34315 13.6569C3.46197 14.7757 4.88743 15.5376 6.43928 15.8463C7.99113 16.155 9.59966 15.9965 11.0615 15.391C12.5233 14.7855 13.7727 13.7602 14.6518 12.4446C15.5308 11.129 16 9.58225 16 8C15.9978 5.87895 15.1542 3.84542 13.6544 2.34562C12.1546 0.845814 10.121 0.00223986 8 0ZM7.38462 4.30769C7.38462 4.14448 7.44945 3.98796 7.56486 3.87255C7.68027 3.75714 7.83679 3.69231 8 3.69231C8.16321 3.69231 8.31974 3.75714 8.43514 3.87255C8.55055 3.98796 8.61539 4.14448 8.61539 4.30769V8.61538C8.61539 8.77859 8.55055 8.93512 8.43514 9.05053C8.31974 9.16593 8.16321 9.23077 8 9.23077C7.83679 9.23077 7.68027 9.16593 7.56486 9.05053C7.44945 8.93512 7.38462 8.77859 7.38462 8.61538V4.30769ZM8 12.3077C7.81743 12.3077 7.63897 12.2536 7.48717 12.1521C7.33537 12.0507 7.21706 11.9065 7.14719 11.7379C7.07732 11.5692 7.05904 11.3836 7.09466 11.2045C7.13028 11.0255 7.21819 10.861 7.34729 10.7319C7.47638 10.6028 7.64086 10.5149 7.81992 10.4793C7.99898 10.4437 8.18458 10.4619 8.35325 10.5318C8.52192 10.6017 8.66608 10.72 8.76751 10.8718C8.86894 11.0236 8.92308 11.202 8.92308 11.3846C8.92308 11.6294 8.82583 11.8642 8.65271 12.0373C8.4796 12.2104 8.24482 12.3077 8 12.3077Z"
+        fill="#FFFFFF"
+      />
+    </svg>
+  );
+}
+
+function FieldSuccessIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path
+        d="M8 0C6.41775 0 4.87103 0.469192 3.55544 1.34824C2.23985 2.22729 1.21447 3.47672 0.608967 4.93853C0.00346631 6.40034 -0.15496 8.00887 0.153721 9.56072C0.462403 11.1126 1.22433 12.538 2.34315 13.6568C3.46197 14.7757 4.88743 15.5376 6.43928 15.8463C7.99113 16.155 9.59966 15.9965 11.0615 15.391C12.5233 14.7855 13.7727 13.7602 14.6518 12.4446C15.5308 11.129 16 9.58225 16 8C15.9978 5.87895 15.1542 3.84542 13.6544 2.34562C12.1546 0.845813 10.121 0.00223986 8 0ZM11.5123 6.58923L7.20462 10.8969C7.14747 10.9541 7.0796 10.9995 7.00489 11.0305C6.93018 11.0615 6.8501 11.0774 6.76923 11.0774C6.68836 11.0774 6.60828 11.0615 6.53358 11.0305C6.45887 10.9995 6.391 10.9541 6.33385 10.8969L4.4877 9.05077C4.37222 8.9353 4.30735 8.77868 4.30735 8.61538C4.30735 8.45208 4.37222 8.29547 4.4877 8.18C4.60317 8.06453 4.75978 7.99966 4.92308 7.99966C5.08638 7.99966 5.24299 8.06453 5.35846 8.18L6.76923 9.59154L10.6415 5.71846C10.6987 5.66128 10.7666 5.61593 10.8413 5.58499C10.916 5.55404 10.9961 5.53812 11.0769 5.53812C11.1578 5.53812 11.2379 5.55404 11.3126 5.58499C11.3873 5.61593 11.4551 5.66128 11.5123 5.71846C11.5695 5.77564 11.6148 5.84351 11.6458 5.91822C11.6767 5.99292 11.6927 6.07299 11.6927 6.15384C11.6927 6.2347 11.6767 6.31477 11.6458 6.38947C11.6148 6.46418 11.5695 6.53205 11.5123 6.58923Z"
+        fill="#FFFFFF"
+        fillOpacity={0.85}
+      />
+    </svg>
+  );
+}
 
 function CollapseIcon() {
   return (
@@ -10,7 +44,7 @@ function CollapseIcon() {
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M10 0C8.02219 0 6.08879 0.58649 4.4443 1.6853C2.79981 2.78412 1.51809 4.3459 0.761209 6.17316C0.00433284 8.00042 -0.1937 10.0111 0.192152 11.9509C0.578004 13.8907 1.53041 15.6725 2.92894 17.0711C4.32746 18.4696 6.10929 19.422 8.0491 19.8078C9.98891 20.1937 11.9996 19.9957 13.8268 19.2388C15.6541 18.4819 17.2159 17.2002 18.3147 15.5557C19.4135 13.9112 20 11.9778 20 10C19.9972 7.34869 18.9427 4.80678 17.068 2.93202C15.1932 1.05727 12.6513 0.00279983 10 0ZM13.8462 10.7692H8.01058L9.775 12.5327C9.84647 12.6042 9.90316 12.689 9.94184 12.7824C9.98052 12.8758 10.0004 12.9758 10.0004 13.0769C10.0004 13.178 9.98052 13.2781 9.94184 13.3715C9.90316 13.4648 9.84647 13.5497 9.775 13.6212C9.70353 13.6926 9.61869 13.7493 9.52531 13.788C9.43193 13.8267 9.33184 13.8466 9.23077 13.8466C9.1297 13.8466 9.02962 13.8267 8.93624 13.788C8.84286 13.7493 8.75801 13.6926 8.68654 13.6212L5.60962 10.5442C5.5381 10.4728 5.48136 10.3879 5.44265 10.2946C5.40394 10.2012 5.38401 10.1011 5.38401 10C5.38401 9.89891 5.40394 9.79881 5.44265 9.70543C5.48136 9.61205 5.5381 9.52721 5.60962 9.45577L8.68654 6.37884C8.83088 6.23451 9.02665 6.15342 9.23077 6.15342C9.4349 6.15342 9.63066 6.23451 9.775 6.37884C9.91934 6.52318 10.0004 6.71895 10.0004 6.92308C10.0004 7.1272 9.91934 7.32297 9.775 7.46731L8.01058 9.23077H13.8462C14.0502 9.23077 14.2458 9.31181 14.3901 9.45607C14.5343 9.60033 14.6154 9.79599 14.6154 10C14.6154 10.204 14.5343 10.3997 14.3901 10.5439C14.2458 10.6882 14.0502 10.7692 13.8462 10.7692Z"
-          fill="#101010"
+          fill="#FFFFFF"
         />
       </svg>
     </span>
@@ -20,10 +54,10 @@ function CollapseIcon() {
 function SelectedArrowIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <circle cx="8" cy="8" r="8" fill="#101010" />
+      <circle cx="8" cy="8" r="8" fill="#FFFFFF" />
       <path
         d="M6.41255 4.53019C6.50078 4.44207 6.62039 4.39257 6.7451 4.39257C6.8698 4.39257 6.98941 4.44207 7.07764 4.53019L10.2149 7.66745C10.303 7.75568 10.3525 7.87529 10.3525 8C10.3525 8.1247 10.303 8.24431 10.2149 8.33255L7.07765 11.4698C6.98844 11.5529 6.87045 11.5982 6.74853 11.596C6.62662 11.5939 6.5103 11.5445 6.42408 11.4583C6.33786 11.372 6.28847 11.2557 6.28632 11.1338C6.28417 11.0119 6.32942 10.8939 6.41255 10.8047L9.21647 8L6.41255 5.19529C6.32442 5.10706 6.27492 4.98745 6.27492 4.86274C6.27492 4.73804 6.32442 4.61843 6.41255 4.53019Z"
-        fill="#FFFFFF"
+        fill="#050505"
       />
     </svg>
   );
@@ -34,25 +68,53 @@ function UnselectedArrowIcon() {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
       <path
         d="M-3.49691e-07 8C-2.80529e-07 9.58225 0.469191 11.129 1.34824 12.4446C2.22729 13.7602 3.47672 14.7855 4.93853 15.391C6.40034 15.9965 8.00887 16.155 9.56072 15.8463C11.1126 15.5376 12.538 14.7757 13.6569 13.6569C14.7757 12.538 15.5376 11.1126 15.8463 9.56072C16.155 8.00887 15.9965 6.40034 15.391 4.93853C14.7855 3.47672 13.7602 2.22729 12.4446 1.34824C11.129 0.469191 9.58225 -4.18853e-07 8 -3.49691e-07C5.87903 0.00249074 3.84565 0.846145 2.3459 2.3459C0.846145 3.84565 0.00249042 5.87903 -3.49691e-07 8ZM15.0588 8C15.0588 9.3961 14.6448 10.7609 13.8692 11.9217C13.0936 13.0825 11.9911 13.9872 10.7013 14.5215C9.41146 15.0558 7.99217 15.1956 6.62289 14.9232C5.25361 14.6508 3.99585 13.9785 3.00866 12.9913C2.02146 12.0041 1.34918 10.7464 1.07681 9.37711C0.804443 8.00783 0.944231 6.58854 1.4785 5.2987C2.01276 4.00887 2.91751 2.90644 4.07833 2.1308C5.23914 1.35517 6.60389 0.941176 8 0.941176C9.87148 0.943252 11.6657 1.68761 12.989 3.01095C14.3124 4.33429 15.0567 6.12852 15.0588 8ZM6.41255 4.53019C6.50078 4.44207 6.62039 4.39257 6.7451 4.39257C6.8698 4.39257 6.98941 4.44207 7.07764 4.53019L10.2149 7.66745C10.303 7.75568 10.3525 7.87529 10.3525 8C10.3525 8.1247 10.303 8.24431 10.2149 8.33255L7.07765 11.4698C6.98844 11.5529 6.87045 11.5982 6.74853 11.596C6.62662 11.5939 6.5103 11.5445 6.42408 11.4583C6.33786 11.372 6.28847 11.2557 6.28632 11.1338C6.28417 11.0119 6.32942 10.8939 6.41255 10.8047L9.21647 8L6.41255 5.19529C6.32442 5.10706 6.27492 4.98745 6.27492 4.86274C6.27492 4.73804 6.32442 4.61843 6.41255 4.53019Z"
-        fill="#101010"
-        fillOpacity={0.5}
+        fill="rgba(255, 255, 255, 0.5)"
       />
     </svg>
   );
 }
+
+const glassSheet = {
+  boxSizing: 'border-box',
+  background: 'rgba(5, 5, 5, 0.75)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'blur(7.5px)',
+  WebkitBackdropFilter: 'blur(7.5px)',
+  borderRadius: 20,
+};
+
+const involve = { fontFamily: 'var(--font-involve), system-ui, sans-serif' };
 
 export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialStep = 'contact-method' }) {
   const SAVED_PHONE_KEY = 'leadPhone';
   const [step, setStep] = useState(initialStep);
   const [phoneNumber, setPhoneNumber] = useState('+7 ');
   const [selectedMethod, setSelectedMethod] = useState(null);
-  const [phoneFocused, setPhoneFocused] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [shouldRender, setShouldRender] = useState(true);
 
   const [isBackBtnPressed, setIsBackBtnPressed] = useState(false);
   const [isNextBtnPressed, setIsNextBtnPressed] = useState(false);
   const [isPhoneNextBtnPressed, setIsPhoneNextBtnPressed] = useState(false);
+
+  const [callbackName, setCallbackName] = useState('');
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [privacyConsentTouched, setPrivacyConsentTouched] = useState(false);
+  const [callbackFormAttempted, setCallbackFormAttempted] = useState(false);
+  const [flowToast, setFlowToast] = useState(null);
+  const successSubmitTimerRef = useRef(null);
+
+  useEffect(() => {
+    if (!flowToast || flowToast.countdown <= 0) return undefined;
+    const id = window.setInterval(() => {
+      setFlowToast((prev) => {
+        if (!prev) return null;
+        if (prev.countdown <= 1) return null;
+        return { ...prev, countdown: prev.countdown - 1 };
+      });
+    }, 1000);
+    return () => window.clearInterval(id);
+  }, [flowToast?.toastKey]);
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -96,35 +158,74 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
     [formatPhoneNumber]
   );
 
-  const handleSubmitPhoneAfterMethod = useCallback(() => {
+  const isPhoneValid = useMemo(() => {
     const phoneDigits = phoneNumber.replace(/\D/g, '');
-    if (phoneDigits.length === 11) {
-      try {
-        localStorage.setItem(SAVED_PHONE_KEY, phoneNumber);
-      } catch {
-        // ignore
-      }
-      onSubmit({ phone: phoneNumber, method: 'phone' });
-    }
-  }, [phoneNumber, onSubmit, SAVED_PHONE_KEY]);
+    return phoneDigits.length === 11;
+  }, [phoneNumber]);
 
   const handleNextFromMethod = useCallback(() => {
     if (selectedMethod === 'phone') {
-      onSubmit({ phone: phoneNumber, method: 'phone' });
+      setCallbackFormAttempted(false);
+      setPrivacyConsentTouched(false);
+      setStep('phone-callback-form');
     } else if (selectedMethod) {
       onSubmit({ phone: phoneNumber, method: selectedMethod });
     }
   }, [selectedMethod, phoneNumber, onSubmit]);
 
   const handleBack = useCallback(() => {
-    if (step === 'phone-after-method') setStep('contact-method');
+    if (step === 'phone-callback-form') {
+      setStep('contact-method');
+      setCallbackFormAttempted(false);
+      setCallbackName('');
+      setPrivacyAccepted(false);
+      setFlowToast(null);
+      if (successSubmitTimerRef.current) {
+        window.clearTimeout(successSubmitTimerRef.current);
+        successSubmitTimerRef.current = null;
+      }
+      return;
+    }
     else onClose();
   }, [step, onClose]);
 
-  const isPhoneValid = useMemo(() => {
-    const phoneDigits = phoneNumber.replace(/\D/g, '');
-    return phoneDigits.length === 11;
-  }, [phoneNumber]);
+  const handleCallbackFormSubmit = useCallback(() => {
+    setPrivacyConsentTouched(true);
+    const nameOk = callbackName.trim().length > 0;
+    if (!nameOk || !isPhoneValid || !privacyAccepted) {
+      setCallbackFormAttempted(true);
+      setFlowToast({
+        kind: 'error',
+        message: 'Информация не заполнена',
+        countdown: 7,
+        toastKey: Date.now(),
+      });
+      return;
+    }
+    try {
+      localStorage.setItem(SAVED_PHONE_KEY, phoneNumber);
+    } catch {
+      // ignore
+    }
+    if (successSubmitTimerRef.current) window.clearTimeout(successSubmitTimerRef.current);
+    setFlowToast({
+      kind: 'success',
+      message: 'Информация отправлена',
+      countdown: 7,
+      toastKey: Date.now(),
+    });
+    successSubmitTimerRef.current = window.setTimeout(() => {
+      successSubmitTimerRef.current = null;
+      onSubmit({ phone: phoneNumber, method: 'phone', name: callbackName.trim() });
+    }, 2500);
+  }, [callbackName, isPhoneValid, privacyAccepted, phoneNumber, onSubmit, SAVED_PHONE_KEY]);
+
+  useEffect(
+    () => () => {
+      if (successSubmitTimerRef.current) window.clearTimeout(successSubmitTimerRef.current);
+    },
+    []
+  );
 
   const handleBackgroundClick = useCallback(() => {
     setIsAnimating(false);
@@ -136,7 +237,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
   }, [onSkip, onClose]);
 
   const renderContactMethod = () => (
-    <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-background">
+    <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#050505]">
       <div className="relative flex-shrink-0" style={{ minHeight: '105px' }}>
         <div
           className="absolute left-0 right-0"
@@ -148,7 +249,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
               dispatchNavigateToOrderLanding();
               onClose();
             }}
-            className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-white/50 bg-white backdrop-blur-[5px] transition-opacity hover:opacity-90"
+            className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
             aria-label="Свернуть окно"
           >
             <CollapseIcon />
@@ -156,38 +257,62 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
         </div>
       </div>
       <div
-        className="mx-auto flex w-full min-w-0 flex-col rounded-[20px] bg-white"
+        className="mx-auto flex w-full min-w-0 flex-col"
         style={{
+          ...glassSheet,
           marginLeft: 'var(--main-block-margin)',
           marginRight: 'var(--main-block-margin)',
           width: 'calc(100% - 2 * var(--main-block-margin))',
-          boxSizing: 'border-box',
           marginTop: 'auto',
           marginBottom: 0,
           padding: '15px',
-          border: '1px solid rgba(255,255,255,0.5)',
-          backdropFilter: 'blur(7.5px)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div style={{ fontFamily: 'var(--font-involve), system-ui, sans-serif', fontWeight: 500, fontSize: '18px', lineHeight: '110%', color: '#101010', marginBottom: '15px' }}>
-          Консультирование
+        <div
+          style={{
+            ...involve,
+            fontWeight: 400,
+            fontSize: '18px',
+            lineHeight: '110%',
+            color: '#FFFFFF',
+            marginBottom: '10px',
+          }}
+        >
+          Взаимодействие
         </div>
-        <div style={{ fontFamily: 'var(--font-involve), system-ui, sans-serif', fontWeight: 500, fontSize: '14px', lineHeight: '110%', color: 'rgba(16, 16, 16, 0.5)', marginBottom: '20px' }}>
-          Рекламы нет, только ваши вопросы <span style={{ color: '#EF4444' }}>❣️</span>
+        <div
+          style={{
+            ...involve,
+            fontWeight: 400,
+            fontSize: '14px',
+            lineHeight: '110%',
+            color: 'rgba(255, 255, 255, 0.25)',
+            marginBottom: '20px',
+            maxWidth: 330,
+          }}
+        >
+          Навязывание ненужного отсутствует.
+          <br />
+          Рекламирование ненужного тоже отсутствует.
         </div>
 
         <div className="flex flex-col gap-[5px]" style={{ marginBottom: '20px' }}>
-          <div className="flex items-center justify-between rounded-[10px] px-[15px]" style={{ height: '50px', border: '1px solid rgba(16, 16, 16, 0.15)', opacity: 0.25 }}>
-            <span className="whitespace-nowrap" style={{ fontFamily: 'var(--font-involve), system-ui, sans-serif', fontWeight: 500, fontSize: '16px', lineHeight: '125%', color: 'rgba(16, 16, 16, 0.5)' }}>
-              Написать нам в «Max»
+          <div
+            className="flex items-center justify-between rounded-[10px] px-[15px]"
+            style={{ height: '50px', border: '1px solid rgba(255, 255, 255, 0.25)', opacity: 0.25 }}
+          >
+            <span
+              className="whitespace-nowrap"
+              style={{ ...involve, fontWeight: 400, fontSize: '16px', lineHeight: '125%', color: '#FFFFFF' }}
+            >
+              Написать нам в «Макс»
             </span>
             <div className="flex h-4 w-4 flex-shrink-0 items-center justify-center">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
                 <path
                   d="M10.8424 5.82274L8.6651 8L10.8424 10.1773C10.8886 10.2203 10.9257 10.2723 10.9514 10.33C10.9771 10.3877 10.9909 10.4501 10.9921 10.5132C10.9932 10.5764 10.9816 10.6392 10.9579 10.6978C10.9342 10.7564 10.899 10.8096 10.8543 10.8543C10.8096 10.899 10.7564 10.9342 10.6978 10.9579C10.6392 10.9815 10.5764 10.9932 10.5132 10.9921C10.4501 10.9909 10.3877 10.9771 10.33 10.9514C10.2723 10.9257 10.2203 10.8886 10.1773 10.8424L8 8.6651L5.82275 10.8424C5.73354 10.9255 5.61555 10.9707 5.49364 10.9686C5.37172 10.9664 5.2554 10.917 5.16918 10.8308C5.08296 10.7446 5.03357 10.6283 5.03142 10.5064C5.02927 10.3844 5.07452 10.2665 5.15765 10.1773L7.3349 8L5.15765 5.82274C5.07452 5.73354 5.02927 5.61555 5.03142 5.49363C5.03357 5.37172 5.08296 5.2554 5.16918 5.16918C5.2554 5.08296 5.37172 5.03357 5.49364 5.03142C5.61555 5.02927 5.73354 5.07452 5.82275 5.15765L8 7.3349L10.1773 5.15765C10.2665 5.07452 10.3845 5.02927 10.5064 5.03142C10.6283 5.03357 10.7446 5.08296 10.8308 5.16918C10.917 5.2554 10.9664 5.37172 10.9686 5.49363C10.9707 5.61555 10.9255 5.73354 10.8424 5.82274ZM16 8C16 9.58225 15.5308 11.129 14.6518 12.4446C13.7727 13.7602 12.5233 14.7855 11.0615 15.391C9.59966 15.9965 7.99113 16.155 6.43928 15.8463C4.88743 15.5376 3.46197 14.7757 2.34315 13.6569C1.22433 12.538 0.462403 11.1126 0.153721 9.56072C-0.15496 8.00887 0.00346614 6.40034 0.608967 4.93853C1.21447 3.47672 2.23985 2.22729 3.55544 1.34824C4.87103 0.469192 6.41775 0 8 0C10.121 0.00249086 12.1544 0.846145 13.6541 2.3459C15.1539 3.84565 15.9975 5.87903 16 8ZM15.0588 8C15.0588 6.6039 14.6448 5.23914 13.8692 4.07833C13.0936 2.91751 11.9911 2.01276 10.7013 1.4785C9.41146 0.944232 7.99217 0.804443 6.62289 1.07681C5.25362 1.34918 3.99585 2.02146 3.00866 3.00866C2.02147 3.99585 1.34918 5.25361 1.07681 6.62289C0.804447 7.99217 0.944235 9.41146 1.4785 10.7013C2.01277 11.9911 2.91751 13.0936 4.07833 13.8692C5.23915 14.6448 6.6039 15.0588 8 15.0588C9.87148 15.0567 11.6657 14.3124 12.989 12.989C14.3124 11.6657 15.0567 9.87148 15.0588 8Z"
-                  fill="#101010"
-                  fillOpacity="0.5"
+                  fill="#FFFFFF"
                 />
               </svg>
             </div>
@@ -195,11 +320,24 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
 
           <div
             className="flex cursor-pointer items-center justify-between rounded-[10px] px-[15px]"
-            style={{ height: '50px', border: selectedMethod === 'telegram' ? '1px solid rgba(16, 16, 16, 0.5)' : '1px solid rgba(16, 16, 16, 0.25)' }}
+            style={{
+              height: '50px',
+              border:
+                selectedMethod === 'telegram' ? '1px solid rgba(255, 255, 255, 0.5)' : '1px solid rgba(255, 255, 255, 0.25)',
+            }}
             onClick={() => setSelectedMethod('telegram')}
           >
-            <span className="whitespace-nowrap" style={{ fontFamily: 'var(--font-involve), system-ui, sans-serif', fontWeight: 500, fontSize: '16px', lineHeight: '125%', color: selectedMethod === 'telegram' ? '#101010' : 'rgba(16, 16, 16, 0.5)' }}>
-              Написать нам в «Telegram»
+            <span
+              className="whitespace-nowrap"
+              style={{
+                ...involve,
+                fontWeight: 400,
+                fontSize: '16px',
+                lineHeight: '125%',
+                color: selectedMethod === 'telegram' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.5)',
+              }}
+            >
+              Написать нам в «Телеграм»
             </span>
             <div className="flex h-4 w-4 flex-shrink-0 items-center justify-center">
               {selectedMethod === 'telegram' ? <SelectedArrowIcon /> : <UnselectedArrowIcon />}
@@ -208,17 +346,21 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
 
           <div
             className="flex cursor-pointer items-center justify-between rounded-[10px] px-[15px]"
-            style={{ height: '50px', border: selectedMethod === 'phone' ? '1px solid rgba(16, 16, 16, 0.5)' : '1px solid rgba(16, 16, 16, 0.15)' }}
+            style={{
+              height: '50px',
+              border:
+                selectedMethod === 'phone' ? '1px solid rgba(255, 255, 255, 0.5)' : '1px solid rgba(255, 255, 255, 0.25)',
+            }}
             onClick={() => setSelectedMethod('phone')}
           >
             <span
               className="whitespace-nowrap"
               style={{
-                fontFamily: 'var(--font-involve), system-ui, sans-serif',
-                fontWeight: 500,
+                ...involve,
+                fontWeight: 400,
                 fontSize: '16px',
                 lineHeight: '125%',
-                color: selectedMethod === 'phone' ? '#101010' : 'rgba(16, 16, 16, 0.5)',
+                color: selectedMethod === 'phone' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.5)',
               }}
             >
               Перезвонить на номер телефона
@@ -239,10 +381,15 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
             onTouchStart={() => setIsBackBtnPressed(true)}
             onTouchEnd={() => setIsBackBtnPressed(false)}
             className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none"
-            style={{ border: '1px solid rgba(16, 16, 16, 0.15)', background: 'white', transform: isBackBtnPressed ? 'scale(0.92)' : 'scale(1)', transition: 'transform 0.15s ease-out' }}
+            style={{
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              background: 'transparent',
+              transform: isBackBtnPressed ? 'scale(0.92)' : 'scale(1)',
+              transition: 'transform 0.15s ease-out',
+            }}
           >
             <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }}>
-              <path d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z" fill="#101010" />
+              <path d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z" fill="#FFFFFF" />
             </svg>
           </button>
           <button
@@ -253,8 +400,17 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
             onMouseLeave={() => setIsNextBtnPressed(false)}
             onTouchStart={() => setIsNextBtnPressed(true)}
             onTouchEnd={() => setIsNextBtnPressed(false)}
-            className="h-[50px] flex-1 cursor-pointer rounded-[10px] text-white outline-none disabled:cursor-not-allowed"
-            style={{ background: selectedMethod ? '#101010' : 'rgba(16, 16, 16, 0.25)', fontFamily: 'var(--font-involve), system-ui, sans-serif', fontSize: '16px', transform: isNextBtnPressed && selectedMethod ? 'scale(0.97)' : 'scale(1)', transition: 'transform 0.15s ease-out' }}
+            className="h-[50px] flex-1 cursor-pointer rounded-[10px] outline-none disabled:cursor-not-allowed"
+            style={{
+              ...involve,
+              fontSize: '16px',
+              lineHeight: '315%',
+              border: '1px solid #FFFFFF',
+              background: selectedMethod ? '#FFFFFF' : 'rgba(255, 255, 255, 0.08)',
+              color: selectedMethod ? '#050505' : 'rgba(255, 255, 255, 0.35)',
+              transform: isNextBtnPressed && selectedMethod ? 'scale(0.97)' : 'scale(1)',
+              transition: 'transform 0.15s ease-out',
+            }}
           >
             Далее
           </button>
@@ -263,69 +419,242 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
     </div>
   );
 
-  const renderPhoneAfterMethod = () => (
-    <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-background">
-      <div className="relative flex-shrink-0" style={{ minHeight: '105px' }}>
-        <div
-          className="absolute left-0 right-0"
-          style={{ top: HINT_TOP, left: 'var(--main-block-margin)', right: 'var(--main-block-margin)' }}
-        >
-          <button
-            type="button"
-            onClick={() => {
-              dispatchNavigateToOrderLanding();
-              onClose();
-            }}
-            className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-white/50 bg-white backdrop-blur-[5px] transition-opacity hover:opacity-90"
-            aria-label="Свернуть окно"
+  const renderPhoneCallbackForm = () => {
+    const nameOk = callbackName.trim().length > 0;
+    const nameErr = callbackFormAttempted && !nameOk;
+    const phoneErr = callbackFormAttempted && !isPhoneValid;
+    const nameTrail = nameErr || nameOk;
+    const phoneTrail = phoneErr || isPhoneValid;
+    const privacyShowStrongBorder = !privacyAccepted && privacyConsentTouched && callbackFormAttempted;
+    const stackMuted = 'rgba(255, 255, 255, 0.25)';
+    const stackStrong = 'rgba(255, 255, 255, 0.85)';
+    const formCanSubmit = nameOk && isPhoneValid && privacyAccepted;
+
+    return (
+      <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#050505]">
+        <div className="relative flex-shrink-0" style={{ minHeight: '105px' }}>
+          <div
+            className="absolute left-0 right-0"
+            style={{ top: HINT_TOP, left: 'var(--main-block-margin)', right: 'var(--main-block-margin)' }}
           >
-            <CollapseIcon />
-          </button>
+            <button
+              type="button"
+              onClick={() => {
+                dispatchNavigateToOrderLanding();
+                onClose();
+              }}
+              className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
+              aria-label="Свернуть окно"
+            >
+              <CollapseIcon />
+            </button>
+          </div>
+        </div>
+        <div
+          className="mx-auto flex w-full min-w-0 flex-col"
+          style={{
+            ...glassSheet,
+            marginLeft: 'var(--main-block-margin)',
+            marginRight: 'var(--main-block-margin)',
+            width: 'calc(100% - 2 * var(--main-block-margin))',
+            marginTop: 'auto',
+            marginBottom: 0,
+            padding: '15px',
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div
+            style={{
+              ...involve,
+              fontWeight: 400,
+              fontSize: '18px',
+              lineHeight: '110%',
+              color: '#FFFFFF',
+              marginBottom: '10px',
+            }}
+          >
+            Взаимодействие
+          </div>
+          <div
+            style={{
+              ...involve,
+              fontWeight: 400,
+              fontSize: '14px',
+              lineHeight: '110%',
+              color: 'rgba(255, 255, 255, 0.25)',
+              marginBottom: '15px',
+            }}
+          >
+            Навязывание ненужного отсутствует.
+            <br />
+            Рекламирование ненужного тоже отсутствует.
+          </div>
+
+          <div className="flex flex-col gap-[5px]" style={{ marginBottom: '5px' }}>
+            <label className="sr-only" htmlFor="consult-callback-name">
+              Имя
+            </label>
+            <div className="relative w-full">
+              <input
+                id="consult-callback-name"
+                type="text"
+                autoComplete="name"
+                placeholder="Имя"
+                value={callbackName}
+                onChange={(e) => setCallbackName(e.target.value)}
+                className="box-border w-full rounded-[10px] border border-solid bg-transparent px-[15px] outline-none placeholder:text-[rgba(255,255,255,0.25)]"
+                style={{
+                  ...involve,
+                  height: 50,
+                  minHeight: 50,
+                  paddingRight: nameTrail ? 39 : 16,
+                  fontSize: 16,
+                  lineHeight: '125%',
+                  color: '#FFFFFF',
+                  borderColor: nameErr ? stackStrong : stackMuted,
+                }}
+              />
+              {nameErr ? (
+                <span className="pointer-events-none absolute right-[15px] top-1/2 flex h-4 w-4 -translate-y-1/2" aria-hidden>
+                  <FieldErrorIcon />
+                </span>
+              ) : nameOk ? (
+                <span className="pointer-events-none absolute right-[15px] top-1/2 flex h-4 w-4 -translate-y-1/2" aria-hidden>
+                  <FieldSuccessIcon />
+                </span>
+              ) : null}
+            </div>
+
+            <label className="sr-only" htmlFor="consult-callback-phone">
+              Номер сотового телефона
+            </label>
+            <div className="relative w-full">
+              <input
+                id="consult-callback-phone"
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                value={phoneNumber}
+                onChange={handlePhoneChange}
+                placeholder="Номер сотового телефона"
+                className="box-border w-full rounded-[10px] border border-solid bg-transparent px-[15px] outline-none placeholder:text-[rgba(255,255,255,0.25)]"
+                style={{
+                  ...involve,
+                  height: 50,
+                  minHeight: 50,
+                  paddingRight: phoneTrail ? 39 : 16,
+                  fontSize: 16,
+                  lineHeight: '125%',
+                  color: '#FFFFFF',
+                  borderColor: phoneErr ? stackStrong : isPhoneValid ? 'rgba(255, 255, 255, 0.5)' : stackMuted,
+                }}
+              />
+              {phoneErr ? (
+                <span className="pointer-events-none absolute right-[15px] top-1/2 flex h-4 w-4 -translate-y-1/2" aria-hidden>
+                  <FieldErrorIcon />
+                </span>
+              ) : isPhoneValid ? (
+                <span className="pointer-events-none absolute right-[15px] top-1/2 flex h-4 w-4 -translate-y-1/2" aria-hidden>
+                  <FieldSuccessIcon />
+                </span>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="mb-[15px] mt-[5px] w-full min-w-0 shrink-0">
+            <button
+              type="button"
+              className="relative box-border flex w-full min-w-0 cursor-pointer items-center rounded-[10px] border border-solid bg-transparent text-left outline-none focus:outline-none"
+              style={{
+                height: 50,
+                minHeight: 50,
+                paddingLeft: 10,
+                paddingRight: 10,
+                boxSizing: 'border-box',
+                borderColor: privacyAccepted ? stackMuted : privacyShowStrongBorder ? stackStrong : 'rgba(255, 255, 255, 0.1)',
+              }}
+              onClick={() => {
+                setPrivacyConsentTouched(true);
+                setPrivacyAccepted(!privacyAccepted);
+              }}
+            >
+              <span
+                className="mr-2 flex flex-shrink-0 items-center justify-center rounded-full border border-solid box-border"
+                style={{
+                  width: 16,
+                  height: 16,
+                  borderColor: privacyAccepted ? 'transparent' : privacyShowStrongBorder ? stackStrong : 'rgba(255, 255, 255, 0.5)',
+                  background: privacyAccepted ? '#FFFFFF' : 'transparent',
+                }}
+              >
+                {privacyAccepted ? <ConsentCheckDarkIcon /> : null}
+              </span>
+              <span className="text-[14px] font-normal leading-[105%] text-white" style={{ ...involve, flex: 1, minWidth: 0 }}>
+                Я, полностью соглашаюсь с условиями{' '}
+                <Link
+                  href={PRIVACY_HREF}
+                  className="text-white underline decoration-solid [text-underline-offset:3px]"
+                  style={{ textDecorationSkipInk: 'none' }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  политики конфиденциальности
+                </Link>{' '}
+                сайта
+              </span>
+            </button>
+          </div>
+
+          <div className="flex items-center gap-[5px]">
+            <button
+              type="button"
+              onClick={handleBack}
+              onMouseDown={() => setIsBackBtnPressed(true)}
+              onMouseUp={() => setIsBackBtnPressed(false)}
+              onMouseLeave={() => setIsBackBtnPressed(false)}
+              onTouchStart={() => setIsBackBtnPressed(true)}
+              onTouchEnd={() => setIsBackBtnPressed(false)}
+              className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none"
+              style={{
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: 'transparent',
+                transform: isBackBtnPressed ? 'scale(0.92)' : 'scale(1)',
+                transition: 'transform 0.15s ease-out',
+              }}
+            >
+              <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }}>
+                <path d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z" fill="#FFFFFF" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={handleCallbackFormSubmit}
+              onMouseDown={() => setIsPhoneNextBtnPressed(true)}
+              onMouseUp={() => setIsPhoneNextBtnPressed(false)}
+              onMouseLeave={() => setIsPhoneNextBtnPressed(false)}
+              onTouchStart={() => setIsPhoneNextBtnPressed(true)}
+              onTouchEnd={() => setIsPhoneNextBtnPressed(false)}
+              className="h-[50px] flex-1 cursor-pointer rounded-[10px] outline-none"
+              style={{
+                ...involve,
+                fontSize: '16px',
+                lineHeight: '315%',
+                border: '1px solid #FFFFFF',
+                background: formCanSubmit ? '#FFFFFF' : 'rgba(255, 255, 255, 0.08)',
+                color: formCanSubmit ? '#050505' : 'rgba(255, 255, 255, 0.35)',
+                transform: isPhoneNextBtnPressed && formCanSubmit ? 'scale(0.97)' : 'scale(1)',
+                transition: 'transform 0.15s ease-out',
+              }}
+            >
+              Далее
+            </button>
+          </div>
         </div>
       </div>
-      <div
-        className="mx-auto flex w-full min-w-0 flex-col rounded-[20px] bg-white"
-        style={{
-          marginLeft: 'var(--main-block-margin)',
-          marginRight: 'var(--main-block-margin)',
-          width: 'calc(100% - 2 * var(--main-block-margin))',
-          boxSizing: 'border-box',
-          marginTop: 'auto',
-          marginBottom: 0,
-          padding: '15px',
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div style={{ fontFamily: 'var(--font-involve), system-ui, sans-serif', fontSize: '20px', lineHeight: '125%', color: '#101010', marginBottom: '15px' }}>Консультация</div>
-        <div style={{ fontFamily: 'var(--font-involve), system-ui, sans-serif', fontSize: '14px', lineHeight: '105%', color: 'rgba(16, 16, 16, 0.25)', marginBottom: '20px' }}>Напишите номер вашего сотового телефона. Пожалуйста, проверьте правильность</div>
-        <div className="mb-[20px] w-full rounded-[10px]" style={{ height: '50px', border: isPhoneValid ? '1px solid #101010' : '1px solid rgba(16, 16, 16, 0.25)' }}>
-          <input
-            type="tel"
-            value={phoneNumber}
-            onChange={handlePhoneChange}
-            onFocus={() => setPhoneFocused(true)}
-            onBlur={() => setPhoneFocused(false)}
-            placeholder="Номер сотового телефона"
-            className="h-full w-full rounded-[10px] bg-transparent px-[15px] outline-none"
-            style={{ fontFamily: 'var(--font-involve), system-ui, sans-serif', fontSize: '16px', lineHeight: '125%', color: phoneFocused ? '#101010' : 'rgba(16, 16, 16, 0.5)', letterSpacing: '0.5px', transition: 'color 0.2s ease' }}
-          />
-        </div>
-        <div className="flex items-center gap-[5px]">
-          <button type="button" onClick={handleBack} onMouseDown={() => setIsBackBtnPressed(true)} onMouseUp={() => setIsBackBtnPressed(false)} onMouseLeave={() => setIsBackBtnPressed(false)} onTouchStart={() => setIsBackBtnPressed(true)} onTouchEnd={() => setIsBackBtnPressed(false)} className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none" style={{ border: '1px solid rgba(16, 16, 16, 0.15)', background: 'white', transform: isBackBtnPressed ? 'scale(0.92)' : 'scale(1)', transition: 'transform 0.15s ease-out' }}>
-            <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }}>
-              <path d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z" fill="#101010" />
-            </svg>
-          </button>
-          <button type="button" onClick={handleSubmitPhoneAfterMethod} onMouseDown={() => setIsPhoneNextBtnPressed(true)} onMouseUp={() => setIsPhoneNextBtnPressed(false)} onMouseLeave={() => setIsPhoneNextBtnPressed(false)} onTouchStart={() => setIsPhoneNextBtnPressed(true)} onTouchEnd={() => setIsPhoneNextBtnPressed(false)} disabled={!isPhoneValid} className="h-[50px] flex-1 cursor-pointer rounded-[10px] text-white outline-none disabled:cursor-not-allowed" style={{ background: isPhoneValid ? '#101010' : 'rgba(16, 16, 16, 0.25)', fontFamily: 'var(--font-involve), system-ui, sans-serif', fontSize: '16px', transform: isPhoneNextBtnPressed && isPhoneValid ? 'scale(0.97)' : 'scale(1)', transition: 'transform 0.15s ease-out' }}>
-            Далее
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+    );
+  };
 
   const renderPhoneFirst = () => (
-    <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-background">
+    <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#050505]">
       <div className="relative flex-shrink-0" style={{ minHeight: '105px' }}>
         <div
           className="absolute left-0 right-0"
@@ -337,7 +666,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
               dispatchNavigateToOrderLanding();
               onClose();
             }}
-            className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-white/50 bg-white backdrop-blur-[5px] transition-opacity hover:opacity-90"
+            className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
             aria-label="Свернуть окно"
           >
             <CollapseIcon />
@@ -345,30 +674,42 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
         </div>
       </div>
       <div
-        className="mx-auto flex w-full min-w-0 flex-col rounded-[20px] bg-white"
+        className="mx-auto flex w-full min-w-0 flex-col"
         style={{
+          ...glassSheet,
           marginLeft: 'var(--main-block-margin)',
           marginRight: 'var(--main-block-margin)',
           width: 'calc(100% - 2 * var(--main-block-margin))',
-          boxSizing: 'border-box',
           marginTop: 'auto',
           marginBottom: 0,
           padding: '15px',
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div style={{ fontFamily: 'var(--font-involve), system-ui, sans-serif', fontSize: '20px', lineHeight: '125%', color: '#101010', marginBottom: '15px' }}>Консультация</div>
-        <div style={{ fontFamily: 'var(--font-involve), system-ui, sans-serif', fontSize: '14px', lineHeight: '105%', color: 'rgba(16, 16, 16, 0.25)', marginBottom: '20px' }}>Напишите номер вашего сотового телефона. Пожалуйста, проверьте правильность</div>
-        <div className="mb-[20px] w-full rounded-[10px]" style={{ height: '50px', border: isPhoneValid ? '1px solid #101010' : '1px solid rgba(16, 16, 16, 0.25)' }}>
+        <div style={{ ...involve, fontWeight: 400, fontSize: '20px', lineHeight: '125%', color: '#FFFFFF', marginBottom: '15px' }}>Консультация</div>
+        <div style={{ ...involve, fontWeight: 400, fontSize: '14px', lineHeight: '105%', color: 'rgba(255, 255, 255, 0.25)', marginBottom: '20px' }}>
+          Напишите номер вашего сотового телефона. Пожалуйста, проверьте правильность
+        </div>
+        <div
+          className="mb-[20px] w-full rounded-[10px]"
+          style={{
+            height: '50px',
+            border: isPhoneValid ? '1px solid rgba(255, 255, 255, 0.5)' : '1px solid rgba(255, 255, 255, 0.25)',
+          }}
+        >
           <input
             type="tel"
             value={phoneNumber}
             onChange={handlePhoneChange}
-            onFocus={() => setPhoneFocused(true)}
-            onBlur={() => setPhoneFocused(false)}
             placeholder="Номер сотового телефона"
-            className="h-full w-full rounded-[10px] bg-transparent px-[15px] outline-none"
-            style={{ fontFamily: 'var(--font-involve), system-ui, sans-serif', fontSize: '16px', lineHeight: '125%', color: phoneFocused ? '#101010' : 'rgba(16, 16, 16, 0.5)', letterSpacing: '0.5px', transition: 'color 0.2s ease' }}
+            className="h-full w-full rounded-[10px] bg-transparent px-[15px] outline-none placeholder:text-[rgba(255,255,255,0.25)]"
+            style={{
+              ...involve,
+              fontSize: '16px',
+              lineHeight: '125%',
+              color: '#FFFFFF',
+              letterSpacing: '0.5px',
+            }}
           />
         </div>
         <button
@@ -381,12 +722,13 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
           disabled={!isPhoneValid}
           className="w-full cursor-pointer rounded-[10px] outline-none disabled:cursor-not-allowed"
           style={{
+            ...involve,
             height: '50px',
-            fontFamily: 'var(--font-involve), system-ui, sans-serif',
             fontSize: '16px',
-            background: isPhoneValid ? '#101010' : '#FFFFFF',
-            color: isPhoneValid ? '#FFFFFF' : 'rgba(16, 16, 16, 0.5)',
-            border: '1px solid rgba(16, 16, 16, 0.25)',
+            lineHeight: '315%',
+            border: '1px solid #FFFFFF',
+            background: isPhoneValid ? '#FFFFFF' : 'rgba(255, 255, 255, 0.08)',
+            color: isPhoneValid ? '#050505' : 'rgba(255, 255, 255, 0.35)',
           }}
         >
           Далее
@@ -399,7 +741,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
 
   return (
     <div
-      className="fixed inset-0 z-[10050] flex w-full min-w-0 cursor-pointer flex-col items-stretch overflow-hidden bg-background"
+      className="fixed inset-0 z-[10050] flex w-full min-w-0 cursor-pointer flex-col items-stretch overflow-hidden bg-[#050505]"
       style={{
         opacity: isAnimating ? 1 : 0,
         transition: 'opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -411,18 +753,62 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
       onClick={handleBackgroundClick}
     >
       <div
-        className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-background"
+        className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#050505]"
         style={{
           transform: isAnimating ? 'scale(1)' : 'scale(0.95)',
           transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
           boxSizing: 'border-box',
         }}
       >
-        <div className="absolute bottom-0 left-0 right-[0.06%] top-0 bg-background" aria-hidden />
+        <div className="absolute bottom-0 left-0 right-[0.06%] top-0 bg-[#050505]" aria-hidden />
         {step === 'contact-method' && renderContactMethod()}
-        {step === 'phone-after-method' && renderPhoneAfterMethod()}
+        {step === 'phone-callback-form' && renderPhoneCallbackForm()}
         {step === 'phone-first' && renderPhoneFirst()}
       </div>
+      {flowToast ? (
+        <div
+          role="status"
+          className="fixed z-[10051] box-border"
+          style={{
+            left: 'var(--main-block-margin)',
+            top: 'calc(var(--sat, 0px) + 125px)',
+            width: 360,
+            height: 70,
+            boxSizing: 'border-box',
+            background: 'rgba(5, 5, 5, 0.85)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(7.5px)',
+            WebkitBackdropFilter: 'blur(7.5px)',
+            borderRadius: 20,
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <span
+            className="absolute left-[15px] top-[15px] z-0 box-border flex h-[15px] w-[330px] items-center overflow-hidden text-ellipsis whitespace-nowrap"
+            style={{
+              ...involve,
+              fontWeight: 400,
+              fontSize: 14,
+              lineHeight: '105%',
+              color: 'rgba(255, 255, 255, 0.25)',
+            }}
+          >
+            Автоматически закроется через {flowToast.countdown}
+          </span>
+          <p
+            className="absolute left-[15px] top-[40px] m-0 box-border h-[15px] w-[330px] overflow-hidden text-ellipsis whitespace-nowrap"
+            style={{
+              ...involve,
+              fontWeight: 400,
+              fontSize: 14,
+              lineHeight: '110%',
+              color: '#FFFFFF',
+            }}
+          >
+            {flowToast.message}
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }
