@@ -70,6 +70,17 @@ function FormSelectedCheckIcon() {
   );
 }
 
+function ManaStyleSelectedCheckIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path
+        d="M8 0C6.41775 0 4.87103 0.469192 3.55544 1.34824C2.23985 2.22729 1.21447 3.47672 0.608967 4.93853C0.00346631 6.40034 -0.15496 8.00887 0.153721 9.56072C0.462403 11.1126 1.22433 12.538 2.34315 13.6568C3.46197 14.7757 4.88743 15.5376 6.43928 15.8463C7.99113 16.155 9.59966 15.9965 11.0615 15.391C12.5233 14.7855 13.7727 13.7602 14.6518 12.4446C15.5308 11.129 16 9.58225 16 8C15.9978 5.87895 15.1542 3.84542 13.6544 2.34562C12.1546 0.845813 10.121 0.00223986 8 0ZM11.5123 6.58923L7.20462 10.8969C7.14747 10.9541 7.0796 10.9995 7.00489 11.0305C6.93018 11.0615 6.8501 11.0774 6.76923 11.0774C6.68836 11.0774 6.60828 11.0615 6.53358 11.0305C6.45887 10.9995 6.391 10.9541 6.33385 10.8969L4.4877 9.05077C4.37222 8.9353 4.30735 8.77868 4.30735 8.61538C4.30735 8.45208 4.37222 8.29547 4.4877 8.18C4.60317 8.06453 4.75978 7.99966 4.92308 7.99966C5.08638 7.99966 5.24299 8.06453 5.35846 8.18L6.76923 9.59154L10.6415 5.71846C10.6987 5.66128 10.7666 5.61593 10.8413 5.58499C10.916 5.55404 10.9961 5.53812 11.0769 5.53812C11.1578 5.53812 11.2379 5.55404 11.3126 5.58499C11.3873 5.61593 11.4551 5.66128 11.5123 5.71846C11.5695 5.77564 11.6148 5.84351 11.6458 5.91822C11.6767 5.99292 11.6927 6.07299 11.6927 6.15384C11.6927 6.2347 11.6767 6.31477 11.6458 6.38947C11.6148 6.46418 11.5695 6.53205 11.5123 6.58923Z"
+        fill="white"
+      />
+    </svg>
+  );
+}
+
 function TariffPrepOption({ label, selected, onClick, showErrorOutline }) {
   const borderColor = showErrorOutline
     ? '#101010'
@@ -334,7 +345,7 @@ export default function OrderCreationLandingPage({
     if (durationId != null) setAttemptedStep4(false);
   }, [durationId]);
 
-  /** Как раньше: до первой неуспешной попытки кнопка тёмная; после — белая до валидного выбора */
+  /** На тёмном фоне: сначала кнопка активная, после невалидного клика — приглушённая до валидного выбора */
   const wizardNextStyle = (step) => {
     const attempted =
       step === 1
@@ -356,8 +367,11 @@ export default function OrderCreationLandingPage({
     return {
       ...involve,
       fontSize: 16,
-      background: solid ? '#101010' : '#FFFFFF',
-      color: solid ? '#FFFFFF' : 'rgba(16, 16, 16, 0.5)',
+      lineHeight: '315%',
+      border: solid ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
+      background: solid ? '#FFFFFF' : 'transparent',
+      color: solid ? '#050505' : '#FFFFFF',
+      opacity: solid ? 1 : 0.25,
     };
   };
 
@@ -722,16 +736,23 @@ export default function OrderCreationLandingPage({
                         { id: 'high-known', label: 'Компания известна в сети' },
                       ].map((item) => {
                         const selected = prepType === item.id;
+                        const showRequired = attemptedStep1 && !prepType;
                         return (
                           <button
                             key={item.id}
                             type="button"
                             onClick={() => setPrepType(item.id)}
                             className="box-border flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-solid bg-transparent px-[10px] text-left outline-none"
-                            style={{ borderColor: selected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.1)' }}
+                            style={{ borderColor: showRequired ? 'rgba(255,255,255,0.5)' : selected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.1)' }}
                           >
-                            <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)]" style={{ background: selected ? '#FFFFFF' : 'transparent' }} />
-                            <span style={{ ...involve, fontSize: 16, lineHeight: '125%', color: selected ? '#FFFFFF' : 'rgba(255,255,255,0.5)' }}>{item.label}</span>
+                            <span className="flex h-4 w-4 shrink-0 items-center justify-center">
+                              {selected ? (
+                                <ManaStyleSelectedCheckIcon />
+                              ) : (
+                                <span className="h-4 w-4 rounded-full border border-[rgba(255,255,255,0.5)]" />
+                              )}
+                            </span>
+                            <span style={{ ...involve, fontSize: 16, lineHeight: '125%', color: selected || showRequired ? '#FFFFFF' : 'rgba(255,255,255,0.5)' }}>{item.label}</span>
                           </button>
                         );
                       })}
@@ -744,7 +765,7 @@ export default function OrderCreationLandingPage({
                         className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
                         aria-label="Назад"
                       >
-                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(90deg)' }} aria-hidden>
+                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }} aria-hidden>
                           <path
                             d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z"
                             fill="#FFFFFF"
@@ -754,8 +775,8 @@ export default function OrderCreationLandingPage({
                       <button
                         type="button"
                         onClick={handlePrepTypeNext}
-                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
-                        style={{ ...involve, fontSize: 16, lineHeight: '315%', color: '#050505' }}
+                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                        style={wizardNextStyle(1)}
                       >
                         Далее
                       </button>
@@ -785,16 +806,23 @@ export default function OrderCreationLandingPage({
                         { id: 1, label: 'Компания знакома с трендами' },
                       ].map((item) => {
                         const selected = grade === item.id;
+                        const showRequired = attemptedStep2 && grade == null;
                         return (
                           <button
                             key={item.id}
                             type="button"
                             onClick={() => setGrade(item.id)}
                             className="box-border flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-solid bg-transparent px-[10px] text-left outline-none"
-                            style={{ borderColor: selected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.1)' }}
+                            style={{ borderColor: showRequired ? 'rgba(255,255,255,0.5)' : selected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.1)' }}
                           >
-                            <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)]" style={{ background: selected ? '#FFFFFF' : 'transparent' }} />
-                            <span style={{ ...involve, fontSize: 16, lineHeight: '125%', color: selected ? '#FFFFFF' : 'rgba(255,255,255,0.5)' }}>{item.label}</span>
+                            <span className="flex h-4 w-4 shrink-0 items-center justify-center">
+                              {selected ? (
+                                <ManaStyleSelectedCheckIcon />
+                              ) : (
+                                <span className="h-4 w-4 rounded-full border border-[rgba(255,255,255,0.5)]" />
+                              )}
+                            </span>
+                            <span style={{ ...involve, fontSize: 16, lineHeight: '125%', color: selected || showRequired ? '#FFFFFF' : 'rgba(255,255,255,0.5)' }}>{item.label}</span>
                           </button>
                         );
                       })}
@@ -807,7 +835,7 @@ export default function OrderCreationLandingPage({
                         className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
                         aria-label="Назад"
                       >
-                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(90deg)' }} aria-hidden>
+                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }} aria-hidden>
                           <path
                             d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z"
                             fill="#FFFFFF"
@@ -817,8 +845,8 @@ export default function OrderCreationLandingPage({
                       <button
                         type="button"
                         onClick={handleGradeNext}
-                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
-                        style={{ ...involve, fontSize: 16, lineHeight: '315%', color: '#050505' }}
+                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                        style={wizardNextStyle(2)}
                       >
                         Далее
                       </button>
@@ -848,16 +876,23 @@ export default function OrderCreationLandingPage({
                         { id: 'load-high', label: 'Компания загружена на 95%' },
                       ].map((item) => {
                         const selected = selectedSubjectIds.includes(item.id);
+                        const showRequired = attemptedStep3 && selectedSubjectIds.length === 0;
                         return (
                           <button
                             key={item.id}
                             type="button"
                             onClick={() => setSelectedSubjectIds([item.id])}
                             className="box-border flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-solid bg-transparent px-[10px] text-left outline-none"
-                            style={{ borderColor: selected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.1)' }}
+                            style={{ borderColor: showRequired ? 'rgba(255,255,255,0.5)' : selected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.1)' }}
                           >
-                            <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)]" style={{ background: selected ? '#FFFFFF' : 'transparent' }} />
-                            <span style={{ ...involve, fontSize: 16, lineHeight: '125%', color: selected ? '#FFFFFF' : 'rgba(255,255,255,0.5)' }}>{item.label}</span>
+                            <span className="flex h-4 w-4 shrink-0 items-center justify-center">
+                              {selected ? (
+                                <ManaStyleSelectedCheckIcon />
+                              ) : (
+                                <span className="h-4 w-4 rounded-full border border-[rgba(255,255,255,0.5)]" />
+                              )}
+                            </span>
+                            <span style={{ ...involve, fontSize: 16, lineHeight: '125%', color: selected || showRequired ? '#FFFFFF' : 'rgba(255,255,255,0.5)' }}>{item.label}</span>
                           </button>
                         );
                       })}
@@ -870,7 +905,7 @@ export default function OrderCreationLandingPage({
                         className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
                         aria-label="Назад"
                       >
-                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(90deg)' }} aria-hidden>
+                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }} aria-hidden>
                           <path
                             d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z"
                             fill="#FFFFFF"
@@ -880,8 +915,8 @@ export default function OrderCreationLandingPage({
                       <button
                         type="button"
                         onClick={handleSubjectsNext}
-                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
-                        style={{ ...involve, fontSize: 16, lineHeight: '315%', color: '#050505' }}
+                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                        style={wizardNextStyle(3)}
                       >
                         Далее
                       </button>
@@ -909,7 +944,9 @@ export default function OrderCreationLandingPage({
                       <div
                         className="box-border flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent px-[10px]"
                       >
-                        <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)] bg-white" />
+                        <span className="flex h-4 w-4 shrink-0 items-center justify-center">
+                          <ManaStyleSelectedCheckIcon />
+                        </span>
                         <div className="min-w-0">
                           <p className="m-0" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: '#FFFFFF' }}>
                             Категорически важно ведение маркетингового и медиа, и сайта

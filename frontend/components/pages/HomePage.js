@@ -276,7 +276,7 @@ export default function HomePage({
         */}
         <header
           className={`pointer-events-none fixed left-0 right-0 top-0 z-40 w-full bg-transparent ${
-            hideHeaderForConsultation || activeSection === 'hero' ? 'invisible' : ''
+            hideHeaderForConsultation ? 'invisible' : ''
           }`}
         >
           <div

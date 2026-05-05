@@ -327,9 +327,9 @@ function ManaGlassCheckCircle16() {
 
 function ManaGiftHeartIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+    <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
       <path
-        d="M10 17.5L8.825 16.45C4.5 12.6 1.75 10.2125 1.75 7.25C1.75 4.85 3.6 3 6 3C7.3 3 8.55 3.65 10 4.85C11.45 3.65 12.7 3 14 3C16.4 3 18.25 4.85 18.25 7.25C18.25 10.2125 15.5 12.6 11.175 16.45L10 17.5Z"
+        d="M12.6562 0C11.043 0 9.63047 0.69375 8.75 1.86641C7.86953 0.69375 6.45703 0 4.84375 0C3.55955 0.00144745 2.32837 0.512235 1.4203 1.4203C0.512235 2.32837 0.00144745 3.55955 0 4.84375C0 10.3125 8.10859 14.7391 8.45391 14.9219C8.54492 14.9708 8.64665 14.9965 8.75 14.9965C8.85335 14.9965 8.95508 14.9708 9.04609 14.9219C9.39141 14.7391 17.5 10.3125 17.5 4.84375C17.4986 3.55955 16.9878 2.32837 16.0797 1.4203C15.1716 0.512235 13.9404 0.00144745 12.6562 0ZM8.75 13.6563C7.32344 12.825 1.25 9.03828 1.25 4.84375C1.25124 3.89101 1.63026 2.97765 2.30396 2.30396C2.97765 1.63026 3.89101 1.25124 4.84375 1.25C6.36328 1.25 7.63906 2.05938 8.17188 3.35938C8.21896 3.47401 8.29907 3.57205 8.40201 3.64105C8.50494 3.71005 8.62607 3.7469 8.75 3.7469C8.87393 3.7469 8.99506 3.71005 9.09799 3.64105C9.20093 3.57205 9.28104 3.47401 9.32812 3.35938C9.86094 2.05703 11.1367 1.25 12.6562 1.25C13.609 1.25124 14.5224 1.63026 15.196 2.30396C15.8697 2.97765 16.2488 3.89101 16.25 4.84375C16.25 9.03203 10.175 12.8242 8.75 13.6563Z"
         fill="#FFFFFF"
       />
     </svg>
@@ -356,12 +356,12 @@ function ManaGlassChevronRight() {
   );
 }
 
-function ManaGlassPriceFab({ onClick }) {
+function ManaGlassPriceFab({ onClick, className = '' }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[7.5px]"
+      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] bg-transparent ${className}`}
       aria-label="Далее к заявке"
     >
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
@@ -516,10 +516,11 @@ function ManaGlassMarketingCarouselCard({
       className="carousel-card relative flex shrink-0 flex-col overflow-hidden"
       style={{
         height: 'auto',
+        width: 360,
         alignSelf: 'flex-end',
         scrollSnapAlign: 'start',
         boxSizing: 'border-box',
-        maxWidth: 'min(360px, 100%)',
+        maxWidth: '100%',
         transform: leavingDown || baseEntering ? 'translateY(120%)' : 'translateY(0)',
         opacity: leavingDown || baseEntering ? 0 : 1,
         transition: 'transform 320ms ease, opacity 320ms ease',
@@ -611,7 +612,7 @@ function ManaGlassMarketingCarouselCard({
           <ManaGlassDivider />
         </div>
 
-        <div className="mt-4 flex max-w-[330px] items-start justify-between gap-3">
+        <div className="relative mt-4 flex max-w-[330px] items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <p className="m-0" style={{ ...involveMana, fontSize: 20, lineHeight: '125%', color: '#FFFFFF' }}>
               {cardPrice}
@@ -620,7 +621,7 @@ function ManaGlassMarketingCarouselCard({
               Рассрочка под ноль годовых до 3 мес.
             </p>
           </div>
-          {typeof onNavigateToOrder === 'function' ? <ManaGlassPriceFab onClick={onNavigateToOrder} /> : null}
+          {typeof onNavigateToOrder === 'function' ? <ManaGlassPriceFab onClick={onNavigateToOrder} className="absolute right-0 top-[16px]" /> : null}
         </div>
 
         <div className="mt-4">
@@ -788,10 +789,11 @@ function ManaGlassMarketingCarouselCardTwo({
       className="carousel-card relative flex shrink-0 flex-col overflow-hidden"
       style={{
         height: 'auto',
+        width: 360,
         alignSelf: 'flex-end',
         scrollSnapAlign: 'start',
         boxSizing: 'border-box',
-        maxWidth: 'min(360px, 100%)',
+        maxWidth: '100%',
         ...containerStyle,
       }}
     >
@@ -902,7 +904,7 @@ function ManaGlassMarketingCarouselCardTwo({
           <ManaGlassDivider />
         </div>
 
-        <div className={`${priceGap} flex max-w-[330px] items-start justify-between gap-3`}>
+        <div className={`${priceGap} relative flex max-w-[330px] items-start justify-between gap-3`}>
           <div className="min-w-0 flex-1">
             <p className="m-0" style={{ ...involveMana, fontSize: 20, lineHeight: '125%', color: '#FFFFFF' }}>
               {expandedPrice}
@@ -911,7 +913,7 @@ function ManaGlassMarketingCarouselCardTwo({
               Рассрочка под ноль годовых до 3 мес.
             </p>
           </div>
-          {typeof onNavigateToOrder === 'function' ? <ManaGlassPriceFab onClick={onNavigateToOrder} /> : null}
+          {typeof onNavigateToOrder === 'function' ? <ManaGlassPriceFab onClick={onNavigateToOrder} className="absolute right-0 top-[16px]" /> : null}
         </div>
 
         <div className={dividerGap}>

@@ -398,7 +398,6 @@ export default function ConsultationLandingPage({
           }}
         >
           <div className="relative box-border flex h-full min-h-0 w-full min-w-0 flex-col bg-[#050505]" style={{ boxSizing: 'border-box' }}>
-            <ManaMarketingHeader onConsultationClick={() => setConsultationFlowOpen(true)} menuHref="#section-hero" />
             {stackedNotificationsPortal}
             <div className="relative min-h-0 w-full flex-1 shrink">
               <div

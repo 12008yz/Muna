@@ -407,9 +407,10 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
               ...involve,
               fontSize: '16px',
               lineHeight: '315%',
-              border: '1px solid #FFFFFF',
-              background: selectedMethod ? '#FFFFFF' : 'rgba(255, 255, 255, 0.08)',
-              color: selectedMethod ? '#050505' : 'rgba(255, 255, 255, 0.35)',
+              border: selectedMethod ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
+              background: selectedMethod ? '#FFFFFF' : 'transparent',
+              color: selectedMethod ? '#050505' : '#FFFFFF',
+              opacity: selectedMethod ? 1 : 0.25,
               transform: isNextBtnPressed && selectedMethod ? 'scale(0.97)' : 'scale(1)',
               transition: 'transform 0.15s ease-out',
             }}
@@ -431,6 +432,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
     const stackMuted = 'rgba(255, 255, 255, 0.25)';
     const stackStrong = 'rgba(255, 255, 255, 0.85)';
     const formCanSubmit = nameOk && isPhoneValid && privacyAccepted;
+    const callbackNextSolid = !callbackFormAttempted || formCanSubmit;
 
     return (
       <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#050505]">
@@ -640,10 +642,11 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
                 ...involve,
                 fontSize: '16px',
                 lineHeight: '315%',
-                border: '1px solid #FFFFFF',
-                background: formCanSubmit ? '#FFFFFF' : 'rgba(255, 255, 255, 0.08)',
-                color: formCanSubmit ? '#050505' : 'rgba(255, 255, 255, 0.35)',
-                transform: isPhoneNextBtnPressed && formCanSubmit ? 'scale(0.97)' : 'scale(1)',
+                border: callbackNextSolid ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
+                background: callbackNextSolid ? '#FFFFFF' : 'transparent',
+                color: callbackNextSolid ? '#050505' : '#FFFFFF',
+                opacity: callbackNextSolid ? 1 : 0.25,
+                transform: isPhoneNextBtnPressed && callbackNextSolid ? 'scale(0.97)' : 'scale(1)',
                 transition: 'transform 0.15s ease-out',
               }}
             >
@@ -728,9 +731,10 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
             height: '50px',
             fontSize: '16px',
             lineHeight: '315%',
-            border: '1px solid #FFFFFF',
-            background: isPhoneValid ? '#FFFFFF' : 'rgba(255, 255, 255, 0.08)',
-            color: isPhoneValid ? '#050505' : 'rgba(255, 255, 255, 0.35)',
+            border: isPhoneValid ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
+            background: isPhoneValid ? '#FFFFFF' : 'transparent',
+            color: isPhoneValid ? '#050505' : '#FFFFFF',
+            opacity: isPhoneValid ? 1 : 0.25,
           }}
         >
           Далее
