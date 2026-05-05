@@ -328,21 +328,12 @@ export default function ConsultationLandingPage({
   const privacyLinkHref = PRIVACY_HREF;
   const notificationsNode = (
     <div
-      className={`pointer-events-none z-[10060] flex flex-col ${
-        isStacked
-          ? 'fixed'
-          : 'absolute left-0 right-0 items-center px-[var(--main-block-margin)]'
-      }`}
-      style={
-        isStacked
-          ? {
-              top: notificationsTop,
-              left: 'var(--main-block-margin)',
-              width: 360,
-              isolation: 'isolate',
-            }
-          : { top: notificationsTop }
-      }
+      className="pointer-events-none fixed z-[10060] flex w-full max-w-[360px] -translate-x-1/2 flex-col"
+      style={{
+        top: 125,
+        left: '50%',
+        isolation: 'isolate',
+      }}
     >
       {(showCookieBanner || cookieBannerClosing) && (
         <div
