@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { createPortal } from 'react-dom';
 import { dispatchNavigateToOrderLanding } from '@/lib/navigateToOrderLanding';
 import ConsultationFlow from '@/components/modals/ConsultationFlow';
 import ManaMarketingHeader from '@/components/landing/ManaMarketingHeader';
@@ -346,10 +347,11 @@ function ManaGlassChevronRight() {
       aria-hidden
       className="shrink-0"
     >
-      <path
-        d="M8 0C6.41775 0 4.87103 0.469192 3.55544 1.34824C2.23985 2.22729 1.21447 3.47672 0.608967 4.93853C0.00346628 6.40034 -0.15496 8.00887 0.153721 9.56072C0.462403 11.1126 1.22433 12.538 2.34315 13.6569C3.46197 14.7757 4.88743 15.5376 6.43928 15.8463C7.99113 16.155 9.59966 15.9965 11.0615 15.391C12.5233 14.7855 13.7727 13.7602 14.6518 12.4446C15.5308 11.129 16 9.58225 16 8C15.9978 5.87895 15.1542 3.84542 13.6544 2.34562C12.1546 0.845814 10.121 0.00223986 8 0ZM8 14.7692C6.66117 14.7692 5.35241 14.3722 4.23922 13.6284C3.12603 12.8846 2.2584 11.8274 1.74605 10.5905C1.2337 9.35356 1.09965 7.99249 1.36084 6.67939C1.62203 5.36629 2.26674 4.16012 3.21343 3.21343C4.16013 2.26674 5.36629 1.62203 6.67939 1.36084C7.99249 1.09965 9.35356 1.2337 10.5905 1.74605C11.8274 2.25839 12.8846 3.12602 13.6284 4.23922C14.3722 5.35241 14.7692 6.66117 14.7692 8C14.7672 9.79468 14.0534 11.5153 12.7843 12.7843C11.5153 14.0534 9.79469 14.7672 8 14.7692ZM11.6923 8C11.6923 8.16321 11.6275 8.31973 11.5121 8.43514C11.3967 8.55055 11.2401 8.61538 11.0769 8.61538H8.61539V11.0769C8.61539 11.2401 8.55055 11.3967 8.43514 11.5121C8.31974 11.6275 8.16321 11.6923 8 11.6923C7.83679 11.6923 7.68027 11.6275 7.56486 11.5121C7.44945 11.3967 7.38462 11.2401 7.38462 11.0769V8.61538H4.92308C4.75987 8.61538 4.60334 8.55055 4.48794 8.43514C4.37253 8.31973 4.30769 8.16321 4.30769 8C4.30769 7.83679 4.37253 7.68026 4.48794 7.56486C4.60334 7.44945 4.75987 7.38461 4.92308 7.38461H7.38462V4.92308C7.38462 4.75987 7.44945 4.60334 7.56486 4.48793C7.68027 4.37253 7.83679 4.30769 8 4.30769C8.16321 4.30769 8.31974 4.37253 8.43514 4.48793C8.55055 4.60334 8.61539 4.75987 8.61539 4.92308V7.38461H11.0769C11.2401 7.38461 11.3967 7.44945 11.5121 7.56486C11.6275 7.68026 11.6923 7.83679 11.6923 8Z"
-        fill="white"
-      />
+      <circle cx="8" cy="8" r="7.1" stroke="#FFFFFF" strokeWidth="1.4" />
+      <path d="M8 4.2V11.8" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M4.2 8H11.8" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M5.35 5.35L10.65 10.65" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M10.65 5.35L5.35 10.65" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
   );
 }
@@ -408,10 +410,13 @@ function ManaGlassMarketingCarouselCard({
 }) {
   const isSiteVariant = initialVariant === 'site';
   const [showInformScreen, setShowInformScreen] = useState(false);
+  const [showGiftScreen, setShowGiftScreen] = useState(false);
   const [leavingDown, setLeavingDown] = useState(false);
   const [baseEntering, setBaseEntering] = useState(false);
   const [expandedEntering, setExpandedEntering] = useState(false);
   const [expandedLeaving, setExpandedLeaving] = useState(false);
+  const [giftEntering, setGiftEntering] = useState(false);
+  const [giftLeaving, setGiftLeaving] = useState(false);
   const defaultTitle = isSiteVariant ? 'Формирование сайта' : 'Формирование контента';
   const defaultDescription = isSiteVariant
     ? 'Наличие комфортного сайта служит важным маркетинговым инструментом малого и среднего предпринимательства'
@@ -447,10 +452,47 @@ function ManaGlassMarketingCarouselCard({
     }, 320);
   };
 
+  const handleExpandedGiftClick = () => {
+    if (expandedLeaving || showGiftScreen || !showInformScreen) return;
+    setExpandedLeaving(true);
+    window.setTimeout(() => {
+      setShowInformScreen(false);
+      setShowGiftScreen(true);
+      setExpandedLeaving(false);
+      setGiftEntering(true);
+      window.requestAnimationFrame(() => setGiftEntering(false));
+    }, 320);
+  };
+
+  const handleGiftBackClick = () => {
+    if (giftLeaving || !showGiftScreen) return;
+    setGiftLeaving(true);
+    window.setTimeout(() => {
+      setShowGiftScreen(false);
+      setGiftLeaving(false);
+      setShowInformScreen(true);
+      setExpandedEntering(true);
+      window.requestAnimationFrame(() => setExpandedEntering(false));
+    }, 320);
+  };
+
+  if (showGiftScreen) {
+    return (
+      <ManaGiftFlowCard
+        onBack={handleGiftBackClick}
+        containerStyle={{
+          transform: giftEntering || giftLeaving ? 'translateY(120%)' : 'translateY(0)',
+          opacity: giftEntering || giftLeaving ? 0 : 1,
+          transition: 'transform 320ms ease, opacity 320ms ease',
+        }}
+      />
+    );
+  }
+
   if (showInformScreen) {
     return (
       <ManaGlassMarketingCarouselCardTwo
-        onGiftClick={() => {}}
+        onGiftClick={handleExpandedGiftClick}
         onArrowClick={onArrowClick}
         onNavigateToOrder={onNavigateToOrder}
         onInformClick={handleExpandedInformClick}
@@ -605,6 +647,105 @@ function ManaGlassMarketingCarouselCard({
         </button>
       </article>
     </div>
+  );
+}
+
+function ManaGiftFlowCard({ onBack, containerStyle }) {
+  const [portalReady, setPortalReady] = useState(false);
+  const [email, setEmail] = useState('');
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [newsAccepted, setNewsAccepted] = useState(false);
+
+  const canSubmit = email.trim().length > 0 && privacyAccepted && newsAccepted;
+
+  useEffect(() => {
+    setPortalReady(true);
+  }, []);
+
+  if (!portalReady) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[20000] flex items-end justify-center bg-[#050505] px-[20px] pb-[20px] pt-[80px]">
+      <button
+        type="button"
+        onClick={onBack}
+        className="absolute left-[20px] top-[calc(var(--sat,0px)+10px)] z-[1] flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[5px]"
+        aria-label="Назад"
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <path
+            d="M10 0C8.02219 0 6.08879 0.58649 4.4443 1.6853C2.79981 2.78412 1.51809 4.3459 0.761209 6.17316C0.00433284 8.00042 -0.1937 10.0111 0.192152 11.9509C0.578004 13.8907 1.53041 15.6725 2.92894 17.0711C4.32746 18.4696 6.10929 19.422 8.0491 19.8078C9.98891 20.1937 11.9996 19.9957 13.8268 19.2388C15.6541 18.4819 17.2159 17.2002 18.3147 15.5557C19.4135 13.9112 20 11.9778 20 10C19.9972 7.34869 18.9427 4.80678 17.068 2.93202C15.1932 1.05727 12.6513 0.00279983 10 0ZM13.8462 10.7692H8.01058L9.775 12.5327C9.84647 12.6042 9.90316 12.689 9.94184 12.7824C9.98052 12.8758 10.0004 12.9758 10.0004 13.0769C10.0004 13.178 9.98052 13.2781 9.94184 13.3715C9.90316 13.4648 9.84647 13.5497 9.775 13.6212C9.70353 13.6926 9.61869 13.7493 9.52531 13.788C9.43193 13.8267 9.33184 13.8466 9.23077 13.8466C9.1297 13.8466 9.02962 13.8267 8.93624 13.788C8.84286 13.7493 8.75801 13.6926 8.68654 13.6212L5.60962 10.5442C5.5381 10.4728 5.48136 10.3879 5.44265 10.2946C5.40394 10.2012 5.38401 10.1011 5.38401 10C5.38401 9.89891 5.40394 9.79881 5.44265 9.70543C5.48136 9.61205 5.5381 9.52721 5.60962 9.45577L8.68654 6.37884C8.83088 6.23451 9.02665 6.15342 9.23077 6.15342C9.4349 6.15342 9.63066 6.23451 9.775 6.37884C9.91934 6.52318 10.0004 6.71895 10.0004 6.92308C10.0004 7.1272 9.91934 7.32297 9.775 7.46731L8.01058 9.23077H13.8462C14.0502 9.23077 14.2458 9.31181 14.3901 9.45607C14.5343 9.60033 14.6154 9.79599 14.6154 10C14.6154 10.204 14.5343 10.3997 14.3901 10.5439C14.2458 10.6882 14.0502 10.7692 13.8462 10.7692Z"
+            fill="#FFFFFF"
+          />
+        </svg>
+      </button>
+      <div
+        className="carousel-card relative flex w-full max-w-[360px] shrink-0 flex-col overflow-hidden"
+        style={{
+          height: 'auto',
+          alignSelf: 'flex-end',
+          scrollSnapAlign: 'start',
+          boxSizing: 'border-box',
+          ...containerStyle,
+        }}
+      >
+        <article className="box-border w-full px-[15px] pb-5 pt-[15px]" style={manaGlassCardStyle}>
+        <p className="m-0" style={{ ...involveMana, fontSize: 18, lineHeight: '110%', color: '#FFFFFF' }}>
+          Подарок, как маркетинговая карта
+        </p>
+        <p className="m-0 mt-[10px]" style={{ ...involveMana, fontSize: 14, lineHeight: '110%', color: 'rgba(255,255,255,0.25)' }}>
+          Рассылка неполезного отсутствует.
+          <br />
+          Рассылка неинтересного тоже отсутствует
+        </p>
+
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Имя электронного ящика"
+          className="mt-[15px] h-[50px] w-full rounded-[10px] border border-[rgba(255,255,255,0.5)] bg-transparent px-[15px] outline-none placeholder:text-[rgba(255,255,255,0.5)]"
+          style={{ ...involveMana, fontSize: 16, lineHeight: '125%', color: '#FFFFFF' }}
+        />
+
+        <button
+          type="button"
+          onClick={() => setPrivacyAccepted((v) => !v)}
+          className="mt-[15px] flex w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] py-[8px] text-left"
+        >
+          <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)]" style={{ background: privacyAccepted ? '#FFFFFF' : 'transparent' }} />
+          <span style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: '#FFFFFF' }}>
+            Я, полностью соглашаюсь с условиями
+            <br />
+            <span className="underline">политики конфиденциальности сайта</span>
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setNewsAccepted((v) => !v)}
+          className="mt-[5px] flex w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] py-[8px] text-left"
+        >
+          <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)]" style={{ background: newsAccepted ? '#FFFFFF' : 'transparent' }} />
+          <span style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: '#FFFFFF' }}>
+            Я, полностью соглашаюсь с условиями
+            <br />
+            <span className="underline">политики новостной отправки сайта</span>
+          </span>
+        </button>
+
+        <button
+          type="button"
+          disabled={!canSubmit}
+          className={`mt-[15px] h-[50px] w-full rounded-[10px] border border-white ${canSubmit ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+          style={{ ...involveMana, fontSize: 16, lineHeight: '315%', color: '#050505', background: '#FFFFFF', opacity: canSubmit ? 1 : 0.75 }}
+        >
+          Подтверждение
+        </button>
+        </article>
+      </div>
+    </div>,
+    document.body
   );
 }
 

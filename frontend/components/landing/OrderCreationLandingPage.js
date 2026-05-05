@@ -2,10 +2,9 @@
 
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ManaMarketingHeader from '@/components/landing/ManaMarketingHeader';
-import ConsultationModal from '@/components/modals/ConsultationModal';
+import ConsultationFlow from '@/components/modals/ConsultationFlow';
 import { HINT_TOP } from '@/components/common/ClickOutsideHint';
 import { NAVIGATE_TO_ORDER_LANDING_EVENT } from '@/lib/navigateToOrderLanding';
 const involve = {
@@ -24,10 +23,10 @@ const wizardTitleStyle = {
   minHeight: 20,
   fontSize: 18,
   lineHeight: '110%',
-  color: '#101010',
+  color: '#FFFFFF',
   display: 'flex',
   alignItems: 'center',
-  marginBottom: 10,
+  marginBottom: 6,
 };
 
 /** Подзаголовок мастера (Figma: 330×15, 14px, line-height 110%, color 50%) */
@@ -38,8 +37,8 @@ const wizardSubtitleStyle = {
   minHeight: 15,
   fontSize: 14,
   lineHeight: '110%',
-  color: 'rgba(16, 16, 16, 0.5)',
-  marginBottom: 20,
+  color: 'rgba(255, 255, 255, 0.25)',
+  marginBottom: 10,
 };
 
 /** Как в ConsultationFlow / GroupTrainingPage / PrivacyPolicyPage (кнопка: safe area + 10px). */
@@ -279,6 +278,7 @@ export default function OrderCreationLandingPage({
   /** До первой неуспешной попытки кнопка тёмная; после клика без согласия — белая до валидного состояния */
   const [submitAttemptedWithoutPrivacy, setSubmitAttemptedWithoutPrivacy] = useState(false);
   const [consultationFlowOpen, setConsultationFlowOpen] = useState(false);
+  const [consultationInitialStep, setConsultationInitialStep] = useState('contact-method');
   const [leadSubmitting, setLeadSubmitting] = useState(false);
   const [stepVisualState, setStepVisualState] = useState('in');
   const stepTransitionTimerRef = useRef(null);
@@ -368,7 +368,10 @@ export default function OrderCreationLandingPage({
 
   useEffect(() => {
     if (!isStacked || typeof exposeOpenConsultation !== 'function') return;
-    exposeOpenConsultation(() => setConsultationFlowOpen(true));
+    exposeOpenConsultation(() => {
+      setConsultationInitialStep('contact-method');
+      setConsultationFlowOpen(true);
+    });
     return () => exposeOpenConsultation(null);
   }, [isStacked, exposeOpenConsultation]);
 
@@ -399,11 +402,6 @@ export default function OrderCreationLandingPage({
   useEffect(() => () => clearStepTransitionHandles(), []);
 
   const goToTariffStep = () => {
-    if (!privacyAccepted) {
-      setPrivacyConsentTouched(true);
-      setSubmitAttemptedWithoutPrivacy(true);
-      return;
-    }
     setOrderStepAnimated(1);
   };
 
@@ -463,17 +461,7 @@ export default function OrderCreationLandingPage({
   };
 
   const handleDurationNext = () => {
-    if (!durationId) {
-      setAttemptedStep4(true);
-      return;
-    }
-    try {
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem(ORDER_DURATION_KEY, durationId);
-      }
-    } catch {
-      // игнорируем
-    }
+    setConsultationInitialStep('phone-callback-form');
     setConsultationFlowOpen(true);
   };
 
@@ -528,10 +516,15 @@ export default function OrderCreationLandingPage({
     <button
       type="button"
       onClick={collapseWizardToLanding}
-      className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-white/50 bg-white backdrop-blur-[5px] transition-opacity hover:opacity-90 outline-none focus:outline-none"
+      className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90 outline-none focus:outline-none"
       aria-label="Свернуть окно"
     >
-      <CollapseIcon />
+      <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }} aria-hidden>
+        <path
+          d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z"
+          fill="#FFFFFF"
+        />
+      </svg>
     </button>
   );
 
@@ -562,9 +555,9 @@ export default function OrderCreationLandingPage({
       );
     })();
 
-  const renderLeadCard = (buttonHandler, headingVariant = 'default') => (
+  const renderLeadCard = (buttonHandler) => (
     <div
-      className="absolute box-border bg-white"
+      className="absolute box-border"
       style={{
         left: 'var(--main-block-margin)',
         right: 'var(--main-block-margin)',
@@ -574,101 +567,47 @@ export default function OrderCreationLandingPage({
         flexDirection: 'column',
         padding: 15,
         boxSizing: 'border-box',
-        gap: 5,
+        gap: 0,
+        background: 'rgba(5, 5, 5, 0.75)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(7.5px)',
+        WebkitBackdropFilter: 'blur(7.5px)',
         ...wizardDissolveStyle,
       }}
     >
-      <h1 className="m-0 flex-shrink-0" style={{ ...involve, fontSize: 20, lineHeight: '125%', color: '#101010', paddingBottom: 15 }}>
-        {headingVariant === 'final' ? 'Призвание школьников,' : 'Формирование своих тарифов'}
+      <h1 className="m-0 flex-shrink-0" style={{ ...involve, fontSize: 20, lineHeight: '125%', color: '#FFFFFF' }}>
+        Маркетинговое прогнозирование
         <br />
-        {headingVariant === 'final' ? 'с 7 по 11 класс, чтобы все жизненные и деловые мечты' : 'с 5 по 11 класс, чтобы все'}
+        потенциала для захвата рынка
         <br />
-        {headingVariant === 'final' ? (
-          'воплотились на сто процентов'
-        ) : (
-          <>
-            государственные экзамены
-            <br />
-            сдали на топ баллов
-          </>
-        )}
+        при помощи медиа и сайта,
+        <br />
+        малого и среднего дела
       </h1>
-
-      <div
-        className="box-border flex min-w-0 shrink-0 items-center gap-[5px] self-start rounded-[100px] bg-[#ebebeb] px-[5px]"
-        style={{ width: 'calc(100% - 10px)', maxWidth: '100%', height: 25 }}
-      >
-        <span className="flex h-[15px] w-[15px] shrink-0 items-center justify-center" aria-hidden>
-          <BadgeCheckIcon />
-        </span>
-        <span className="flex min-h-0 min-w-0 flex-1 items-center overflow-hidden text-ellipsis whitespace-nowrap text-[12px] font-medium leading-[25px] text-[rgba(16,16,16,0.75)]" style={involve}>
-          свыше 999+ школьников подготовились с нами
-        </span>
-      </div>
-
-      <div className="w-full min-w-0 shrink-0" style={{ marginTop: 5 }}>
-        <button
-          type="button"
-          className="relative box-border flex w-full min-w-0 cursor-pointer items-center rounded-[10px] border border-solid bg-white text-left outline-none focus:outline-none"
-          style={{
-            height: 50,
-            minHeight: 50,
-            paddingLeft: 10,
-            paddingRight: 10,
-            boxSizing: 'border-box',
-            borderColor: privacyAccepted ? privacyBorderMuted : privacyShowStrongBorder ? privacyBorderStrong : privacyBorderMuted,
-          }}
-          onClick={() => {
-            setPrivacyConsentTouched(true);
-            setPrivacyAccepted(!privacyAccepted);
-          }}
-        >
-          <span
-            className="flex flex-shrink-0 items-center justify-center rounded-full border border-solid box-border"
-            style={{
-              width: 16,
-              height: 16,
-              marginRight: 8,
-              borderColor: privacyAccepted ? 'transparent' : privacyShowStrongBorder ? privacyBorderStrong : privacyBorderMuted,
-              background: privacyAccepted ? '#101010' : 'transparent',
-            }}
-          >
-            {privacyAccepted ? <ConsentCheckIcon /> : null}
-          </span>
-          <span className="text-[14px] font-medium leading-[105%] text-[#101010]" style={{ ...involve, flex: 1, minWidth: 0 }}>
-            Я, полностью соглашаюсь с условиями
-            <br />
-            <Link
-              href="/privacy-policy"
-              className="text-[#2563eb] underline decoration-solid [text-underline-offset:3px]"
-              style={{ textDecorationSkipInk: 'none' }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              политики приватности
-            </Link>{' '}
-            этого портала
-          </span>
-        </button>
-      </div>
+      <p className="m-0 mt-[15px]" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: 'rgba(255, 255, 255, 0.5)' }}>
+        Прогнозирование однозначно важного,
+        <br />
+        одновременно, сейчас неизвестного
+      </p>
 
       <button
         type="button"
-        className="box-border mt-[15px] flex w-full min-w-0 shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-[background,color] duration-150 focus:outline-none"
+        className="box-border mt-[20px] flex w-full min-w-0 shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
         style={{
           ...involve,
           width: '100%',
           height: 50,
           minHeight: 50,
-          background: submitButtonSolid ? '#101010' : '#FFFFFF',
-          border: 'none',
+          background: '#FFFFFF',
+          border: '1px solid #FFFFFF',
           borderRadius: 10,
           fontSize: 16,
           lineHeight: '315%',
-          color: submitButtonSolid ? '#FFFFFF' : 'rgba(16, 16, 16, 0.5)',
+          color: '#050505',
         }}
         onClick={buttonHandler}
       >
-        {headingVariant === 'final' ? 'Профориентирование' : 'Формирование'}
+        Прогнозирование
       </button>
     </div>
   );
@@ -704,11 +643,21 @@ export default function OrderCreationLandingPage({
           }}
         >
           {(orderStep === 0 || orderStep === 5) && !isStacked ? (
-            <ManaMarketingHeader onConsultationClick={() => setConsultationFlowOpen(true)} menuHref="/" />
+            <ManaMarketingHeader
+              onConsultationClick={() => {
+                setConsultationInitialStep('contact-method');
+                setConsultationFlowOpen(true);
+              }}
+              menuHref="/"
+            />
           ) : null}
 
-          {orderStep === 0 && renderLeadCard(goToTariffStep, 'default')}
-          {orderStep === 5 && renderLeadCard(() => setConsultationFlowOpen(true), 'final')}
+          {orderStep === 0 && renderLeadCard(goToTariffStep)}
+          {orderStep === 5 &&
+            renderLeadCard(() => {
+              setConsultationInitialStep('contact-method');
+              setConsultationFlowOpen(true);
+            })}
 
         {(orderStep === 1 || orderStep === 2 || orderStep === 3 || orderStep === 4) && (
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden" style={{ boxSizing: 'border-box' }}>
@@ -725,7 +674,7 @@ export default function OrderCreationLandingPage({
               ) : null}
 
               <div
-                className="scrollbar-hide mt-auto flex w-full min-w-0 flex-shrink-0 flex-col rounded-[20px] bg-white"
+                className="scrollbar-hide mt-auto flex w-full min-w-0 flex-shrink-0 flex-col rounded-[20px]"
                 style={{
                   marginLeft: 'var(--main-block-margin)',
                   marginRight: 'var(--main-block-margin)',
@@ -733,6 +682,10 @@ export default function OrderCreationLandingPage({
                   boxSizing: 'border-box',
                   padding: 15,
                   marginBottom: 0,
+                  background: 'rgba(5, 5, 5, 0.75)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  backdropFilter: 'blur(7.5px)',
+                  WebkitBackdropFilter: 'blur(7.5px)',
                   ...(isStacked
                     ? {
                         maxHeight: 'calc(var(--unified-section-min-h) - 24px)',
@@ -750,43 +703,59 @@ export default function OrderCreationLandingPage({
                 {orderStep === 1 && (
                   <>
                     <p className="m-0 flex max-w-full flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
-                      Нажмите только на то, что интересно
+                      Главное во всех ответах, это четкость.
+                      <br />
+                      Незаменимое во всех ответах, это честность
+                    </p>
+                    <div className="h-0 w-full max-w-[330px] border-t border-[rgba(255,255,255,0.1)]" />
+                    <p className="m-0 mt-[10px] mb-[15px]" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: 'rgba(255,255,255,0.5)' }}>
+                      Посмотрите сейчас на своё предприятие
+                      <br />
+                      со стороны, например, как ваш клиент.
+                      <br />
+                      Кликните на очень похожее мнение
                     </p>
 
                     <div className="flex flex-col gap-[5px]" style={{ marginBottom: 20 }}>
-                      <TariffPrepOption
-                        label="Групповая подготовка"
-                        selected={prepType === 'group'}
-                        showErrorOutline={attemptedStep1 && !prepType}
-                        onClick={() => setPrepType('group')}
-                      />
-                      <TariffPrepOption
-                        label="Персональная подготовка"
-                        selected={prepType === 'personal'}
-                        showErrorOutline={attemptedStep1 && !prepType}
-                        onClick={() => setPrepType('personal')}
-                      />
+                      {[
+                        { id: 'low-known', label: 'Компания малоизвестна в сети' },
+                        { id: 'high-known', label: 'Компания известна в сети' },
+                      ].map((item) => {
+                        const selected = prepType === item.id;
+                        return (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => setPrepType(item.id)}
+                            className="box-border flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-solid bg-transparent px-[10px] text-left outline-none"
+                            style={{ borderColor: selected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.1)' }}
+                          >
+                            <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)]" style={{ background: selected ? '#FFFFFF' : 'transparent' }} />
+                            <span style={{ ...involve, fontSize: 16, lineHeight: '125%', color: selected ? '#FFFFFF' : 'rgba(255,255,255,0.5)' }}>{item.label}</span>
+                          </button>
+                        );
+                      })}
                     </div>
 
                     <div className="flex items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(0)}
-                        className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(16,16,16,0.15)] bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
+                        className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
                         aria-label="Назад"
                       >
-                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }} aria-hidden>
+                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(90deg)' }} aria-hidden>
                           <path
                             d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z"
-                            fill="#101010"
+                            fill="#FFFFFF"
                           />
                         </svg>
                       </button>
                       <button
                         type="button"
                         onClick={handlePrepTypeNext}
-                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] border-none outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
-                        style={wizardNextStyle(1)}
+                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                        style={{ ...involve, fontSize: 16, lineHeight: '315%', color: '#050505' }}
                       >
                         Далее
                       </button>
@@ -797,40 +766,59 @@ export default function OrderCreationLandingPage({
                 {orderStep === 2 && (
                   <>
                     <p className="m-0 flex max-w-full flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
-                      Нажмите только на то, что действительно
+                      Главное во всех ответах, это четкость.
+                      <br />
+                      Незаменимое во всех ответах, это честность
+                    </p>
+                    <div className="h-0 w-full max-w-[330px] border-t border-[rgba(255,255,255,0.1)]" />
+                    <p className="m-0 mt-[10px] mb-[15px]" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: 'rgba(255,255,255,0.5)' }}>
+                      Посмотрите сейчас на своё предприятие
+                      <br />
+                      со стороны, например, как ваш клиент.
+                      <br />
+                      Кликните на очень похожее мнение
                     </p>
 
                     <div className="flex flex-col gap-[5px]" style={{ marginBottom: 20 }}>
-                      {GRADE_OPTIONS.map((g) => (
-                        <TariffPrepOption
-                          key={g}
-                          label={`${g} класс`}
-                          selected={grade === g}
-                          showErrorOutline={attemptedStep2 && grade == null}
-                          onClick={() => setGrade(g)}
-                        />
-                      ))}
+                      {[
+                        { id: 0, label: 'Компания незнакома с трендами' },
+                        { id: 1, label: 'Компания знакома с трендами' },
+                      ].map((item) => {
+                        const selected = grade === item.id;
+                        return (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => setGrade(item.id)}
+                            className="box-border flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-solid bg-transparent px-[10px] text-left outline-none"
+                            style={{ borderColor: selected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.1)' }}
+                          >
+                            <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)]" style={{ background: selected ? '#FFFFFF' : 'transparent' }} />
+                            <span style={{ ...involve, fontSize: 16, lineHeight: '125%', color: selected ? '#FFFFFF' : 'rgba(255,255,255,0.5)' }}>{item.label}</span>
+                          </button>
+                        );
+                      })}
                     </div>
 
                     <div className="flex items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(1)}
-                        className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(16,16,16,0.15)] bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
+                        className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
                         aria-label="Назад"
                       >
-                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }} aria-hidden>
+                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(90deg)' }} aria-hidden>
                           <path
                             d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z"
-                            fill="#101010"
+                            fill="#FFFFFF"
                           />
                         </svg>
                       </button>
                       <button
                         type="button"
                         onClick={handleGradeNext}
-                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] border-none outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
-                        style={wizardNextStyle(2)}
+                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                        style={{ ...involve, fontSize: 16, lineHeight: '315%', color: '#050505' }}
                       >
                         Далее
                       </button>
@@ -841,40 +829,59 @@ export default function OrderCreationLandingPage({
                 {orderStep === 3 && (
                   <>
                     <p className="m-0 flex max-w-full flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
-                      Нажмите только на то, что интересно
+                      Главное во всех ответах, это четкость.
+                      <br />
+                      Незаменимое во всех ответах, это честность
+                    </p>
+                    <div className="h-0 w-full max-w-[330px] border-t border-[rgba(255,255,255,0.1)]" />
+                    <p className="m-0 mt-[10px] mb-[15px]" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: 'rgba(255,255,255,0.5)' }}>
+                      Посмотрите сейчас на своё предприятие
+                      <br />
+                      со стороны, например, как ваш клиент.
+                      <br />
+                      Кликните на очень похожее мнение
                     </p>
 
                     <div className="flex flex-col gap-[5px]" style={{ marginBottom: 20 }}>
-                      {SUBJECT_OPTIONS.map(({ id, label }) => (
-                        <TariffPrepOption
-                          key={id}
-                          label={label}
-                          selected={selectedSubjectIds.includes(id)}
-                          showErrorOutline={attemptedStep3 && selectedSubjectIds.length === 0}
-                          onClick={() => toggleSubject(id)}
-                        />
-                      ))}
+                      {[
+                        { id: 'load-low', label: 'Компания не загружена на 95%' },
+                        { id: 'load-high', label: 'Компания загружена на 95%' },
+                      ].map((item) => {
+                        const selected = selectedSubjectIds.includes(item.id);
+                        return (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => setSelectedSubjectIds([item.id])}
+                            className="box-border flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-solid bg-transparent px-[10px] text-left outline-none"
+                            style={{ borderColor: selected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.1)' }}
+                          >
+                            <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)]" style={{ background: selected ? '#FFFFFF' : 'transparent' }} />
+                            <span style={{ ...involve, fontSize: 16, lineHeight: '125%', color: selected ? '#FFFFFF' : 'rgba(255,255,255,0.5)' }}>{item.label}</span>
+                          </button>
+                        );
+                      })}
                     </div>
 
                     <div className="flex items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(2)}
-                        className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(16,16,16,0.15)] bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
+                        className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
                         aria-label="Назад"
                       >
-                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }} aria-hidden>
+                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(90deg)' }} aria-hidden>
                           <path
                             d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z"
-                            fill="#101010"
+                            fill="#FFFFFF"
                           />
                         </svg>
                       </button>
                       <button
                         type="button"
                         onClick={handleSubjectsNext}
-                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] border-none outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
-                        style={wizardNextStyle(3)}
+                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                        style={{ ...involve, fontSize: 16, lineHeight: '315%', color: '#050505' }}
                       >
                         Далее
                       </button>
@@ -885,47 +892,43 @@ export default function OrderCreationLandingPage({
                 {orderStep === 4 && (
                   <>
                     <p className="m-0 flex max-w-full flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
-                      Нажмите только на то, что интересно
+                      Главное во всех ответах, это четкость.
+                      <br />
+                      Незаменимое во всех ответах, это честность
+                    </p>
+                    <div className="h-0 w-full max-w-[330px] border-t border-[rgba(255,255,255,0.1)]" />
+                    <p className="m-0 mt-[10px] mb-[15px]" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: 'rgba(255,255,255,0.5)' }}>
+                      Посмотрите сейчас на своё предприятие
+                      <br />
+                      со стороны, например, как ваш клиент.
+                      <br />
+                      Кликните на очень похожее мнение
                     </p>
 
                     <div className="flex flex-col gap-[5px]" style={{ marginBottom: 20 }}>
-                      {DURATION_OPTIONS.map(({ id, label, disabled }) => (
-                        <TariffDurationOption
-                          key={id}
-                          label={label}
-                          disabled={disabled}
-                          selected={!disabled && durationId === id}
-                          showErrorOutline={attemptedStep4 && !durationId && !disabled}
-                          onClick={() => {
-                            if (!disabled) setDurationId(id);
-                          }}
-                        />
-                      ))}
+                      <div
+                        className="box-border flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent px-[10px]"
+                      >
+                        <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)] bg-white" />
+                        <div className="min-w-0">
+                          <p className="m-0" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: '#FFFFFF' }}>
+                            Категорически важно ведение маркетингового и медиа, и сайта
+                          </p>
+                          <p className="m-0" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: '#5050FF' }}>
+                            Риск у компании · {selectedSubjectIds.includes('load-high') ? 'низкий' : 'высокий'}
+                          </p>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-[5px]">
-                      <button
-                        type="button"
-                        onClick={() => setOrderStepAnimated(3)}
-                        className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(16,16,16,0.15)] bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
-                        aria-label="Назад"
-                      >
-                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }} aria-hidden>
-                          <path
-                            d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z"
-                            fill="#101010"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleDurationNext}
-                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] border-none outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
-                        style={wizardNextStyle(4)}
-                      >
-                        Далее
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={handleDurationNext}
+                      className="flex h-[50px] min-h-[50px] w-full cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                      style={{ ...involve, fontSize: 16, lineHeight: '315%', color: '#050505' }}
+                    >
+                      Продолжение
+                    </button>
                   </>
                 )}
               </div>
@@ -938,10 +941,11 @@ export default function OrderCreationLandingPage({
       {stackedWizardCollapsePortal}
 
       {consultationFlowOpen ? (
-        <ConsultationModal
-          isOpen={consultationFlowOpen}
+        <ConsultationFlow
+          initialStep={consultationInitialStep}
           onClose={() => setConsultationFlowOpen(false)}
-          onComplete={handleConsultationFlowSubmit}
+          onSkip={() => setConsultationFlowOpen(false)}
+          onSubmit={handleConsultationFlowSubmit}
         />
       ) : null}
     </>
