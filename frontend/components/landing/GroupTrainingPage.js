@@ -1263,6 +1263,8 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
 
                 {isStacked ? (
                   <ManaGlassMarketingCarouselCard
+                    overrideButtonLabel="Консультирование"
+                    forceActionEnabled
                     onArrowClick={scrollStackedCarouselToNext}
                     onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
                   />
@@ -1283,6 +1285,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                   <ManaGlassMarketingCarouselCard
                     initialVariant="site"
                     allowInformSwitch
+                    overrideButtonLabel="Консультирование"
                     onArrowClick={scrollStackedCarouselToNext}
                     onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
                   />

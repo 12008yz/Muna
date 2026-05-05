@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 const involve = {
   fontFamily: 'var(--font-involve), system-ui, sans-serif',
   fontStyle: 'normal',
@@ -12,6 +14,15 @@ const involve = {
  * нижний слот 125px под декор (в макете background без url), кнопка «Далее» по отступам макета.
  */
 export default function PostLoadIntroScreen({ onContinue }) {
+  const [showContinueButton, setShowContinueButton] = useState(false);
+
+  useEffect(() => {
+    const timerId = window.setTimeout(() => {
+      setShowContinueButton(true);
+    }, 1700);
+    return () => window.clearTimeout(timerId);
+  }, []);
+
   return (
     <div
       className="fixed inset-0 z-[10001] flex justify-center bg-[#050505] pt-[var(--sat,0px)]"
@@ -31,7 +42,8 @@ export default function PostLoadIntroScreen({ onContinue }) {
         <button
           type="button"
           onClick={onContinue}
-          className="absolute box-border flex min-h-[50px] cursor-pointer items-center justify-center border border-solid border-white outline-none transition-opacity hover:opacity-90 focus:outline-none"
+          disabled={!showContinueButton}
+          className="absolute box-border flex min-h-[50px] items-center justify-center border border-solid border-white outline-none transition-opacity duration-500 ease-out hover:opacity-90 focus:outline-none disabled:cursor-default"
           style={{
             ...involve,
             left: '8.75%',
@@ -43,6 +55,8 @@ export default function PostLoadIntroScreen({ onContinue }) {
             color: '#FFFFFF',
             background: 'transparent',
             textAlign: 'center',
+            opacity: showContinueButton ? 1 : 0,
+            pointerEvents: showContinueButton ? 'auto' : 'none',
           }}
         >
           Далее
