@@ -307,12 +307,17 @@ const MANA_GLASS_PLACEHOLDER_ROWS = [
   { title: 'Не заполнено', hint: 'Не заполнено' },
   { title: 'Не заполнено', hint: 'Не заполнено' },
 ];
+const MANA_GLASS_SITE_ROWS = [
+  { title: 'Повышение привлекательности до 65%', hint: 'Предпринимательская необходимость' },
+  { title: 'Повышение удерживаемости до 65%', hint: 'Клиентская удерживаемость' },
+  { title: 'Повышение лояльности до 95%', hint: 'Клиентская лояльность' },
+];
 
 function ManaGlassCheckCircle16() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden className="shrink-0">
       <path
-        d="M8 0C6.41775 0 4.87103 0.469192 3.55544 1.34824C2.23985 2.22729 1.21447 3.47672 0.608967 4.93853C0.00346628 6.40034 -0.15496 8.00887 0.153721 9.56072C0.462403 11.1126 1.22433 12.538 2.34315 13.6569C3.46197 14.7757 4.88743 15.5376 6.43928 15.8463C7.99113 16.155 9.59966 15.9965 11.0615 15.391C12.5233 14.7855 13.7727 13.7602 14.6518 12.4446C15.5308 11.129 16 9.58225 16 8C15.9978 5.87895 15.1542 3.84542 13.6544 2.34562C12.1546 0.845814 10.121 0.00223986 8 0ZM8 14.7692C6.66117 14.7692 5.35241 14.3722 4.23922 13.6284C3.12603 12.8846 2.2584 11.8274 1.74605 10.5905C1.2337 9.35356 1.09965 7.99249 1.36084 6.67939C1.62203 5.36629 2.26674 4.16012 3.21343 3.21343C4.16013 2.26674 5.36629 1.62203 6.67939 1.36084C7.99249 1.09965 9.35356 1.2337 10.5905 1.74605C11.8274 2.25839 12.8846 3.12602 13.6284 4.23922C14.3722 5.35241 14.7692 6.66117 14.7692 8C14.7672 9.79468 14.0534 11.5153 12.7843 12.7843C11.5153 14.0534 9.79469 14.7672 8 14.7692ZM11.6923 8C11.6923 8.16321 11.6275 8.31973 11.5121 8.43514C11.3967 8.55055 11.2401 8.61538 11.0769 8.61538H8.61539V11.0769C8.61539 11.2401 8.55055 11.3967 8.43514 11.5121C8.31974 11.6275 8.16321 11.6923 8 11.6923C7.83679 11.6923 7.68027 11.6275 7.56486 11.5121C7.44945 11.3967 7.38462 11.2401 7.38462 11.0769V8.61538H4.92308C4.75987 8.61538 4.60334 8.55055 4.48794 8.43514C4.37253 8.31973 4.30769 8.16321 4.30769 8C4.30769 7.83679 4.37253 7.68026 4.48794 7.56486C4.60334 7.44945 4.75987 7.38461 4.92308 7.38461H7.38462V4.92308C7.38462 4.75987 7.44945 4.60334 7.56486 4.48793C7.68027 4.37253 7.83679 4.30769 8 4.30769C8.16321 4.30769 8.31974 4.37253 8.43514 4.48793C8.55055 4.60334 8.61539 4.75987 8.61539 4.92308V7.38461H11.0769C11.2401 7.38461 11.3967 7.44945 11.5121 7.56486C11.6275 7.68026 11.6923 7.83679 11.6923 8Z"
+        d="M11.5123 5.71846C11.5695 5.77561 11.6149 5.84348 11.6459 5.91819C11.6769 5.9929 11.6928 6.07297 11.6928 6.15384C11.6928 6.23472 11.6769 6.31479 11.6459 6.3895C11.6149 6.46421 11.5695 6.53208 11.5123 6.58923L7.20462 10.8969C7.14746 10.9541 7.07959 10.9995 7.00489 11.0305C6.93018 11.0615 6.8501 11.0774 6.76923 11.0774C6.68836 11.0774 6.60828 11.0615 6.53358 11.0305C6.45887 10.9995 6.391 10.9541 6.33385 10.8969L4.48769 9.05077C4.37222 8.9353 4.30735 8.77868 4.30735 8.61538C4.30735 8.45208 4.37222 8.29547 4.48769 8.18C4.60317 8.06453 4.75978 7.99966 4.92308 7.99966C5.08638 7.99966 5.24299 8.06453 5.35846 8.18L6.76923 9.59154L10.6415 5.71846C10.6987 5.66124 10.7666 5.61585 10.8413 5.58489C10.916 5.55392 10.9961 5.53798 11.0769 5.53798C11.1578 5.53798 11.2379 5.55392 11.3126 5.58489C11.3873 5.61585 11.4552 5.66124 11.5123 5.71846ZM16 8C16 9.58225 15.5308 11.129 14.6518 12.4446C13.7727 13.7602 12.5233 14.7855 11.0615 15.391C9.59966 15.9965 7.99113 16.155 6.43928 15.8463C4.88743 15.5376 3.46197 14.7757 2.34315 13.6569C1.22433 12.538 0.462403 11.1126 0.153721 9.56072C-0.15496 8.00887 0.00346628 6.40034 0.608967 4.93853C1.21447 3.47672 2.23985 2.22729 3.55544 1.34824C4.87103 0.469192 6.41775 0 8 0C10.121 0.00223986 12.1546 0.845814 13.6544 2.34562C15.1542 3.84542 15.9978 5.87895 16 8ZM14.7692 8C14.7692 6.66117 14.3722 5.35241 13.6284 4.23922C12.8846 3.12602 11.8274 2.25839 10.5905 1.74605C9.35356 1.2337 7.99249 1.09965 6.67939 1.36084C5.36629 1.62203 4.16013 2.26674 3.21343 3.21343C2.26674 4.16012 1.62203 5.36629 1.36084 6.67939C1.09965 7.99249 1.2337 9.35356 1.74605 10.5905C2.2584 11.8274 3.12603 12.8846 4.23922 13.6284C5.35241 14.3722 6.66117 14.7692 8 14.7692C9.79469 14.7672 11.5153 14.0534 12.7843 12.7843C14.0534 11.5153 14.7672 9.79468 14.7692 8Z"
         fill="white"
       />
     </svg>
@@ -383,8 +388,86 @@ const manaGlassCardStyle = {
 /**
  * Первый слайд карусели на главной (MANA): тёмная стеклянная карточка по макету Figma (Rectangle 30).
  */
-function ManaGlassMarketingCarouselCard({ onArrowClick, onNavigateToOrder }) {
-  const [infoOpen, setInfoOpen] = useState(false);
+function ManaGlassMarketingCarouselCard({
+  onArrowClick,
+  onNavigateToOrder,
+  initialVariant = 'content',
+  allowInformSwitch = true,
+  overrideTitle,
+  overrideDescription,
+  overridePrice,
+  overrideButtonLabel,
+  forceActionEnabled,
+  expandedVariant,
+  expandedTitleOverride,
+  expandedPriceOverride,
+  expandedButtonLabelOverride,
+  expandedForceActionEnabled,
+  arrowFlipped = true,
+  expandedArrowFlipped = true,
+}) {
+  const isSiteVariant = initialVariant === 'site';
+  const [showInformScreen, setShowInformScreen] = useState(false);
+  const [leavingDown, setLeavingDown] = useState(false);
+  const [baseEntering, setBaseEntering] = useState(false);
+  const [expandedEntering, setExpandedEntering] = useState(false);
+  const [expandedLeaving, setExpandedLeaving] = useState(false);
+  const defaultTitle = isSiteVariant ? 'Формирование сайта' : 'Формирование контента';
+  const defaultDescription = isSiteVariant
+    ? 'Наличие комфортного сайта служит важным маркетинговым инструментом малого и среднего предпринимательства'
+    : 'Наличие заразного контента служит важным маркетинговым инструментом малого и среднего предпринимательства';
+  const defaultPrice = isSiteVariant ? 'около 35 тыс. р.' : 'около 45 тыс. р.';
+  const cardTitle = overrideTitle || defaultTitle;
+  const cardDescription = overrideDescription || defaultDescription;
+  const cardPrice = overridePrice || defaultPrice;
+  const isActionEnabled = typeof forceActionEnabled === 'boolean' ? forceActionEnabled : isSiteVariant;
+  const actionLabel = overrideButtonLabel || (isSiteVariant ? 'Уточнение' : 'Недоступно');
+  const expandedVariantResolved = expandedVariant || (isSiteVariant ? 'site' : 'content');
+
+  const handleInformClick = () => {
+    if (!allowInformSwitch || leavingDown || showInformScreen) return;
+    setLeavingDown(true);
+    window.setTimeout(() => {
+      setShowInformScreen(true);
+      setExpandedEntering(true);
+      setLeavingDown(false);
+      window.requestAnimationFrame(() => setExpandedEntering(false));
+    }, 320);
+  };
+
+  const handleExpandedInformClick = () => {
+    if (expandedLeaving || !showInformScreen) return;
+    setExpandedLeaving(true);
+    window.setTimeout(() => {
+      setShowInformScreen(false);
+      setLeavingDown(false);
+      setExpandedLeaving(false);
+      setBaseEntering(true);
+      window.requestAnimationFrame(() => setBaseEntering(false));
+    }, 320);
+  };
+
+  if (showInformScreen) {
+    return (
+      <ManaGlassMarketingCarouselCardTwo
+        onGiftClick={() => {}}
+        onArrowClick={onArrowClick}
+        onNavigateToOrder={onNavigateToOrder}
+        onInformClick={handleExpandedInformClick}
+        variant={expandedVariantResolved}
+        overrideTitle={expandedTitleOverride}
+        overridePrice={expandedPriceOverride}
+        overrideButtonLabel={expandedButtonLabelOverride}
+        forceActionEnabled={expandedForceActionEnabled}
+        arrowFlipped={expandedArrowFlipped}
+        containerStyle={{
+          transform: expandedEntering || expandedLeaving ? 'translateY(120%)' : 'translateY(0)',
+          opacity: expandedEntering || expandedLeaving ? 0 : 1,
+          transition: 'transform 320ms ease, opacity 320ms ease',
+        }}
+      />
+    );
+  }
 
   return (
     <div
@@ -395,6 +478,9 @@ function ManaGlassMarketingCarouselCard({ onArrowClick, onNavigateToOrder }) {
         scrollSnapAlign: 'start',
         boxSizing: 'border-box',
         maxWidth: 'min(360px, 100%)',
+        transform: leavingDown || baseEntering ? 'translateY(120%)' : 'translateY(0)',
+        opacity: leavingDown || baseEntering ? 0 : 1,
+        transition: 'transform 320ms ease, opacity 320ms ease',
       }}
     >
       <div className="mb-3 flex w-full items-center justify-end">
@@ -411,7 +497,7 @@ function ManaGlassMarketingCarouselCard({ onArrowClick, onNavigateToOrder }) {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden
-            style={{ transform: 'scaleX(-1)' }}
+            style={arrowFlipped ? { transform: 'scaleX(-1)' } : undefined}
           >
             <path
               d="M10 0C8.02219 0 6.08879 0.58649 4.4443 1.6853C2.79981 2.78412 1.51809 4.3459 0.761209 6.17316C0.00433284 8.00042 -0.1937 10.0111 0.192152 11.9509C0.578004 13.8907 1.53041 15.6725 2.92894 17.0711C4.32746 18.4696 6.10929 19.422 8.0491 19.8078C9.98891 20.1937 11.9996 19.9957 13.8268 19.2388C15.6541 18.4819 17.2159 17.2002 18.3147 15.5557C19.4135 13.9112 20 11.9778 20 10C19.9972 7.34869 18.9427 4.80678 17.068 2.93202C15.1932 1.05727 12.6513 0.00279983 10 0ZM13.8462 10.7692H8.01058L9.775 12.5327C9.84647 12.6042 9.90316 12.689 9.94184 12.7824C9.98052 12.8758 10.0004 12.9758 10.0004 13.0769C10.0004 13.178 9.98052 13.2781 9.94184 13.3715C9.90316 13.4648 9.84647 13.5497 9.775 13.6212C9.70353 13.6926 9.61869 13.7493 9.52531 13.788C9.43193 13.8267 9.33184 13.8466 9.23077 13.8466C9.1297 13.8466 9.02962 13.8267 8.93624 13.788C8.84286 13.7493 8.75801 13.6926 8.68654 13.6212L5.60962 10.5442C5.5381 10.4728 5.48136 10.3879 5.44265 10.2946C5.40394 10.2012 5.38401 10.1011 5.38401 10C5.38401 9.89891 5.40394 9.79881 5.44265 9.70543C5.48136 9.61205 5.5381 9.52721 5.60962 9.45577L8.68654 6.37884C8.83088 6.23451 9.02665 6.15342 9.23077 6.15342C9.4349 6.15342 9.63066 6.23451 9.775 6.37884C9.91934 6.52318 10.0004 6.71895 10.0004 6.92308C10.0004 7.1272 9.91934 7.32297 9.775 7.46731L8.01058 9.23077H13.8462C14.0502 9.23077 14.2458 9.31181 14.3901 9.45607C14.5343 9.60033 14.6154 9.79599 14.6154 10C14.6154 10.204 14.5343 10.3997 14.3901 10.5439C14.2458 10.6882 14.0502 10.7692 13.8462 10.7692Z"
@@ -442,7 +528,7 @@ function ManaGlassMarketingCarouselCard({ onArrowClick, onNavigateToOrder }) {
               color: '#FFFFFF',
             }}
           >
-            Формирование контента
+            {cardTitle}
           </h2>
           <p
             className="m-0 mt-2"
@@ -453,7 +539,7 @@ function ManaGlassMarketingCarouselCard({ onArrowClick, onNavigateToOrder }) {
               color: 'rgba(255, 255, 255, 0.5)',
             }}
           >
-            Наличие заразного контента служит важным маркетинговым инструментом малого и среднего предпринимательства
+            {cardDescription}
           </p>
         </div>
 
@@ -464,7 +550,7 @@ function ManaGlassMarketingCarouselCard({ onArrowClick, onNavigateToOrder }) {
         <button
           type="button"
           className="mt-4 flex w-full max-w-[330px] cursor-pointer items-center gap-2 border-0 bg-transparent p-0 text-left outline-none"
-          onClick={() => setInfoOpen((v) => !v)}
+          onClick={handleInformClick}
         >
           <span className="shrink-0">
             <ManaGlassChevronRight />
@@ -479,28 +565,6 @@ function ManaGlassMarketingCarouselCard({ onArrowClick, onNavigateToOrder }) {
           </span>
         </button>
 
-        {infoOpen ? (
-          <div className="mt-3 flex max-w-[330px] flex-col gap-[5px] pl-1">
-            {MANA_GLASS_INFORM_ROWS.map((row, idx) => (
-              <div key={`mana-inform-${idx}`} className="flex gap-2">
-                <span className="mt-1 shrink-0 text-white">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                    <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-                <span className="min-w-0">
-                  <span className="block" style={{ ...involveMana, fontSize: 16, lineHeight: '155%', color: '#FFFFFF' }}>
-                    {row.title}
-                  </span>
-                  <span className="mt-0.5 block" style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: 'rgba(255, 255, 255, 0.25)' }}>
-                    {row.hint}
-                  </span>
-                </span>
-              </div>
-            ))}
-          </div>
-        ) : null}
-
         <div className="mt-4">
           <ManaGlassDivider />
         </div>
@@ -508,7 +572,7 @@ function ManaGlassMarketingCarouselCard({ onArrowClick, onNavigateToOrder }) {
         <div className="mt-4 flex max-w-[330px] items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <p className="m-0" style={{ ...involveMana, fontSize: 20, lineHeight: '125%', color: '#FFFFFF' }}>
-              около 45 тыс. р.
+              {cardPrice}
             </p>
             <p className="m-0 mt-1" style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: 'rgba(255, 255, 255, 0.5)' }}>
               Рассрочка под ноль годовых до 3 мес.
@@ -523,17 +587,21 @@ function ManaGlassMarketingCarouselCard({ onArrowClick, onNavigateToOrder }) {
 
         <button
           type="button"
-          disabled
-          className="mt-4 box-border flex h-[50px] w-full max-w-[330px] cursor-not-allowed items-center justify-center rounded-[10px] border border-solid border-white outline-none"
+          disabled={!isActionEnabled}
+          onClick={isActionEnabled ? onNavigateToOrder : undefined}
+          className={`mt-4 box-border flex h-[50px] w-full max-w-[330px] items-center justify-center rounded-[10px] border border-solid border-white outline-none ${
+            isActionEnabled ? 'cursor-pointer' : 'cursor-not-allowed'
+          }`}
           style={{
             ...involveMana,
             fontSize: 16,
             lineHeight: '315%',
-            color: '#FFFFFF',
-            opacity: 0.25,
+            color: isActionEnabled ? '#050505' : '#FFFFFF',
+            background: isActionEnabled ? '#FFFFFF' : 'transparent',
+            opacity: isActionEnabled ? 1 : 0.25,
           }}
         >
-          Недоступно
+          {actionLabel}
         </button>
       </article>
     </div>
@@ -543,8 +611,36 @@ function ManaGlassMarketingCarouselCard({ onArrowClick, onNavigateToOrder }) {
 /**
  * Второй слайд карусели (MANA): тёмное стекло, Frame 2, «Информирование», плашки «Подарок» и стрелка.
  */
-function ManaGlassMarketingCarouselCardTwo({ onGiftClick, onArrowClick, onNavigateToOrder }) {
-  const [infoOpen, setInfoOpen] = useState(false);
+function ManaGlassMarketingCarouselCardTwo({
+  onGiftClick,
+  onArrowClick,
+  onNavigateToOrder,
+  onInformClick,
+  variant = 'content',
+  overrideTitle,
+  overridePrice,
+  overrideButtonLabel,
+  forceActionEnabled,
+  arrowFlipped = true,
+  containerStyle,
+}) {
+  const isSiteVariant = variant === 'site';
+  const expandedTitle = overrideTitle || (isSiteVariant ? 'Формирование сайта' : 'Формирование контента');
+  const expandedPrice = overridePrice || (isSiteVariant ? 'около 35 тыс. р.' : 'около 45 тыс. р.');
+  const expandedRows = isSiteVariant ? MANA_GLASS_SITE_ROWS : MANA_GLASS_PLACEHOLDER_ROWS;
+  const expandedButtonLabel = overrideButtonLabel || (isSiteVariant ? 'Уточнение' : 'Недоступно');
+  const expandedButtonDisabled =
+    typeof forceActionEnabled === 'boolean' ? !forceActionEnabled : !isSiteVariant;
+  const topRowClass = isSiteVariant
+    ? 'mb-[10px] flex w-full shrink-0 items-center justify-between'
+    : 'mb-3 flex w-full shrink-0 items-center justify-between';
+  const giftButtonClass = isSiteVariant
+    ? 'flex h-10 w-[115px] items-center gap-2 rounded-full border border-[rgba(255,255,255,0.1)] bg-[#050505] pl-[10px] pr-[12px] backdrop-blur-[5px]'
+    : 'flex h-10 items-center gap-2 rounded-full border border-[rgba(255,255,255,0.1)] bg-[#050505] px-3 backdrop-blur-[5px]';
+  const articlePaddingClass = isSiteVariant ? 'box-border w-full px-[15px] pb-[15px] pt-[15px]' : 'box-border w-full px-[15px] pb-5 pt-[15px]';
+  const dividerGap = isSiteVariant ? 'mt-[10px]' : 'mt-[10px]';
+  const infoGap = isSiteVariant ? 'mt-[10px]' : 'mt-[10px]';
+  const priceGap = isSiteVariant ? 'mt-[10px]' : 'mt-[10px]';
 
   return (
     <div
@@ -555,13 +651,14 @@ function ManaGlassMarketingCarouselCardTwo({ onGiftClick, onArrowClick, onNaviga
         scrollSnapAlign: 'start',
         boxSizing: 'border-box',
         maxWidth: 'min(360px, 100%)',
+        ...containerStyle,
       }}
     >
-      <div className="mb-3 flex w-full shrink-0 items-center justify-between pl-[15px]">
+      <div className={topRowClass}>
         <button
           type="button"
           onClick={onGiftClick}
-          className="flex h-10 items-center gap-2 rounded-full border border-[rgba(255,255,255,0.1)] bg-[#050505] px-3 backdrop-blur-[5px]"
+          className={giftButtonClass}
           style={{ ...involveMana, fontSize: 14, lineHeight: '145%', color: '#FFFFFF' }}
         >
           <ManaGiftHeartIcon />
@@ -580,7 +677,7 @@ function ManaGlassMarketingCarouselCardTwo({ onGiftClick, onArrowClick, onNaviga
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden
-            style={{ transform: 'scaleX(-1)' }}
+            style={arrowFlipped ? { transform: 'scaleX(-1)' } : undefined}
           >
             <path
               d="M10 0C8.02219 0 6.08879 0.58649 4.4443 1.6853C2.79981 2.78412 1.51809 4.3459 0.761209 6.17316C0.00433284 8.00042 -0.1937 10.0111 0.192152 11.9509C0.578004 13.8907 1.53041 15.6725 2.92894 17.0711C4.32746 18.4696 6.10929 19.422 8.0491 19.8078C9.98891 20.1937 11.9996 19.9957 13.8268 19.2388C15.6541 18.4819 17.2159 17.2002 18.3147 15.5557C19.4135 13.9112 20 11.9778 20 10C19.9972 7.34869 18.9427 4.80678 17.068 2.93202C15.1932 1.05727 12.6513 0.00279983 10 0ZM13.8462 10.7692H8.01058L9.775 12.5327C9.84647 12.6042 9.90316 12.689 9.94184 12.7824C9.98052 12.8758 10.0004 12.9758 10.0004 13.0769C10.0004 13.178 9.98052 13.2781 9.94184 13.3715C9.90316 13.4648 9.84647 13.5497 9.775 13.6212C9.70353 13.6926 9.61869 13.7493 9.52531 13.788C9.43193 13.8267 9.33184 13.8466 9.23077 13.8466C9.1297 13.8466 9.02962 13.8267 8.93624 13.788C8.84286 13.7493 8.75801 13.6926 8.68654 13.6212L5.60962 10.5442C5.5381 10.4728 5.48136 10.3879 5.44265 10.2946C5.40394 10.2012 5.38401 10.1011 5.38401 10C5.38401 9.89891 5.40394 9.79881 5.44265 9.70543C5.48136 9.61205 5.5381 9.52721 5.60962 9.45577L8.68654 6.37884C8.83088 6.23451 9.02665 6.15342 9.23077 6.15342C9.4349 6.15342 9.63066 6.23451 9.775 6.37884C9.91934 6.52318 10.0004 6.71895 10.0004 6.92308C10.0004 7.1272 9.91934 7.32297 9.775 7.46731L8.01058 9.23077H13.8462C14.0502 9.23077 14.2458 9.31181 14.3901 9.45607C14.5343 9.60033 14.6154 9.79599 14.6154 10C14.6154 10.204 14.5343 10.3997 14.3901 10.5439C14.2458 10.6882 14.0502 10.7692 13.8462 10.7692Z"
@@ -590,7 +687,7 @@ function ManaGlassMarketingCarouselCardTwo({ onGiftClick, onArrowClick, onNaviga
         </button>
       </div>
 
-      <article className="box-border w-full px-[15px] pb-5 pt-[15px]" style={manaGlassCardStyle}>
+      <article className={articlePaddingClass} style={manaGlassCardStyle}>
         <div className="w-full max-w-[330px]">
           <p
             className="m-0"
@@ -612,18 +709,18 @@ function ManaGlassMarketingCarouselCardTwo({ onGiftClick, onArrowClick, onNaviga
               color: '#FFFFFF',
             }}
           >
-            Формирование контента
+            {expandedTitle}
           </h2>
         </div>
 
-        <div className="mt-4">
+        <div className={dividerGap}>
           <ManaGlassDivider />
         </div>
 
-        <div className="mt-2 flex max-w-[330px] flex-col gap-[5px]">
-          {MANA_GLASS_PLACEHOLDER_ROWS.map((row, idx) => (
-            <div key={`mana-ph-${idx}`} className="flex items-start gap-2">
-              <span className="mt-0.5 shrink-0">
+        <div className="mt-[10px] flex max-w-[330px] flex-col gap-[5px]">
+          {expandedRows.map((row, idx) => (
+            <div key={`mana-ph-${idx}`} className="flex items-center gap-2">
+              <span className="shrink-0 self-center">
                 <ManaGlassCheckCircle16 />
               </span>
               <span className="min-w-0">
@@ -638,14 +735,14 @@ function ManaGlassMarketingCarouselCardTwo({ onGiftClick, onArrowClick, onNaviga
           ))}
         </div>
 
-        <div className="mt-4">
+        <div className={dividerGap}>
           <ManaGlassDivider />
         </div>
 
         <button
           type="button"
-          className="mt-2 flex w-full max-w-[330px] cursor-pointer items-center gap-2 border-0 bg-transparent p-0 text-left outline-none"
-          onClick={() => setInfoOpen((v) => !v)}
+          className={`${infoGap} flex w-full max-w-[330px] cursor-pointer items-center gap-2 border-0 bg-transparent p-0 text-left outline-none`}
+          onClick={onInformClick}
         >
           <span className="shrink-0">
             <ManaGlassChevronRight />
@@ -660,36 +757,14 @@ function ManaGlassMarketingCarouselCardTwo({ onGiftClick, onArrowClick, onNaviga
           </span>
         </button>
 
-        {infoOpen ? (
-          <div className="mt-3 flex max-w-[330px] flex-col gap-[5px] pl-1">
-            {MANA_GLASS_INFORM_ROWS.map((row, idx) => (
-              <div key={`mana-inf2-${idx}`} className="flex gap-2">
-                <span className="mt-1 shrink-0 text-white">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                    <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-                <span className="min-w-0">
-                  <span className="block" style={{ ...involveMana, fontSize: 16, lineHeight: '155%', color: '#FFFFFF' }}>
-                    {row.title}
-                  </span>
-                  <span className="mt-0.5 block" style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: 'rgba(255, 255, 255, 0.25)' }}>
-                    {row.hint}
-                  </span>
-                </span>
-              </div>
-            ))}
-          </div>
-        ) : null}
-
-        <div className="mt-4">
+        <div className={dividerGap}>
           <ManaGlassDivider />
         </div>
 
-        <div className="mt-4 flex max-w-[330px] items-start justify-between gap-3">
+        <div className={`${priceGap} flex max-w-[330px] items-start justify-between gap-3`}>
           <div className="min-w-0 flex-1">
             <p className="m-0" style={{ ...involveMana, fontSize: 20, lineHeight: '125%', color: '#FFFFFF' }}>
-              около 45 тыс. р.
+              {expandedPrice}
             </p>
             <p className="m-0 mt-1" style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: 'rgba(255, 255, 255, 0.5)' }}>
               Рассрочка под ноль годовых до 3 мес.
@@ -698,23 +773,26 @@ function ManaGlassMarketingCarouselCardTwo({ onGiftClick, onArrowClick, onNaviga
           {typeof onNavigateToOrder === 'function' ? <ManaGlassPriceFab onClick={onNavigateToOrder} /> : null}
         </div>
 
-        <div className="mt-4">
+        <div className={dividerGap}>
           <ManaGlassDivider />
         </div>
 
         <button
           type="button"
-          disabled
-          className="mt-4 box-border flex h-[50px] w-full max-w-[330px] cursor-not-allowed items-center justify-center rounded-[10px] border border-solid border-white outline-none"
+          disabled={expandedButtonDisabled}
+          className={`mt-4 box-border flex h-[50px] w-full max-w-[330px] items-center justify-center rounded-[10px] border border-solid border-white outline-none ${
+            expandedButtonDisabled ? 'cursor-not-allowed' : 'cursor-pointer'
+          }`}
           style={{
             ...involveMana,
             fontSize: 16,
             lineHeight: '315%',
-            color: '#FFFFFF',
-            opacity: 0.25,
+            color: '#050505',
+            background: '#FFFFFF',
+            opacity: expandedButtonDisabled ? 0.25 : 1,
           }}
         >
-          Недоступно
+          {expandedButtonLabel}
         </button>
       </article>
     </div>
@@ -957,6 +1035,15 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
     el.scrollTo({ left: nextCard.offsetLeft, behavior: 'smooth' });
   };
 
+  const scrollStackedCarouselToFirst = () => {
+    const el = stackedCarouselRef.current;
+    if (!el) return;
+    const cards = Array.from(el.querySelectorAll('.carousel-card'));
+    const firstCard = cards[0];
+    if (!firstCard) return;
+    el.scrollTo({ left: firstCard.offsetLeft, behavior: 'smooth' });
+  };
+
   return (
     <>
       {detailsTariff ? (
@@ -1050,8 +1137,9 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                 )}
 
                 {isStacked ? (
-                  <ManaGlassMarketingCarouselCardTwo
-                    onGiftClick={() => scrollNavigate?.toHero?.()}
+                  <ManaGlassMarketingCarouselCard
+                    initialVariant="site"
+                    allowInformSwitch
                     onArrowClick={scrollStackedCarouselToNext}
                     onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
                   />
@@ -1067,6 +1155,27 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                     onButtonClick={openTariffDetails}
                   />
                 )}
+
+                {isStacked ? (
+                  <ManaGlassMarketingCarouselCard
+                    initialVariant="site"
+                    allowInformSwitch
+                    overrideTitle="Формирование имиджа"
+                    overrideDescription="Наличие достойного имиджа служит важным маркетинговым инструментом малого и среднего предпринимательства"
+                    overridePrice="около 35 тыс. р."
+                    overrideButtonLabel="Уточнение"
+                    forceActionEnabled
+                    expandedVariant="content"
+                    expandedTitleOverride="Формирование имиджа"
+                    expandedPriceOverride="около 35 тыс. р."
+                    expandedButtonLabelOverride="Уточнение"
+                    expandedForceActionEnabled
+                    arrowFlipped={false}
+                    expandedArrowFlipped={false}
+                    onArrowClick={scrollStackedCarouselToFirst}
+                    onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
+                  />
+                ) : null}
 
                 <div className="carousel-spacer-right shrink-0" aria-hidden />
               </div>
