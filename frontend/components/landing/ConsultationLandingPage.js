@@ -411,8 +411,8 @@ export default function ConsultationLandingPage({
             {stackedNotificationsPortal}
             <div className="relative min-h-0 w-full flex-1 shrink">
               <div
-                className="pointer-events-none absolute left-0 right-0 top-0 overflow-hidden"
-                style={{ bottom: 330 }}
+                className="pointer-events-none absolute left-0 right-0 overflow-hidden"
+                style={{ top: 190, bottom: 330 }}
               >
                 <div className="relative h-full w-full">
                   <Image
