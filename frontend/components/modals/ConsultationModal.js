@@ -54,7 +54,7 @@ function CollapseIcon() {
 /** Чёрный круг с белым «!» — ошибка поля */
 function FieldErrorIcon() {
   return (
-    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#101010]" aria-hidden>
+    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[rgba(16,16,16,0.35)]" aria-hidden>
       <span className="text-[10px] font-bold leading-none text-white" style={involve}>
         !
       </span>
@@ -65,9 +65,9 @@ function FieldErrorIcon() {
 /** Серый круг с белой галочкой — валидное поле */
 function FieldSuccessIcon() {
   return (
-    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[rgba(16,16,16,0.35)]" aria-hidden>
+    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#FFFFFF]" aria-hidden>
       <svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M1 3L3 5L7 1" stroke="#FFFFFF" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M1 3L3 5L7 1" stroke="#050505" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </span>
   );

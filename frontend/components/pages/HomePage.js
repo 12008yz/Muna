@@ -12,10 +12,9 @@ const SECTION_IDS = {
   hero: 'section-hero',
   tariffs: 'section-tariffs',
   order: 'section-order',
-  orderFinal: 'section-order-final',
 };
 
-const SECTION_ORDER = [SECTION_IDS.hero, SECTION_IDS.tariffs, SECTION_IDS.order, SECTION_IDS.orderFinal];
+const SECTION_ORDER = [SECTION_IDS.hero, SECTION_IDS.tariffs, SECTION_IDS.order];
 const WHEEL_SCROLL_DURATION_MS = 700;
 
 function scrollSectionIntoView(id, behavior = 'auto') {
@@ -29,7 +28,6 @@ function sectionIdToKey(id) {
   if (id === SECTION_IDS.hero) return 'hero';
   if (id === SECTION_IDS.tariffs) return 'tariffs';
   if (id === SECTION_IDS.order) return 'order';
-  if (id === SECTION_IDS.orderFinal) return 'orderFinal';
   return 'hero';
 }
 
@@ -48,14 +46,12 @@ export default function HomePage({
   const router = useRouter();
   const scrollRef = useRef(null);
   const wheelScrollRafRef = useRef(null);
-  const openersRef = useRef({ hero: null, tariffs: null, order: null, orderFinal: null });
+  const openersRef = useRef({ hero: null, tariffs: null, order: null });
   const [activeSection, setActiveSection] = useState('hero');
   const [heroConsultationOpen, setHeroConsultationOpen] = useState(false);
   const [orderConsultationOpen, setOrderConsultationOpen] = useState(false);
-  const [orderFinalConsultationOpen, setOrderFinalConsultationOpen] = useState(false);
   const searchParams = useSearchParams();
-  const hideHeaderForConsultation =
-    heroConsultationOpen || orderConsultationOpen || orderFinalConsultationOpen;
+  const hideHeaderForConsultation = heroConsultationOpen || orderConsultationOpen;
 
   /**
    * Чистый заход на / — всегда первый слайд (герой). Иначе сохранённый ?section=order или scroll
@@ -66,10 +62,9 @@ export default function HomePage({
     if (!root || typeof window === 'undefined') return;
     const sp = new URLSearchParams(window.location.search);
     const sec = sp.get('section');
-    const hasSectionParam = sec && ['tariffs', 'order', 'orderFinal'].includes(sec);
+    const hasSectionParam = sec && ['tariffs', 'order'].includes(sec);
     const h = window.location.hash.replace(/^#/, '');
-    const hasSectionHash =
-      h === SECTION_IDS.tariffs || h === SECTION_IDS.order || h === SECTION_IDS.orderFinal;
+    const hasSectionHash = h === SECTION_IDS.tariffs || h === SECTION_IDS.order;
     if (!hasSectionParam && !hasSectionHash) {
       root.scrollTop = 0;
     }
@@ -78,7 +73,6 @@ export default function HomePage({
   const scrollNavigate = useMemo(
     () => ({
       toOrder: () => scrollSectionIntoView(SECTION_IDS.order, 'smooth'),
-      toOrderFinal: () => scrollSectionIntoView(SECTION_IDS.orderFinal, 'smooth'),
       toHero: () => scrollSectionIntoView(SECTION_IDS.hero, 'smooth'),
       toTariffs: () => scrollSectionIntoView(SECTION_IDS.tariffs, 'smooth'),
     }),
@@ -190,7 +184,6 @@ export default function HomePage({
     const idMap = {
       tariffs: SECTION_IDS.tariffs,
       order: SECTION_IDS.order,
-      orderFinal: SECTION_IDS.orderFinal,
     };
     const id = idMap[section];
     if (id) {
@@ -215,10 +208,8 @@ export default function HomePage({
     const idMap = {
       [SECTION_IDS.tariffs]: SECTION_IDS.tariffs,
       [SECTION_IDS.order]: SECTION_IDS.order,
-      [SECTION_IDS.orderFinal]: SECTION_IDS.orderFinal,
       tariffs: SECTION_IDS.tariffs,
       order: SECTION_IDS.order,
-      orderFinal: SECTION_IDS.orderFinal,
     };
     const id = idMap[raw];
     if (id) {
@@ -246,10 +237,6 @@ export default function HomePage({
 
   const exposeOrder = useCallback((fn) => {
     openersRef.current.order = fn;
-  }, []);
-
-  const exposeOrderFinal = useCallback((fn) => {
-    openersRef.current.orderFinal = fn;
   }, []);
 
   /** Мастер заявки (шаги 1–4) на главной: вместо шапки — только «сворачивание окна» */
@@ -359,19 +346,6 @@ export default function HomePage({
             />
           </section>
 
-          <section
-            id={SECTION_IDS.orderFinal}
-            className={`${sectionShellClass} mx-auto w-full max-w-[425px]`}
-            style={sectionHeightStyle}
-          >
-            <OrderCreationLandingPage
-              layout="stacked"
-              initialOrderStep={5}
-              exposeOpenConsultation={exposeOrderFinal}
-              onAfterPhoneLead={scrollNavigate.toHero}
-              onConsultationFlowOpenChange={setOrderFinalConsultationOpen}
-            />
-          </section>
 
         </div>
       </div>

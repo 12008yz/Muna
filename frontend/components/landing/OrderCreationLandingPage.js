@@ -575,6 +575,8 @@ export default function OrderCreationLandingPage({
       style={{
         left: 'var(--main-block-margin)',
         right: 'var(--main-block-margin)',
+        width: 'calc(100% - 2 * var(--main-block-margin))',
+        maxWidth: 360,
         bottom: 0,
         borderRadius: 20,
         display: 'flex',
@@ -589,7 +591,7 @@ export default function OrderCreationLandingPage({
         ...wizardDissolveStyle,
       }}
     >
-      <h1 className="m-0 flex-shrink-0" style={{ ...involve, fontSize: 20, lineHeight: '125%', color: '#FFFFFF' }}>
+      <h1 className="m-0 w-full max-w-[330px] flex-shrink-0" style={{ ...involve, fontSize: 20, lineHeight: '125%', color: '#FFFFFF' }}>
         Маркетинговое прогнозирование
         <br />
         потенциала для захвата рынка
@@ -598,7 +600,7 @@ export default function OrderCreationLandingPage({
         <br />
         малого и среднего дела
       </h1>
-      <p className="m-0 mt-[15px]" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: 'rgba(255, 255, 255, 0.5)' }}>
+      <p className="m-0 mt-[15px] w-full max-w-[330px]" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: 'rgba(255, 255, 255, 0.5)' }}>
         Прогнозирование однозначно важного,
         <br />
         одновременно, сейчас неизвестного
@@ -606,7 +608,7 @@ export default function OrderCreationLandingPage({
 
       <button
         type="button"
-        className="box-border mt-[20px] flex w-full min-w-0 shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
+        className="box-border mt-[20px] flex w-full max-w-[330px] min-w-0 shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
         style={{
           ...involve,
           width: '100%',
@@ -667,11 +669,6 @@ export default function OrderCreationLandingPage({
           ) : null}
 
           {orderStep === 0 && renderLeadCard(goToTariffStep)}
-          {orderStep === 5 &&
-            renderLeadCard(() => {
-              setConsultationInitialStep('contact-method');
-              setConsultationFlowOpen(true);
-            })}
 
         {(orderStep === 1 || orderStep === 2 || orderStep === 3 || orderStep === 4) && (
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden" style={{ boxSizing: 'border-box' }}>
@@ -693,6 +690,7 @@ export default function OrderCreationLandingPage({
                   marginLeft: 'var(--main-block-margin)',
                   marginRight: 'var(--main-block-margin)',
                   width: 'calc(100% - 2 * var(--main-block-margin))',
+                  maxWidth: 360,
                   boxSizing: 'border-box',
                   padding: 15,
                   marginBottom: 0,
@@ -710,13 +708,13 @@ export default function OrderCreationLandingPage({
                   ...wizardDissolveStyle,
                 }}
               >
-                <h2 className="m-0 flex max-w-full flex-shrink-0 items-center self-stretch" style={wizardTitleStyle}>
+                <h2 className="m-0 flex w-full max-w-[330px] flex-shrink-0 items-center self-stretch" style={wizardTitleStyle}>
                   Формирование тарифного плана
                 </h2>
 
                 {orderStep === 1 && (
                   <>
-                    <p className="m-0 flex max-w-full flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
+                    <p className="m-0 flex w-full max-w-[330px] flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
                       Главное во всех ответах, это четкость.
                       <br />
                       Незаменимое во всех ответах, это честность
@@ -730,7 +728,7 @@ export default function OrderCreationLandingPage({
                       Кликните на очень похожее мнение
                     </p>
 
-                    <div className="flex flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
                       {[
                         { id: 'low-known', label: 'Компания малоизвестна в сети' },
                         { id: 'high-known', label: 'Компания известна в сети' },
@@ -758,7 +756,7 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="flex items-center gap-[5px]">
+                    <div className="flex w-full max-w-[330px] items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(0)}
@@ -786,7 +784,7 @@ export default function OrderCreationLandingPage({
 
                 {orderStep === 2 && (
                   <>
-                    <p className="m-0 flex max-w-full flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
+                    <p className="m-0 flex w-full max-w-[330px] flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
                       Главное во всех ответах, это четкость.
                       <br />
                       Незаменимое во всех ответах, это честность
@@ -800,7 +798,7 @@ export default function OrderCreationLandingPage({
                       Кликните на очень похожее мнение
                     </p>
 
-                    <div className="flex flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
                       {[
                         { id: 0, label: 'Компания незнакома с трендами' },
                         { id: 1, label: 'Компания знакома с трендами' },
@@ -828,7 +826,7 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="flex items-center gap-[5px]">
+                    <div className="flex w-full max-w-[330px] items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(1)}
@@ -856,7 +854,7 @@ export default function OrderCreationLandingPage({
 
                 {orderStep === 3 && (
                   <>
-                    <p className="m-0 flex max-w-full flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
+                    <p className="m-0 flex w-full max-w-[330px] flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
                       Главное во всех ответах, это четкость.
                       <br />
                       Незаменимое во всех ответах, это честность
@@ -870,7 +868,7 @@ export default function OrderCreationLandingPage({
                       Кликните на очень похожее мнение
                     </p>
 
-                    <div className="flex flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
                       {[
                         { id: 'load-low', label: 'Компания не загружена на 95%' },
                         { id: 'load-high', label: 'Компания загружена на 95%' },
@@ -898,7 +896,7 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="flex items-center gap-[5px]">
+                    <div className="flex w-full max-w-[330px] items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(2)}
@@ -926,7 +924,7 @@ export default function OrderCreationLandingPage({
 
                 {orderStep === 4 && (
                   <>
-                    <p className="m-0 flex max-w-full flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
+                    <p className="m-0 flex w-full max-w-[330px] flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
                       Главное во всех ответах, это четкость.
                       <br />
                       Незаменимое во всех ответах, это честность
@@ -940,7 +938,7 @@ export default function OrderCreationLandingPage({
                       Кликните на очень похожее мнение
                     </p>
 
-                    <div className="flex flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
                       <div
                         className="box-border flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent px-[10px]"
                       >
@@ -961,7 +959,7 @@ export default function OrderCreationLandingPage({
                     <button
                       type="button"
                       onClick={handleDurationNext}
-                      className="flex h-[50px] min-h-[50px] w-full cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                      className="flex h-[50px] min-h-[50px] w-full max-w-[330px] cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
                       style={{ ...involve, fontSize: 16, lineHeight: '315%', color: '#050505' }}
                     >
                       Продолжение
