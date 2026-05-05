@@ -2,10 +2,7 @@
 
 import LoadingBrandLogo from '@/components/LoadingBrandLogo';
 
-/**
- * Первый экран: чёрный фон, логотип по центру, полоса прогресса снизу.
- */
-export default function LoadingScreen({ progress = 0 }) {
+export default function LoadingScreen() {
   return (
     <div
       className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden bg-black"
@@ -15,28 +12,15 @@ export default function LoadingScreen({ progress = 0 }) {
       }}
     >
       <div className="flex flex-1 flex-col items-center justify-center px-[var(--main-block-margin)]">
-        <LoadingBrandLogo className="max-w-[min(152px,85vw)] shrink-0" />
-      </div>
-
-      <div
-        className="shrink-0 pb-[max(24px,env(safe-area-inset-bottom,0px))]"
-        style={{
-          width: '280px',
-          maxWidth: 'calc(100% - 80px)',
-          height: '4px',
-          background: 'rgba(255,255,255,0.15)',
-          borderRadius: '2px',
-        }}
-      >
         <div
+          className="loading-logo-blink shrink-0"
           style={{
-            width: `${Math.min(100, Math.max(0, progress))}%`,
-            height: '100%',
-            background: '#FFFFFF',
-            transition: 'width 0.2s ease-out',
-            borderRadius: '2px',
+            width: 'min(152px, 85vw)',
+            height: 'calc(min(152px, 85vw) * 32 / 152)',
           }}
-        />
+        >
+          <LoadingBrandLogo className="block h-full w-full max-w-none" />
+        </div>
       </div>
     </div>
   );

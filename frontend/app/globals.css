@@ -198,3 +198,17 @@ body::-webkit-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.loading-logo-blink {
+  animation: mana-logo-blink 0.36s ease-in-out infinite alternate;
+  will-change: opacity;
+}
+
+@keyframes mana-logo-blink {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.05;
+  }
+}
