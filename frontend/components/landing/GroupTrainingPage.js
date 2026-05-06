@@ -416,10 +416,8 @@ function ManaGlassMarketingCarouselCard({
   const [expandedLeaving, setExpandedLeaving] = useState(false);
   const [giftEntering, setGiftEntering] = useState(false);
   const [giftLeaving, setGiftLeaving] = useState(false);
-  const defaultTitle = isSiteVariant ? 'Формирование сайта' : 'Формирование контента';
-  const defaultDescription = isSiteVariant
-    ? 'Наличие комфортного сайта служит важным маркетинговым инструментом малого и среднего предпринимательства'
-    : 'Наличие заразного контента служит важным маркетинговым инструментом малого и среднего предпринимательства';
+  const defaultTitle = isSiteVariant ? 'Формирование сайта' : 'Формирование медиа';
+  const defaultDescription = 'Наличие интересного медиа служит важным маркетинговым инструментом малого и среднего предпринимательства';
   const defaultPrice = isSiteVariant ? 'около 35 тыс. р.' : 'около 45 тыс. р.';
   const cardTitle = overrideTitle || defaultTitle;
   const cardDescription = overrideDescription || defaultDescription;
@@ -537,7 +535,7 @@ function ManaGlassMarketingCarouselCard({
       <div className="mb-3 flex w-full items-center justify-end">
         <div className="h-10 w-10" aria-hidden />
       </div>
-      <article className="box-border w-full px-[15px] pb-5 pt-[15px]" style={manaGlassCardStyle}>
+      <article className="box-border w-full px-[15px] pb-[15px] pt-[15px]" style={manaGlassCardStyle}>
         <div className="w-full max-w-[330px]">
           <p
             className="m-0"
@@ -562,25 +560,38 @@ function ManaGlassMarketingCarouselCard({
             {cardTitle}
           </h2>
           <p
-            className="m-0 mt-2"
+            className="m-0 mt-2 w-full max-w-[330px]"
             style={{
               ...involveMana,
+              width: 330,
+              height: 60,
               fontSize: 16,
               lineHeight: '125%',
               color: 'rgba(255, 255, 255, 0.5)',
+              overflow: 'hidden',
             }}
           >
-            {cardDescription}
+            {cardDescription === defaultDescription ? (
+              <>
+                <span style={{ display: 'block' }}>Наличие интересного медиа служит</span>
+                <span style={{ display: 'block' }}>важным маркетинговым инструментом</span>
+                <span style={{ display: 'block', whiteSpace: 'nowrap', letterSpacing: '-0.020em' }}>
+                  малого и среднего{'\u00A0'}предпринимательства
+                </span>
+              </>
+            ) : (
+              cardDescription
+            )}
           </p>
         </div>
 
-        <div className="mt-4">
+        <div className="mt-[10px]">
           <ManaGlassDivider />
         </div>
 
         <button
           type="button"
-          className="mt-4 flex w-full max-w-[330px] cursor-pointer items-center gap-2 border-0 bg-transparent p-0 text-left outline-none"
+          className="mt-[10px] flex w-full max-w-[330px] cursor-pointer items-center gap-2 border-0 bg-transparent p-0 text-left outline-none"
           onClick={handleInformClick}
         >
           <span className="shrink-0">
@@ -596,11 +607,11 @@ function ManaGlassMarketingCarouselCard({
           </span>
         </button>
 
-        <div className="mt-4">
+        <div className="mt-[10px]">
           <ManaGlassDivider />
         </div>
 
-        <div className="relative mt-4 flex max-w-[330px] items-start justify-between gap-3">
+        <div className="relative mt-[10px] flex max-w-[330px] items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <p className="m-0" style={{ ...involveMana, fontSize: 20, lineHeight: '125%', color: '#FFFFFF' }}>
               {cardPrice}
@@ -612,15 +623,11 @@ function ManaGlassMarketingCarouselCard({
           {typeof onNavigateToOrder === 'function' ? <ManaGlassPriceFab onClick={onNavigateToOrder} className="absolute right-0 top-[16px]" /> : null}
         </div>
 
-        <div className="mt-4">
-          <ManaGlassDivider />
-        </div>
-
         <button
           type="button"
           disabled={!isActionEnabled}
           onClick={isActionEnabled ? onNavigateToOrder : undefined}
-          className={`mt-4 box-border flex h-[50px] w-full max-w-[330px] items-center justify-center rounded-[10px] border border-solid border-white outline-none ${
+          className={`mt-[20px] box-border flex h-[50px] w-full max-w-[330px] items-center justify-center rounded-[10px] border border-solid border-white outline-none ${
             isActionEnabled ? 'cursor-pointer' : 'cursor-not-allowed'
           }`}
           style={{
@@ -754,30 +761,29 @@ function ManaGlassMarketingCarouselCardTwo({
   containerStyle,
 }) {
   const isSiteVariant = variant === 'site';
-  const expandedTitle = overrideTitle || (isSiteVariant ? 'Формирование сайта' : 'Формирование контента');
+  const expandedTitle = overrideTitle || (isSiteVariant ? 'Формирование сайта' : 'Формирование медиа');
   const expandedPrice = overridePrice || (isSiteVariant ? 'около 35 тыс. р.' : 'около 45 тыс. р.');
   const expandedRows = isSiteVariant ? MANA_GLASS_SITE_ROWS : MANA_GLASS_PLACEHOLDER_ROWS;
   const expandedButtonLabel = overrideButtonLabel || (isSiteVariant ? 'Уточнение' : 'Недоступно');
   const expandedButtonDisabled =
     typeof forceActionEnabled === 'boolean' ? !forceActionEnabled : !isSiteVariant;
-  const topRowClass = isSiteVariant
-    ? 'mb-[10px] flex w-full shrink-0 items-center justify-between'
-    : 'mb-3 flex w-full shrink-0 items-center justify-between';
+  const topRowClass = 'mb-[10px] flex h-10 w-full shrink-0 items-center justify-between';
   const giftButtonClass = isSiteVariant
     ? 'flex h-10 w-[115px] items-center gap-2 rounded-full border border-[rgba(255,255,255,0.1)] bg-[#050505] pl-[10px] pr-[12px] backdrop-blur-[5px]'
     : 'flex h-10 items-center gap-2 rounded-full border border-[rgba(255,255,255,0.1)] bg-[#050505] px-3 backdrop-blur-[5px]';
-  const articlePaddingClass = isSiteVariant ? 'box-border w-full px-[15px] pb-[15px] pt-[15px]' : 'box-border w-full px-[15px] pb-5 pt-[15px]';
-  const dividerGap = isSiteVariant ? 'mt-[10px]' : 'mt-[10px]';
-  const infoGap = isSiteVariant ? 'mt-[10px]' : 'mt-[10px]';
-  const priceGap = isSiteVariant ? 'mt-[10px]' : 'mt-[10px]';
+  const articlePaddingClass = 'box-border min-h-[423px] w-full px-[15px] pb-[15px] pt-[15px]';
+  const dividerGap = 'mt-[10px]';
+  const infoGap = 'mt-[10px]';
+  const priceGap = 'mt-[10px]';
 
   return (
     <div
-      className="carousel-card relative flex shrink-0 flex-col overflow-hidden"
+      className="carousel-card relative flex shrink-0 flex-col overflow-visible"
       style={{
+        minHeight: 473,
         height: 'auto',
         width: 360,
-        alignSelf: 'flex-end',
+        alignSelf: 'flex-start',
         scrollSnapAlign: 'start',
         boxSizing: 'border-box',
         maxWidth: '100%',
@@ -827,17 +833,42 @@ function ManaGlassMarketingCarouselCardTwo({
           <ManaGlassDivider />
         </div>
 
-        <div className="mt-[10px] flex max-w-[330px] flex-col gap-[5px]">
+        <div className="mt-[10px] flex h-[130px] w-full max-w-[330px] flex-col gap-[5px]">
           {expandedRows.map((row, idx) => (
-            <div key={`mana-ph-${idx}`} className="flex items-center gap-2">
-              <span className="shrink-0 self-center">
+            <div key={`mana-ph-${idx}`} className="relative h-10 w-[330px]">
+              <span className="absolute left-0 top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center">
                 <ManaGlassCheckCircle16 />
               </span>
-              <span className="min-w-0">
-                <span className="block" style={{ ...involveMana, fontSize: 16, lineHeight: '155%', color: '#FFFFFF' }}>
+              <span className="block h-10 w-[330px] min-w-0 pl-[25px]">
+                <span
+                  className="block h-[25px]"
+                  style={{
+                    ...involveMana,
+                    fontSize: 16,
+                    lineHeight: '155%',
+                    color: '#FFFFFF',
+                    display: 'flex',
+                    alignItems: 'center',
+                    whiteSpace: 'nowrap',
+                    letterSpacing: '-0.01em',
+                  }}
+                >
                   {row.title}
                 </span>
-                <span className="mt-0.5 block" style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: 'rgba(255, 255, 255, 0.25)' }}>
+                <span
+                  className="block h-[15px]"
+                  style={{
+                    ...involveMana,
+                    fontSize: 14,
+                    lineHeight: '105%',
+                    color: 'rgba(255, 255, 255, 0.25)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'clip',
+                  }}
+                >
                   {row.hint}
                 </span>
               </span>
@@ -883,14 +914,10 @@ function ManaGlassMarketingCarouselCardTwo({
           {typeof onNavigateToOrder === 'function' ? <ManaGlassPriceFab onClick={onNavigateToOrder} className="absolute right-0 top-[16px]" /> : null}
         </div>
 
-        <div className={dividerGap}>
-          <ManaGlassDivider />
-        </div>
-
         <button
           type="button"
           disabled={expandedButtonDisabled}
-          className={`mt-4 box-border flex h-[50px] w-full max-w-[330px] items-center justify-center rounded-[10px] border border-solid border-white outline-none ${
+          className={`mt-[20px] box-border flex h-[50px] w-full max-w-[330px] items-center justify-center rounded-[10px] border border-solid border-white outline-none ${
             expandedButtonDisabled ? 'cursor-not-allowed' : 'cursor-pointer'
           }`}
           style={{
@@ -1308,7 +1335,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
               {/* Ряд без h-full: иначе cross-size строки = высота вьюпорта и карточка «растягивается» с пустотой под контентом */}
               <div ref={stackedCarouselFrameRef} className="relative">
                 {isStacked ? (
-                  <div className="pointer-events-none absolute right-5 z-[3]" style={{ top: stackedArrowTop }}>
+                  <div className="pointer-events-none absolute right-5 z-[3]" style={{ top: stackedArrowTop, transition: 'top 180ms ease' }}>
                     <button
                       type="button"
                       onClick={scrollStackedCarouselToNext}
@@ -1410,7 +1437,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                     initialVariant="site"
                     allowInformSwitch
                     overrideTitle="Формирование имиджа"
-                    overrideDescription="Наличие достойного имиджа служит важным маркетинговым инструментом малого и среднего предпринимательства"
+                    overrideDescription="Наличие интересного медиа служит важным маркетинговым инструментом малого и среднего предпринимательства"
                     overridePrice="около 35 тыс. р."
                     overrideButtonLabel="Уточнение"
                     forceActionEnabled

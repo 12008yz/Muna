@@ -398,14 +398,14 @@ export default function ConsultationLandingPage({
             paddingBottom: 'calc(var(--main-block-margin) + env(safe-area-inset-bottom, 0px))',
           }}
         >
-          <div className="relative box-border flex h-full min-h-0 w-full min-w-0 flex-col bg-[#050505]" style={{ boxSizing: 'border-box' }}>
+          <div className="relative mx-auto box-border flex h-full min-h-0 w-full max-w-[400px] min-w-0 flex-col bg-[#050505]" style={{ boxSizing: 'border-box' }}>
             {stackedNotificationsPortal}
             <div className="relative min-h-0 w-full flex-1 shrink">
               <div
                 className="pointer-events-none absolute left-0 right-0 overflow-hidden"
-                style={{ top: 190, bottom: 330 }}
+                style={{ top: 135, height: 380 }}
               >
-                <div className="relative h-full w-full">
+                <div className="relative mx-auto h-[380px] w-[380px]">
                   <Image
                     src="/mana-marketing-hero.png"
                     alt="MANA — маркетинговое сопровождение"
@@ -420,9 +420,9 @@ export default function ConsultationLandingPage({
             <div
               className="absolute z-[1] box-border"
               style={{
-                left: 'var(--main-block-margin)',
-                right: 'var(--main-block-margin)',
-                bottom: 0,
+                left: 20,
+                width: 360,
+                top: 395,
                 height: 330,
                 borderRadius: 20,
                 display: 'flex',
@@ -477,7 +477,7 @@ export default function ConsultationLandingPage({
                   className="flex min-h-0 min-w-0 flex-1 items-center overflow-hidden text-ellipsis whitespace-nowrap text-[12px] leading-[25px] text-white"
                   style={{ ...involve, fontWeight: 400 }}
                 >
-                  имеется гарантийное сопровождение
+                  свыше 8+ лет в продвижении и организации
                 </span>
               </div>
 
