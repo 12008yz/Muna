@@ -48,6 +48,8 @@ html {
   min-height: 100dvh;
   scroll-behavior: smooth;
   color-scheme: light;
+  /* Мобильные браузеры: не отдавать вертикальный оверскролл «наверх» документа — иначе часто срабатывает pull-to-refresh. */
+  overscroll-behavior-y: none;
   /* Под градиентом: при rubber-band Safari виден и цвет под слоем — держим тот же #f5, что и макет. */
   background-color: var(--background);
   background-image: var(--page-canvas-gradient);
@@ -64,6 +66,7 @@ body {
   color: var(--foreground);
   background: transparent;
   font-family: Arial, Helvetica, sans-serif;
+  overscroll-behavior-y: none;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }

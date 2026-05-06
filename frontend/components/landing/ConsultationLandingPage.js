@@ -405,6 +405,7 @@ export default function ConsultationLandingPage({
             <div className="relative min-h-0 w-full flex-1 shrink">
               <div
                 data-fluid-cursor-block
+                data-vertical-scroll-handle=""
                 className="pointer-events-auto absolute left-0 right-0 z-[2] overflow-hidden"
                 style={{ top: 135, height: 380 }}
               >
@@ -422,6 +423,7 @@ export default function ConsultationLandingPage({
             </div>
             <div
               data-fluid-cursor-block
+              data-vertical-scroll-handle=""
               className="absolute z-[3] box-border"
               style={{
                 left: 20,

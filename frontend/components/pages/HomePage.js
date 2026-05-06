@@ -172,6 +172,49 @@ export default function HomePage({
     };
   }, []);
 
+  /**
+   * Вертикальный свайп по главной колонне только если касание начато на «основных» блоках
+   * (атрибут data-vertical-scroll-handle). Свайп по пустому чёрному полю не листает секции.
+   */
+  useEffect(() => {
+    const root = scrollRef.current;
+    if (!root) return;
+
+    let gestureAllowed = false;
+
+    const onTouchStart = (e) => {
+      if (e.touches.length !== 1) {
+        gestureAllowed = false;
+        return;
+      }
+      const { target } = e;
+      gestureAllowed =
+        target instanceof Element && target.closest('[data-vertical-scroll-handle]') !== null;
+    };
+
+    const onTouchMove = (e) => {
+      if (!gestureAllowed && e.cancelable) {
+        e.preventDefault();
+      }
+    };
+
+    const resetGesture = () => {
+      gestureAllowed = false;
+    };
+
+    root.addEventListener('touchstart', onTouchStart, { capture: true, passive: true });
+    root.addEventListener('touchmove', onTouchMove, { capture: true, passive: false });
+    root.addEventListener('touchend', resetGesture, { capture: true, passive: true });
+    root.addEventListener('touchcancel', resetGesture, { capture: true, passive: true });
+
+    return () => {
+      root.removeEventListener('touchstart', onTouchStart, { capture: true });
+      root.removeEventListener('touchmove', onTouchMove, { capture: true });
+      root.removeEventListener('touchend', resetGesture, { capture: true });
+      root.removeEventListener('touchcancel', resetGesture, { capture: true });
+    };
+  }, []);
+
   useEffect(() => {
     const section = searchParams.get('section');
     if (section === 'orders') {
@@ -307,7 +350,7 @@ export default function HomePage({
 
         <div
           ref={scrollRef}
-          className={`relative z-[10] bg-black scrollbar-hide min-h-0 flex-1 snap-y snap-mandatory overflow-x-hidden overscroll-y-contain pb-main-scroll-bottom ${
+          className={`relative z-[10] bg-black scrollbar-hide min-h-0 flex-1 snap-y snap-mandatory overflow-x-hidden overscroll-y-none pb-main-scroll-bottom ${
             orderStackedWizardSteps ? 'overflow-y-hidden' : 'overflow-y-auto'
           }`}
           style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth' }}

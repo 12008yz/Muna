@@ -104,7 +104,11 @@ function CollapseIcon() {
 
 function LongTariffCard({ title, features }) {
   return (
-    <div className="carousel-card box-border w-full shrink-0" style={{ scrollSnapAlign: 'start' }}>
+    <div
+      className="carousel-card box-border w-full shrink-0"
+      data-vertical-scroll-handle=""
+      style={{ scrollSnapAlign: 'start' }}
+    >
       <article
         className="box-border w-full rounded-[20px] bg-white"
         style={{
@@ -559,6 +563,7 @@ function ManaGlassMarketingCarouselCard({
   return (
     <div
       data-fluid-cursor-block
+      data-vertical-scroll-handle=""
       className="carousel-card relative flex shrink-0 flex-col overflow-hidden"
       style={{
         height: 'auto',
@@ -703,6 +708,7 @@ function ManaGiftFlowCard({ onBack, containerStyle }) {
   const carouselPlaceholder = (
     <div
       className="carousel-card box-border h-[335px] w-[360px] shrink-0"
+      data-vertical-scroll-handle=""
       style={{ scrollSnapAlign: 'start', maxWidth: '100%', ...containerStyle }}
       aria-hidden
     />
@@ -743,6 +749,7 @@ function ManaGiftFlowCard({ onBack, containerStyle }) {
 
           <div
             data-fluid-cursor-block
+            data-vertical-scroll-handle=""
             className="carousel-card relative flex w-full max-w-[360px] shrink-0 flex-col overflow-hidden"
             style={{
               height: 335,
@@ -873,6 +880,7 @@ function ManaGlassMarketingCarouselCardTwo({
   return (
     <div
       data-fluid-cursor-block
+      data-vertical-scroll-handle=""
       className="carousel-card relative flex shrink-0 flex-col overflow-visible"
       style={{
         minHeight: 473,
@@ -1048,6 +1056,7 @@ function EducationTariffCard({
   return (
     <div
       data-fluid-cursor-block
+      data-vertical-scroll-handle=""
       className="carousel-card relative flex shrink-0 flex-col overflow-hidden"
       style={{
         height: 'auto',
@@ -1457,6 +1466,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                     <button
                       type="button"
                       data-fluid-cursor-block
+                      data-vertical-scroll-handle=""
                       onClick={scrollStackedCarouselToNext}
                       className="pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[5px]"
                       aria-label="Следующая карточка"
