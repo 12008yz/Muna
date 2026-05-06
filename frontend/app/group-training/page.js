@@ -1,8 +1,8 @@
 import RedirectToHomeSection from '@/components/navigation/RedirectToHomeSection';
 
 export const metadata = {
-  title: 'Групповая подготовка — МНОЖИТЕЛ',
-  description: 'Тариф групповой подготовки к государственным экзаменам',
+  title: 'Тарифы — MANA',
+  description: 'Секция тарифов на главной странице',
 };
 
 export default function GroupTrainingRoute() {

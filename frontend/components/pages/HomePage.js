@@ -375,11 +375,7 @@ export default function HomePage({
             className={`${sectionShellClass} mx-auto w-full max-w-[425px]`}
             style={sectionHeightStyle}
           >
-            <GroupTrainingPage
-              layout="stacked"
-              exposeOpenConsultation={exposeTariffs}
-              scrollNavigate={scrollNavigate}
-            />
+            <GroupTrainingPage exposeOpenConsultation={exposeTariffs} scrollNavigate={scrollNavigate} />
           </section>
 
           <section
