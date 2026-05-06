@@ -575,7 +575,7 @@ export default function OrderCreationLandingPage({
       style={{
         left: 'var(--main-block-margin)',
         width: 360,
-        height: 260,
+        height: 'auto',
         bottom: 0,
         borderRadius: 20,
         display: 'flex',
@@ -597,7 +597,7 @@ export default function OrderCreationLandingPage({
         {'Маркетинговое прогнозирование\nпотенциала для захвата рынка\nпри помощи медиа и сайта,\nмалого и среднего дела'}
       </h1>
       <p
-        className="m-0 mt-[15px] h-[40px] w-[330px]"
+        className="m-0 mt-[20px] h-[40px] w-[330px]"
         style={{
           fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
           fontStyle: 'normal',
@@ -614,7 +614,7 @@ export default function OrderCreationLandingPage({
 
       <button
         type="button"
-        className="box-border mt-auto flex w-full max-w-[330px] min-w-0 shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
+        className="box-border mt-[20px] mb-0 flex w-full max-w-[330px] min-w-0 shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
         style={{
           ...involve,
           width: '100%',
