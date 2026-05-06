@@ -95,15 +95,32 @@ function getCarouselScrollPaddingLeft(el) {
   return Number.isFinite(n) ? n : 0;
 }
 
+function getCarouselScrollPaddingRight(el) {
+  if (!el || typeof getComputedStyle === 'undefined') return 0;
+  const n = parseFloat(getComputedStyle(el).scrollPaddingRight);
+  return Number.isFinite(n) ? n : 0;
+}
+
 /**
- * Целевой scrollLeft для выравнивания карточки под scroll-snap + scroll-padding-left.
+ * Целевой scrollLeft для выравнивания карточки под scroll-snap + scroll-padding.
+ * Для последнего слайда (cardIndex === totalCards - 1) — выравнивание по end + scroll-padding-right, иначе справа нет поля 20px.
  * Сырой card.offsetLeft без вычитания padding даёт сдвиг; mandatory snap на следующем кадре «дотягивает» — визуальный прыжок.
  */
-function getCarouselSnapScrollLeftForCard(carousel, card) {
+function getCarouselSnapScrollLeftForCard(carousel, card, cardIndex, totalCards) {
   if (!carousel || !card) return 0;
+  const max = Math.max(0, carousel.scrollWidth - carousel.clientWidth);
+  const useEndSnap =
+    typeof cardIndex === 'number' &&
+    typeof totalCards === 'number' &&
+    totalCards >= 2 &&
+    cardIndex === totalCards - 1;
+  if (useEndSnap) {
+    const padR = getCarouselScrollPaddingRight(carousel);
+    const raw = card.offsetLeft + card.offsetWidth - carousel.clientWidth + padR;
+    return Math.max(0, Math.min(raw, max));
+  }
   const padL = getCarouselScrollPaddingLeft(carousel);
   const raw = card.offsetLeft - padL;
-  const max = Math.max(0, carousel.scrollWidth - carousel.clientWidth);
   return Math.max(0, Math.min(raw, max));
 }
 
@@ -115,8 +132,9 @@ function getStackedCarouselActiveCardIndex(carousel) {
   const sl = carousel.scrollLeft;
   let bestIdx = 0;
   let smallest = Number.POSITIVE_INFINITY;
+  const n = cards.length;
   cards.forEach((card, idx) => {
-    const ideal = getCarouselSnapScrollLeftForCard(carousel, card);
+    const ideal = getCarouselSnapScrollLeftForCard(carousel, card, idx, n);
     const delta = Math.abs(sl - ideal);
     if (delta < smallest) {
       smallest = delta;
@@ -204,7 +222,10 @@ function TariffDetailsOverlay({ tariff, onCollapse, onConsultation }) {
     const cards = el.querySelectorAll('.carousel-card');
     const targetCard = cards[targetIndex];
     if (!targetCard) return;
-    el.scrollTo({ left: getCarouselSnapScrollLeftForCard(el, targetCard), behavior: 'auto' });
+    el.scrollTo({
+      left: getCarouselSnapScrollLeftForCard(el, targetCard, targetIndex, cards.length),
+      behavior: 'auto',
+    });
     setActiveIndex(targetIndex);
   }, [tariff]);
 
@@ -276,8 +297,9 @@ function TariffDetailsOverlay({ tariff, onCollapse, onConsultation }) {
               if (!cards.length) return;
               let closest = 0;
               let best = Number.POSITIVE_INFINITY;
+              const n = cards.length;
               cards.forEach((card, idx) => {
-                const ideal = getCarouselSnapScrollLeftForCard(el, card);
+                const ideal = getCarouselSnapScrollLeftForCard(el, card, idx, n);
                 const delta = Math.abs(el.scrollLeft - ideal);
                 if (delta < best) {
                   best = delta;
@@ -487,6 +509,8 @@ function ManaGlassMarketingCarouselCard({
   expandedPriceOverride,
   expandedButtonLabelOverride,
   expandedForceActionEnabled,
+  /** Последний слайд в stacked MANA: snap end + поле 20px справа у края экрана. */
+  stackCarouselLast = false,
 }) {
   const isSiteVariant = initialVariant === 'site';
   const [showInformScreen, setShowInformScreen] = useState(false);
@@ -568,6 +592,7 @@ function ManaGlassMarketingCarouselCard({
   if (showGiftScreen) {
     return (
       <ManaGiftFlowCard
+        stackCarouselLast={stackCarouselLast}
         onBack={handleGiftBackClick}
         containerStyle={{
           transform: giftEntering || giftLeaving ? 'translateY(120%)' : 'translateY(0)',
@@ -581,6 +606,7 @@ function ManaGlassMarketingCarouselCard({
   if (showInformScreen) {
     return (
       <ManaGlassMarketingCarouselCardTwo
+        stackCarouselLast={stackCarouselLast}
         onGiftClick={handleExpandedGiftClick}
         onNavigateToOrder={onNavigateToOrder}
         onInformClick={handleExpandedInformClick}
@@ -602,12 +628,12 @@ function ManaGlassMarketingCarouselCard({
     <div
       data-fluid-cursor-block
       data-vertical-scroll-handle=""
-      className="carousel-card relative flex shrink-0 flex-col overflow-hidden"
+      className={`carousel-card relative flex shrink-0 flex-col overflow-hidden${stackCarouselLast ? ' carousel-card--stacked-last' : ''}`}
       style={{
         height: 'auto',
         width: 360,
-        alignSelf: 'flex-end',
-        scrollSnapAlign: 'start',
+        alignSelf: 'flex-start',
+        scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
         boxSizing: 'border-box',
         maxWidth: '100%',
         transform: leavingDown || baseEntering ? 'translateY(120%)' : 'translateY(0)',
@@ -729,7 +755,7 @@ function ManaGlassMarketingCarouselCard({
   );
 }
 
-function ManaGiftFlowCard({ onBack, containerStyle }) {
+function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false }) {
   const [portalReady, setPortalReady] = useState(false);
   const [email, setEmail] = useState('');
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
@@ -745,9 +771,9 @@ function ManaGiftFlowCard({ onBack, containerStyle }) {
 
   const carouselPlaceholder = (
     <div
-      className="carousel-card box-border h-[335px] w-[360px] shrink-0"
+      className={`carousel-card box-border h-[335px] w-[360px] shrink-0${stackCarouselLast ? ' carousel-card--stacked-last' : ''}`}
       data-vertical-scroll-handle=""
-      style={{ scrollSnapAlign: 'start', maxWidth: '100%', ...containerStyle }}
+      style={{ scrollSnapAlign: stackCarouselLast ? 'end' : 'start', maxWidth: '100%', ...containerStyle }}
       aria-hidden
     />
   );
@@ -788,11 +814,11 @@ function ManaGiftFlowCard({ onBack, containerStyle }) {
           <div
             data-fluid-cursor-block
             data-vertical-scroll-handle=""
-            className="carousel-card relative flex w-full max-w-[360px] shrink-0 flex-col overflow-hidden"
+            className={`carousel-card relative flex w-full max-w-[360px] shrink-0 flex-col overflow-hidden${stackCarouselLast ? ' carousel-card--stacked-last' : ''}`}
             style={{
               height: 335,
-              alignSelf: 'flex-end',
-              scrollSnapAlign: 'start',
+              alignSelf: 'flex-start',
+              scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
               boxSizing: 'border-box',
               ...containerStyle,
             }}
@@ -898,6 +924,7 @@ function ManaGlassMarketingCarouselCardTwo({
   overrideButtonLabel,
   forceActionEnabled,
   containerStyle,
+  stackCarouselLast = false,
 }) {
   const isSiteVariant = variant === 'site';
   const expandedTitle = overrideTitle || (isSiteVariant ? 'Формирование сайта' : 'Формирование медиа');
@@ -919,13 +946,13 @@ function ManaGlassMarketingCarouselCardTwo({
     <div
       data-fluid-cursor-block
       data-vertical-scroll-handle=""
-      className="carousel-card relative flex shrink-0 flex-col overflow-visible"
+      className={`carousel-card relative flex shrink-0 flex-col overflow-visible${stackCarouselLast ? ' carousel-card--stacked-last' : ''}`}
       style={{
         minHeight: 473,
         height: 'auto',
         width: 360,
-        alignSelf: 'flex-end',
-        scrollSnapAlign: 'start',
+        alignSelf: 'flex-start',
+        scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
         boxSizing: 'border-box',
         maxWidth: '100%',
         ...containerStyle,
@@ -1316,8 +1343,9 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
 
     let activeCard = cards[0];
     let smallestDelta = Number.POSITIVE_INFINITY;
-    cards.forEach((card) => {
-      const ideal = getCarouselSnapScrollLeftForCard(carousel, card);
+    const n = cards.length;
+    cards.forEach((card, idx) => {
+      const ideal = getCarouselSnapScrollLeftForCard(carousel, card, idx, n);
       const delta = Math.abs(carousel.scrollLeft - ideal);
       if (delta < smallestDelta) {
         smallestDelta = delta;
@@ -1344,8 +1372,9 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
 
     let currentIndex = 0;
     let smallestDelta = Number.POSITIVE_INFINITY;
+    const n = cards.length;
     cards.forEach((card, idx) => {
-      const ideal = getCarouselSnapScrollLeftForCard(carousel, card);
+      const ideal = getCarouselSnapScrollLeftForCard(carousel, card, idx, n);
       const delta = Math.abs(carousel.scrollLeft - ideal);
       if (delta < smallestDelta) {
         smallestDelta = delta;
@@ -1397,6 +1426,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
   const hideStackedArrowDuringCardTransition = (lockedCardIndex) => {
     const carousel = stackedCarouselRef.current;
     let prevSnapType = '';
+    let prevOverflowX = '';
     if (carousel) {
       pendingCarouselCardIndexRef.current =
         typeof lockedCardIndex === 'number' ? lockedCardIndex : getStackedCarouselActiveCardIndex(carousel);
@@ -1404,6 +1434,9 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
       /* Без этого iOS/WebKit при смене высоты/snap-цели может «дотянуть» scrollLeft к соседней карточке. */
       prevSnapType = carousel.style.scrollSnapType;
       carousel.style.scrollSnapType = 'none';
+      /* Гасим горизонтальный дрейф и «рваный» snap, пока карточка меняет высоту/transform. */
+      prevOverflowX = carousel.style.overflowX;
+      carousel.style.overflowX = 'hidden';
     }
     setHideStackedArrow(true);
     if (stackedArrowTimerRef.current) {
@@ -1420,10 +1453,12 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
           if (el != null && typeof idx === 'number') {
             const cards = Array.from(el.querySelectorAll('.carousel-card'));
             const card = cards[idx];
-            if (card) el.scrollTo({ left: getCarouselSnapScrollLeftForCard(el, card), behavior: 'auto' });
+            const n = cards.length;
+            if (card) el.scrollTo({ left: getCarouselSnapScrollLeftForCard(el, card, idx, n), behavior: 'auto' });
           }
           if (el) {
             el.style.scrollSnapType = prevSnapType || 'x mandatory';
+            el.style.overflowX = prevOverflowX || '';
           }
           carouselLayoutSettlingRef.current = false;
           updateStackedArrowPosition();
@@ -1442,8 +1477,9 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
 
     let currentIndex = 0;
     let smallestDelta = Number.POSITIVE_INFINITY;
+    const n = cards.length;
     cards.forEach((card, idx) => {
-      const ideal = getCarouselSnapScrollLeftForCard(el, card);
+      const ideal = getCarouselSnapScrollLeftForCard(el, card, idx, n);
       const delta = Math.abs(el.scrollLeft - ideal);
       if (delta < smallestDelta) {
         smallestDelta = delta;
@@ -1454,7 +1490,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
     const nextIndex = (currentIndex + 1) % cards.length;
     const nextCard = cards[nextIndex];
     if (!nextCard) return;
-    el.scrollTo({ left: getCarouselSnapScrollLeftForCard(el, nextCard), behavior: 'smooth' });
+    el.scrollTo({ left: getCarouselSnapScrollLeftForCard(el, nextCard, nextIndex, n), behavior: 'smooth' });
   };
 
   const handleGiftOpenChange = useCallback(
@@ -1577,7 +1613,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                 ) : null}
                 <div
                   ref={stackedCarouselRef}
-                  className="carousel-container carousel-learning scrollbar-hide box-border flex w-full max-h-full min-h-0 flex-nowrap items-end overflow-x-auto overflow-y-hidden"
+                  className={`carousel-container carousel-learning scrollbar-hide box-border flex w-full max-h-full min-h-0 flex-nowrap overflow-x-auto overflow-y-hidden ${isStacked ? 'items-start' : 'items-end'}`}
                   style={{
                     height: 'auto',
                     gap: 10,
@@ -1654,6 +1690,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                   <ManaGlassMarketingCarouselCard
                     initialVariant="site"
                     allowInformSwitch
+                    stackCarouselLast
                     overrideTitle="Формирование имиджа"
                     overrideDescription="Наличие интересного медиа служит важным маркетинговым инструментом малого и среднего предпринимательства"
                     overridePrice="около 35 тыс. р."

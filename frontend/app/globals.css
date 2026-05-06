@@ -167,6 +167,11 @@ body::-webkit-scrollbar {
   width: var(--main-block-margin) !important;
 }
 
+/* Последний слайд MANA: конец карточки к правому краю с учётом scroll-padding-right (20px поле). */
+.carousel-container.carousel-learning .carousel-card--stacked-last {
+  scroll-snap-align: end;
+}
+
 .carousel-container:not(.carousel-container--single-card) > .carousel-spacer-right {
   /* Как у шапки: поле справа + safe area на вырезе. */
   min-width: calc(var(--main-block-margin) + env(safe-area-inset-right, 0px)) !important;
