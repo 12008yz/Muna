@@ -329,10 +329,11 @@ export default function ConsultationLandingPage({
   const privacyLinkHref = PRIVACY_HREF;
   const notificationsNode = (
     <div
-      className="pointer-events-none fixed z-[10060] flex w-full max-w-[360px] -translate-x-1/2 flex-col"
+      className="pointer-events-none fixed z-[10060] flex w-auto min-w-0 flex-col"
       style={{
         top: 125,
-        left: '50%',
+        left: 'var(--main-block-margin)',
+        right: 'var(--main-block-margin)',
         isolation: 'isolate',
       }}
     >
@@ -400,7 +401,7 @@ export default function ConsultationLandingPage({
             paddingBottom: 'calc(var(--main-block-margin) + env(safe-area-inset-bottom, 0px))',
           }}
         >
-          <div className="relative mx-auto box-border flex h-full min-h-0 w-full max-w-[400px] min-w-0 flex-col bg-black" style={{ boxSizing: 'border-box' }}>
+          <div className="relative mx-auto box-border flex h-full min-h-0 w-full max-w-full min-w-0 flex-col bg-black" style={{ boxSizing: 'border-box' }}>
             {stackedNotificationsPortal}
             <div className="relative min-h-0 w-full flex-1 shrink">
               <div
@@ -409,7 +410,7 @@ export default function ConsultationLandingPage({
                 className="pointer-events-auto absolute left-0 right-0 z-[2] overflow-hidden"
                 style={{ top: 135, height: 380 }}
               >
-                <div className="pointer-events-none relative mx-auto h-[380px] w-[380px]">
+                <div className="pointer-events-none relative mx-auto h-[380px] w-full min-w-0 max-w-[380px]">
                   <Image
                     src="/mana-marketing-hero.png"
                     alt="MANA — маркетинговое сопровождение"
@@ -426,10 +427,13 @@ export default function ConsultationLandingPage({
               data-vertical-scroll-handle=""
               className="absolute z-[3] box-border"
               style={{
-                left: 20,
-                width: 360,
+                left: 'var(--main-block-margin)',
+                right: 'var(--main-block-margin)',
+                width: 'auto',
+                minWidth: 0,
                 top: 'auto',
                 bottom: 'calc(20px - var(--main-block-margin))',
+                minHeight: 330,
                 height: 330,
                 borderRadius: 20,
                 display: 'flex',
@@ -448,7 +452,7 @@ export default function ConsultationLandingPage({
               }}
             >
               <h1
-                className="m-0 w-[330px] max-w-[330px] self-start flex-shrink-0"
+                className="m-0 w-full min-w-0 self-start flex-shrink-0"
                 style={{
                   ...involve,
                   fontWeight: 400,
@@ -469,7 +473,7 @@ export default function ConsultationLandingPage({
               <div
                 className="box-border flex min-w-0 shrink-0 items-center gap-[5px] self-start rounded-[100px] border border-solid border-[rgba(255,255,255,0.1)] px-[5px]"
                 style={{
-                  width: 'calc(100% - 10px)',
+                  width: '100%',
                   maxWidth: '100%',
                   height: 25,
                   minHeight: 25,

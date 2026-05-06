@@ -19,7 +19,7 @@ const wizardTitleStyle = {
   ...involve,
   fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
   fontWeight: 400,
-  width: 330,
+  width: '100%',
   maxWidth: '100%',
   height: 20,
   minHeight: 20,
@@ -36,7 +36,7 @@ const wizardSubtitleStyle = {
   ...involve,
   fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
   fontWeight: 400,
-  width: 330,
+  width: '100%',
   maxWidth: '100%',
   height: 30,
   minHeight: 30,
@@ -576,7 +576,9 @@ export default function OrderCreationLandingPage({
       className="absolute box-border"
       style={{
         left: 'var(--main-block-margin)',
-        width: 360,
+        right: 'var(--main-block-margin)',
+        width: 'auto',
+        minWidth: 0,
         height: 'auto',
         bottom: 0,
         borderRadius: 20,
@@ -593,13 +595,13 @@ export default function OrderCreationLandingPage({
       }}
     >
       <h1
-        className="m-0 w-[330px] max-w-none flex-shrink-0 whitespace-pre"
+        className="m-0 w-full min-w-0 flex-shrink-0 whitespace-pre"
         style={{ ...involve, fontSize: 18, lineHeight: '125%', letterSpacing: '-0.01em', color: '#FFFFFF' }}
       >
         {'Маркетинговое прогнозирование\nпотенциала для захвата рынка\nпри помощи медиа и сайта,\nмалого и среднего дела'}
       </h1>
       <p
-        className="m-0 mt-[20px] h-[40px] w-[330px]"
+        className="m-0 mt-[20px] min-h-[40px] w-full min-w-0"
         style={{
           fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
           fontStyle: 'normal',
@@ -616,7 +618,7 @@ export default function OrderCreationLandingPage({
 
       <button
         type="button"
-        className="box-border mt-[20px] mb-0 flex w-full max-w-[330px] min-w-0 shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
+        className="box-border mt-[20px] mb-0 flex w-full min-w-0 shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
         style={{
           ...involve,
           width: '100%',
@@ -695,10 +697,12 @@ export default function OrderCreationLandingPage({
               <div
                 data-fluid-cursor-block
                 data-vertical-scroll-handle=""
-                className="scrollbar-hide relative mt-auto flex w-full min-w-0 flex-shrink-0 flex-col rounded-[20px]"
+                className="scrollbar-hide relative mt-auto flex w-full min-w-0 flex-shrink-0 flex-col self-stretch rounded-[20px]"
                 style={{
                   marginLeft: 'var(--main-block-margin)',
-                  width: 360,
+                  marginRight: 'var(--main-block-margin)',
+                  width: 'auto',
+                  minHeight: 360,
                   height: 360,
                   boxSizing: 'border-box',
                   padding: 15,
@@ -717,20 +721,20 @@ export default function OrderCreationLandingPage({
                   ...wizardDissolveStyle,
                 }}
               >
-                <h2 className="m-0 flex w-full max-w-[330px] flex-shrink-0 items-center self-stretch" style={wizardTitleStyle}>
+                <h2 className="m-0 flex w-full min-w-0 flex-shrink-0 items-center self-stretch" style={wizardTitleStyle}>
                   {orderStep === 4 ? 'Прогнозирование' : 'Формирование тарифного плана'}
                 </h2>
 
                 {orderStep === 1 && (
                   <>
-                    <p className="m-0 flex w-full max-w-[330px] flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
+                    <p className="m-0 flex w-full min-w-0 flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
                       Главное во всех ответах, это четкость.
                       <br />
                       Незаменимое во всех ответах, это честность
                     </p>
-                    <div className="h-0 w-full max-w-[330px] border-t border-[rgba(255,255,255,0.1)]" />
+                    <div className="h-0 w-full min-w-0 border-t border-[rgba(255,255,255,0.1)]" />
                     <p
-                      className="m-0 absolute left-[15px] top-[90px] h-[60px] w-[330px]"
+                      className="m-0 absolute left-[15px] right-[15px] top-[90px] h-[60px] w-auto min-w-0"
                       style={{
                         fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
                         fontStyle: 'normal',
@@ -747,7 +751,7 @@ export default function OrderCreationLandingPage({
                       <span className="block whitespace-nowrap">Кликните на очень похожее мнение</span>
                     </p>
 
-                    <div className="mt-[90px] flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]" style={{ marginBottom: 20 }}>
                       {[
                         { id: 'low-known', label: 'Компания малоизвестна в сети' },
                         { id: 'high-known', label: 'Компания известна в сети' },
@@ -786,7 +790,7 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="flex w-full max-w-[330px] items-center gap-[5px]">
+                    <div className="flex w-full min-w-0 items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(0)}
@@ -818,14 +822,14 @@ export default function OrderCreationLandingPage({
 
                 {orderStep === 2 && (
                   <>
-                    <p className="m-0 flex w-full max-w-[330px] flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
+                    <p className="m-0 flex w-full min-w-0 flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
                       Главное во всех ответах, это четкость.
                       <br />
                       Незаменимое во всех ответах, это честность
                     </p>
-                    <div className="h-0 w-full max-w-[330px] border-t border-[rgba(255,255,255,0.1)]" />
+                    <div className="h-0 w-full min-w-0 border-t border-[rgba(255,255,255,0.1)]" />
                     <p
-                      className="m-0 absolute left-[15px] top-[90px] h-[60px] w-[330px]"
+                      className="m-0 absolute left-[15px] right-[15px] top-[90px] h-[60px] w-auto min-w-0"
                       style={{
                         fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
                         fontStyle: 'normal',
@@ -842,7 +846,7 @@ export default function OrderCreationLandingPage({
                       <span className="block whitespace-nowrap">Кликните на очень похожее мнение</span>
                     </p>
 
-                    <div className="mt-[90px] flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]" style={{ marginBottom: 20 }}>
                       {[
                         { id: 0, label: 'Компания незнакома с трендами' },
                         { id: 1, label: 'Компания знакома с трендами' },
@@ -870,7 +874,7 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="flex w-full max-w-[330px] items-center gap-[5px]">
+                    <div className="flex w-full min-w-0 items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(1)}
@@ -898,14 +902,14 @@ export default function OrderCreationLandingPage({
 
                 {orderStep === 3 && (
                   <>
-                    <p className="m-0 flex w-full max-w-[330px] flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
+                    <p className="m-0 flex w-full min-w-0 flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
                       Главное во всех ответах, это четкость.
                       <br />
                       Незаменимое во всех ответах, это честность
                     </p>
-                    <div className="h-0 w-full max-w-[330px] border-t border-[rgba(255,255,255,0.1)]" />
+                    <div className="h-0 w-full min-w-0 border-t border-[rgba(255,255,255,0.1)]" />
                     <p
-                      className="m-0 absolute left-[15px] top-[90px] h-[60px] w-[330px]"
+                      className="m-0 absolute left-[15px] right-[15px] top-[90px] h-[60px] w-auto min-w-0"
                       style={{
                         fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
                         fontStyle: 'normal',
@@ -922,7 +926,7 @@ export default function OrderCreationLandingPage({
                       <span className="block whitespace-nowrap">Кликните на очень похожее мнение</span>
                     </p>
 
-                    <div className="mt-[90px] flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]" style={{ marginBottom: 20 }}>
                       {[
                         { id: 'load-low', label: 'Компания не загружена на 95%' },
                         { id: 'load-high', label: 'Компания загружена на 95%' },
@@ -950,7 +954,7 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="flex w-full max-w-[330px] items-center gap-[5px]">
+                    <div className="flex w-full min-w-0 items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(2)}
@@ -978,14 +982,14 @@ export default function OrderCreationLandingPage({
 
                 {orderStep === 4 && (
                   <>
-                    <p className="m-0 flex w-full max-w-[330px] flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
+                    <p className="m-0 flex w-full min-w-0 flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
                       Главное во всех ответах, это четкость.
                       <br />
                       Незаменимое во всех ответах, это честность
                     </p>
-                    <div className="h-0 w-full max-w-[330px] border-t border-[rgba(255,255,255,0.1)]" />
+                    <div className="h-0 w-full min-w-0 border-t border-[rgba(255,255,255,0.1)]" />
                     <p
-                      className="m-0 absolute left-[15px] top-[90px] h-[60px] w-[330px]"
+                      className="m-0 absolute left-[15px] right-[15px] top-[90px] h-[60px] w-auto min-w-0"
                       style={{
                         fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
                         fontStyle: 'normal',
@@ -1002,7 +1006,7 @@ export default function OrderCreationLandingPage({
                       <span className="block whitespace-nowrap">Кликните на очень похожее мнение</span>
                     </p>
 
-                    <div className="mt-[90px] flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]" style={{ marginBottom: 20 }}>
                       <div
                         className="box-border flex h-[105px] w-full items-start gap-[10px] rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent px-[10px] pt-[15px]"
                       >
@@ -1043,7 +1047,7 @@ export default function OrderCreationLandingPage({
                     <button
                       type="button"
                       onClick={handleDurationNext}
-                      className="flex h-[50px] min-h-[50px] w-full max-w-[330px] cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                      className="flex h-[50px] min-h-[50px] w-full min-w-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
                       style={{ ...involve, fontSize: 16, lineHeight: '315%', color: '#050505' }}
                     >
                       Продолжение
