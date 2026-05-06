@@ -190,6 +190,7 @@ function TariffDetailsOverlay({ tariff, onCollapse, onConsultation }) {
 
   return (
     <div
+      data-fluid-cursor-block
       className="fixed inset-0 z-[10000] box-border flex w-full flex-col overflow-hidden bg-background text-[#101010]"
       style={{
         height: '100dvh',
@@ -557,6 +558,7 @@ function ManaGlassMarketingCarouselCard({
 
   return (
     <div
+      data-fluid-cursor-block
       className="carousel-card relative flex shrink-0 flex-col overflow-hidden"
       style={{
         height: 'auto',
@@ -712,7 +714,10 @@ function ManaGiftFlowCard({ onBack, containerStyle }) {
     <>
       {carouselPlaceholder}
       {createPortal(
-        <div className="fixed inset-0 z-[20000] flex items-end justify-center bg-[#050505] px-[20px] pb-[20px] pt-[80px]">
+        <div
+          data-fluid-cursor-block
+          className="fixed inset-0 z-[20000] flex items-end justify-center bg-[#050505] px-[20px] pb-[20px] pt-[80px]"
+        >
           <button
             type="button"
             onClick={onBack}
@@ -737,6 +742,7 @@ function ManaGiftFlowCard({ onBack, containerStyle }) {
           </button>
 
           <div
+            data-fluid-cursor-block
             className="carousel-card relative flex w-full max-w-[360px] shrink-0 flex-col overflow-hidden"
             style={{
               height: 335,
@@ -866,6 +872,7 @@ function ManaGlassMarketingCarouselCardTwo({
 
   return (
     <div
+      data-fluid-cursor-block
       className="carousel-card relative flex shrink-0 flex-col overflow-visible"
       style={{
         minHeight: 473,
@@ -1040,6 +1047,7 @@ function EducationTariffCard({
 }) {
   return (
     <div
+      data-fluid-cursor-block
       className="carousel-card relative flex shrink-0 flex-col overflow-hidden"
       style={{
         height: 'auto',
@@ -1448,6 +1456,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                   <div className="pointer-events-none absolute right-5 z-[3]" style={{ top: stackedArrowTop, transition: 'top 180ms ease' }}>
                     <button
                       type="button"
+                      data-fluid-cursor-block
                       onClick={scrollStackedCarouselToNext}
                       className="pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[5px]"
                       aria-label="Следующая карточка"

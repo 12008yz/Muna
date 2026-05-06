@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import LoadingScreen from '@/components/LoadingScreen';
 import PostLoadIntroScreen from '@/components/PostLoadIntroScreen';
 import HomePage from '@/components/pages/HomePage';
+import CursorFluidEffect from '@/components/common/CursorFluidEffect';
 
 export default function HomeClient() {
   const searchParams = useSearchParams();
@@ -148,6 +149,9 @@ export default function HomeClient() {
 
   return (
     <div ref={mainRef}>
+      <CursorFluidEffect
+        active={showAppLoading || showPostLoadIntro || !mainHiddenBehindGate}
+      />
       {showAppLoading && <LoadingScreen progress={loadingProgress} />}
       {showPostLoadIntro && <PostLoadIntroScreen onContinue={() => setHasPassedIntro(true)} />}
       <main

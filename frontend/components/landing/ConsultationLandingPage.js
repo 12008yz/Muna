@@ -338,6 +338,7 @@ export default function ConsultationLandingPage({
     >
       {(showCookieBanner || cookieBannerClosing) && (
         <div
+          data-fluid-cursor-block
           className="pointer-events-auto w-full min-w-0 ease-out"
           style={{
             maxHeight: cookieBannerClosing ? 0 : 130,
@@ -360,6 +361,7 @@ export default function ConsultationLandingPage({
 
       {(showLeadSuccessBanner || leadSuccessClosing) && (
         <div
+          data-fluid-cursor-block
           className="pointer-events-auto w-full min-w-0 ease-out"
           style={{
             maxHeight: leadSuccessClosing ? 0 : 80,
@@ -390,7 +392,7 @@ export default function ConsultationLandingPage({
     <>
       {isStacked ? (
         <div
-          className="relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-[#050505]"
+          className="relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-black"
           style={{
             height: '100%',
             minHeight: 0,
@@ -398,19 +400,20 @@ export default function ConsultationLandingPage({
             paddingBottom: 'calc(var(--main-block-margin) + env(safe-area-inset-bottom, 0px))',
           }}
         >
-          <div className="relative mx-auto box-border flex h-full min-h-0 w-full max-w-[400px] min-w-0 flex-col bg-[#050505]" style={{ boxSizing: 'border-box' }}>
+          <div className="relative mx-auto box-border flex h-full min-h-0 w-full max-w-[400px] min-w-0 flex-col bg-black" style={{ boxSizing: 'border-box' }}>
             {stackedNotificationsPortal}
             <div className="relative min-h-0 w-full flex-1 shrink">
               <div
-                className="pointer-events-none absolute left-0 right-0 overflow-hidden"
+                data-fluid-cursor-block
+                className="pointer-events-auto absolute left-0 right-0 z-[2] overflow-hidden"
                 style={{ top: 135, height: 380 }}
               >
-                <div className="relative mx-auto h-[380px] w-[380px]">
+                <div className="pointer-events-none relative mx-auto h-[380px] w-[380px]">
                   <Image
                     src="/mana-marketing-hero.png"
                     alt="MANA — маркетинговое сопровождение"
                     fill
-                    className="object-contain object-center"
+                    className="pointer-events-none object-contain object-center"
                     priority
                     sizes="100vw"
                   />
@@ -418,7 +421,8 @@ export default function ConsultationLandingPage({
               </div>
             </div>
             <div
-              className="absolute z-[1] box-border"
+              data-fluid-cursor-block
+              className="absolute z-[3] box-border"
               style={{
                 left: 20,
                 width: 360,

@@ -31,7 +31,8 @@ function sectionIdToKey(id) {
   return 'hero';
 }
 
-const sectionShellClass = 'snap-start snap-normal md:snap-always box-border shrink-0 overflow-hidden';
+const sectionShellClass =
+  'snap-start snap-normal md:snap-always box-border shrink-0 overflow-hidden bg-black';
 
 /**
  * Главная: герой, тарифы, мастер заявки и финальный экран в одном вертикальном скролле (snap + поблочный wheel);
@@ -247,14 +248,18 @@ export default function HomePage({
 
   return (
     <>
-      <div
-        className="fixed inset-0 z-0 flex w-full flex-col overflow-hidden"
+        <div
+        className="fixed inset-0 z-0 flex w-full flex-col overflow-hidden bg-black"
         style={{
           height: '100dvh',
           maxHeight: '100dvh',
-          background: 'var(--page-canvas-gradient)',
         }}
       >
+        <div
+          id="muna-fluid-cursor-mount"
+          className="pointer-events-none absolute inset-0 z-[1]"
+          aria-hidden
+        />
         {/*
           Шапка: fixed + bg-transparent на корне — по практике Safari (см. iOS 26 / «Liquid Glass»):
           тинт статус-бара/панели берётся с position:fixed у края; фон и backdrop-filter
@@ -279,11 +284,13 @@ export default function HomePage({
             }}
           />
           <div
+            data-fluid-cursor-block
             className="relative z-10 mx-auto w-full max-w-[425px] pt-[var(--sat)] pointer-events-auto"
             style={{ height: 'calc(var(--header-top) + var(--header-height) + 8px)' }}
           >
             <div
               id="stacked-order-wizard-header-slot"
+              data-fluid-cursor-block
               className={
                 hideAppHeaderForOrderWizard
                   ? 'absolute inset-0 z-[15] pointer-events-auto'
@@ -300,7 +307,7 @@ export default function HomePage({
 
         <div
           ref={scrollRef}
-          className={`scrollbar-hide min-h-0 flex-1 snap-y snap-mandatory overflow-x-hidden overscroll-y-contain pb-main-scroll-bottom ${
+          className={`relative z-[10] bg-black scrollbar-hide min-h-0 flex-1 snap-y snap-mandatory overflow-x-hidden overscroll-y-contain pb-main-scroll-bottom ${
             orderStackedWizardSteps ? 'overflow-y-hidden' : 'overflow-y-auto'
           }`}
           style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth' }}
@@ -351,7 +358,10 @@ export default function HomePage({
       </div>
 
       {privacyPolicyOpen ? (
-        <div className="scrollbar-hide fixed inset-0 z-[10000] w-full min-w-0 overflow-y-auto overflow-x-hidden">
+        <div
+          data-fluid-cursor-block
+          className="scrollbar-hide fixed inset-0 z-[10000] w-full min-w-0 overflow-y-auto overflow-x-hidden"
+        >
           <PrivacyPolicyPage onCollapse={onPrivacyCollapse} />
         </div>
       ) : null}

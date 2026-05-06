@@ -571,6 +571,7 @@ export default function OrderCreationLandingPage({
 
   const renderLeadCard = (buttonHandler) => (
     <div
+      data-fluid-cursor-block
       className="absolute box-border"
       style={{
         left: 'var(--main-block-margin)',
@@ -691,6 +692,7 @@ export default function OrderCreationLandingPage({
               ) : null}
 
               <div
+                data-fluid-cursor-block
                 className="scrollbar-hide relative mt-auto flex w-full min-w-0 flex-shrink-0 flex-col rounded-[20px]"
                 style={{
                   marginLeft: 'var(--main-block-margin)',

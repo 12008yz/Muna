@@ -25,7 +25,7 @@ export default function PostLoadIntroScreen({ onContinue }) {
 
   return (
     <div
-      className="fixed inset-0 z-[10001] flex justify-center bg-[#050505] pt-[var(--sat,0px)]"
+      className="fixed inset-0 z-[9998] flex justify-center bg-[#050505] pt-[var(--sat,0px)]"
     >
       <div
         className="relative box-border w-full max-w-[400px] bg-[#050505]"
@@ -41,6 +41,7 @@ export default function PostLoadIntroScreen({ onContinue }) {
 
         <button
           type="button"
+          data-fluid-cursor-block
           onClick={onContinue}
           disabled={!showContinueButton}
           className="absolute box-border flex min-h-[50px] items-center justify-center border border-solid border-white outline-none transition-opacity duration-500 ease-out hover:opacity-90 focus:outline-none disabled:cursor-default"

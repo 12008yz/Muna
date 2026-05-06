@@ -756,6 +756,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
 
   return (
     <div
+      data-fluid-cursor-block
       className="fixed inset-0 z-[10050] flex w-full min-w-0 cursor-pointer flex-col items-stretch overflow-hidden bg-[#050505]"
       style={{
         opacity: isAnimating ? 1 : 0,
