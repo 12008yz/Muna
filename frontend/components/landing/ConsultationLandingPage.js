@@ -423,7 +423,7 @@ export default function ConsultationLandingPage({
                 left: 20,
                 width: 360,
                 top: 'auto',
-                bottom: 20,
+                bottom: 'calc(20px - var(--main-block-margin))',
                 height: 330,
                 borderRadius: 20,
                 display: 'flex',
