@@ -1061,6 +1061,10 @@ export default function OrderCreationLandingPage({
           onClose={() => setConsultationFlowOpen(false)}
           onSkip={() => setConsultationFlowOpen(false)}
           onSubmit={handleConsultationFlowSubmit}
+          onPhoneCallbackBack={() => {
+            setConsultationFlowOpen(false);
+            setOrderStepAnimated(0, { immediate: true });
+          }}
         />
       ) : null}
     </>

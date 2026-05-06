@@ -340,7 +340,7 @@ export default function HomePage({
             <OrderCreationLandingPage
               layout="stacked"
               exposeOpenConsultation={exposeOrder}
-              onAfterPhoneLead={scrollNavigate.toHero}
+              onAfterPhoneLead={scrollNavigate.toOrder}
               onStackedWizardStepsActive={setOrderStackedWizardSteps}
               onConsultationFlowOpenChange={setOrderConsultationOpen}
             />

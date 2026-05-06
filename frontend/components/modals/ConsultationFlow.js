@@ -96,7 +96,7 @@ const subtitleTextStyle = {
   height: 30,
 };
 
-export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialStep = 'contact-method' }) {
+export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialStep = 'contact-method', onPhoneCallbackBack }) {
   const SAVED_PHONE_KEY = 'leadPhone';
   const [step, setStep] = useState(initialStep);
   const [phoneNumber, setPhoneNumber] = useState('+7 ');
@@ -195,6 +195,10 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
 
   const handleBack = useCallback(() => {
     if (step === 'phone-callback-form') {
+      if (typeof onPhoneCallbackBack === 'function') {
+        onPhoneCallbackBack();
+        return;
+      }
       setStep('contact-method');
       setCallbackFormAttempted(false);
       setCallbackName('');
@@ -207,7 +211,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
       return;
     }
     else onClose();
-  }, [step, onClose]);
+  }, [step, onClose, onPhoneCallbackBack]);
 
   const handleCallbackFormSubmit = useCallback(() => {
     setPrivacyConsentTouched(true);
