@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
 import { dispatchNavigateToOrderLanding } from '@/lib/navigateToOrderLanding';
@@ -391,8 +391,9 @@ const manaGlassCardStyle = {
  * Первый слайд карусели на главной (MANA): тёмная стеклянная карточка по макету Figma (Rectangle 30).
  */
 function ManaGlassMarketingCarouselCard({
-  onArrowClick,
   onNavigateToOrder,
+  onTransitionStart,
+  onGiftOpenChange,
   initialVariant = 'content',
   allowInformSwitch = true,
   overrideTitle,
@@ -405,8 +406,6 @@ function ManaGlassMarketingCarouselCard({
   expandedPriceOverride,
   expandedButtonLabelOverride,
   expandedForceActionEnabled,
-  arrowFlipped = true,
-  expandedArrowFlipped = true,
 }) {
   const isSiteVariant = initialVariant === 'site';
   const [showInformScreen, setShowInformScreen] = useState(false);
@@ -431,6 +430,7 @@ function ManaGlassMarketingCarouselCard({
 
   const handleInformClick = () => {
     if (!allowInformSwitch || leavingDown || showInformScreen) return;
+    if (typeof onTransitionStart === 'function') onTransitionStart();
     setLeavingDown(true);
     window.setTimeout(() => {
       setShowInformScreen(true);
@@ -442,6 +442,7 @@ function ManaGlassMarketingCarouselCard({
 
   const handleExpandedInformClick = () => {
     if (expandedLeaving || !showInformScreen) return;
+    if (typeof onTransitionStart === 'function') onTransitionStart();
     setExpandedLeaving(true);
     window.setTimeout(() => {
       setShowInformScreen(false);
@@ -476,6 +477,15 @@ function ManaGlassMarketingCarouselCard({
     }, 320);
   };
 
+  useEffect(() => {
+    if (typeof onGiftOpenChange === 'function') {
+      onGiftOpenChange(showGiftScreen);
+    }
+    return () => {
+      if (typeof onGiftOpenChange === 'function') onGiftOpenChange(false);
+    };
+  }, [showGiftScreen, onGiftOpenChange]);
+
   if (showGiftScreen) {
     return (
       <ManaGiftFlowCard
@@ -493,7 +503,6 @@ function ManaGlassMarketingCarouselCard({
     return (
       <ManaGlassMarketingCarouselCardTwo
         onGiftClick={handleExpandedGiftClick}
-        onArrowClick={onArrowClick}
         onNavigateToOrder={onNavigateToOrder}
         onInformClick={handleExpandedInformClick}
         variant={expandedVariantResolved}
@@ -501,7 +510,6 @@ function ManaGlassMarketingCarouselCard({
         overridePrice={expandedPriceOverride}
         overrideButtonLabel={expandedButtonLabelOverride}
         forceActionEnabled={expandedForceActionEnabled}
-        arrowFlipped={expandedArrowFlipped}
         containerStyle={{
           transform: expandedEntering || expandedLeaving ? 'translateY(120%)' : 'translateY(0)',
           opacity: expandedEntering || expandedLeaving ? 0 : 1,
@@ -527,27 +535,7 @@ function ManaGlassMarketingCarouselCard({
       }}
     >
       <div className="mb-3 flex w-full items-center justify-end">
-        <button
-          type="button"
-          onClick={onArrowClick}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[5px]"
-          aria-label="Следующая карточка"
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden
-            style={arrowFlipped ? { transform: 'scaleX(-1)' } : undefined}
-          >
-            <path
-              d="M10 0C8.02219 0 6.08879 0.58649 4.4443 1.6853C2.79981 2.78412 1.51809 4.3459 0.761209 6.17316C0.00433284 8.00042 -0.1937 10.0111 0.192152 11.9509C0.578004 13.8907 1.53041 15.6725 2.92894 17.0711C4.32746 18.4696 6.10929 19.422 8.0491 19.8078C9.98891 20.1937 11.9996 19.9957 13.8268 19.2388C15.6541 18.4819 17.2159 17.2002 18.3147 15.5557C19.4135 13.9112 20 11.9778 20 10C19.9972 7.34869 18.9427 4.80678 17.068 2.93202C15.1932 1.05727 12.6513 0.00279983 10 0ZM13.8462 10.7692H8.01058L9.775 12.5327C9.84647 12.6042 9.90316 12.689 9.94184 12.7824C9.98052 12.8758 10.0004 12.9758 10.0004 13.0769C10.0004 13.178 9.98052 13.2781 9.94184 13.3715C9.90316 13.4648 9.84647 13.5497 9.775 13.6212C9.70353 13.6926 9.61869 13.7493 9.52531 13.788C9.43193 13.8267 9.33184 13.8466 9.23077 13.8466C9.1297 13.8466 9.02962 13.8267 8.93624 13.788C8.84286 13.7493 8.75801 13.6926 8.68654 13.6212L5.60962 10.5442C5.5381 10.4728 5.48136 10.3879 5.44265 10.2946C5.40394 10.2012 5.38401 10.1011 5.38401 10C5.38401 9.89891 5.40394 9.79881 5.44265 9.70543C5.48136 9.61205 5.5381 9.52721 5.60962 9.45577L8.68654 6.37884C8.83088 6.23451 9.02665 6.15342 9.23077 6.15342C9.4349 6.15342 9.63066 6.23451 9.775 6.37884C9.91934 6.52318 10.0004 6.71895 10.0004 6.92308C10.0004 7.1272 9.91934 7.32297 9.775 7.46731L8.01058 9.23077H13.8462C14.0502 9.23077 14.2458 9.31181 14.3901 9.45607C14.5343 9.60033 14.6154 9.79599 14.6154 10C14.6154 10.204 14.5343 10.3997 14.3901 10.5439C14.2458 10.6882 14.0502 10.7692 13.8462 10.7692Z"
-              fill="#FFFFFF"
-            />
-          </svg>
-        </button>
+        <div className="h-10 w-10" aria-hidden />
       </div>
       <article className="box-border w-full px-[15px] pb-5 pt-[15px]" style={manaGlassCardStyle}>
         <div className="w-full max-w-[330px]">
@@ -673,13 +661,14 @@ function ManaGiftFlowCard({ onBack, containerStyle }) {
         className="absolute left-[20px] top-[calc(var(--sat,0px)+10px)] z-[1] flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[5px]"
         aria-label="Назад"
       >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden style={{ transform: 'scaleX(-1)' }}>
           <path
-            d="M10 0C8.02219 0 6.08879 0.58649 4.4443 1.6853C2.79981 2.78412 1.51809 4.3459 0.761209 6.17316C0.00433284 8.00042 -0.1937 10.0111 0.192152 11.9509C0.578004 13.8907 1.53041 15.6725 2.92894 17.0711C4.32746 18.4696 6.10929 19.422 8.0491 19.8078C9.98891 20.1937 11.9996 19.9957 13.8268 19.2388C15.6541 18.4819 17.2159 17.2002 18.3147 15.5557C19.4135 13.9112 20 11.9778 20 10C19.9972 7.34869 18.9427 4.80678 17.068 2.93202C15.1932 1.05727 12.6513 0.00279983 10 0ZM13.8462 10.7692H8.01058L9.775 12.5327C9.84647 12.6042 9.90316 12.689 9.94184 12.7824C9.98052 12.8758 10.0004 12.9758 10.0004 13.0769C10.0004 13.178 9.98052 13.2781 9.94184 13.3715C9.90316 13.4648 9.84647 13.5497 9.775 13.6212C9.70353 13.6926 9.61869 13.7493 9.52531 13.788C9.43193 13.8267 9.33184 13.8466 9.23077 13.8466C9.1297 13.8466 9.02962 13.8267 8.93624 13.788C8.84286 13.7493 8.75801 13.6926 8.68654 13.6212L5.60962 10.5442C5.5381 10.4728 5.48136 10.3879 5.44265 10.2946C5.40394 10.2012 5.38401 10.1011 5.38401 10C5.38401 9.89891 5.40394 9.79881 5.44265 9.70543C5.48136 9.61205 5.5381 9.52721 5.60962 9.45577L8.68654 6.37884C8.83088 6.23451 9.02665 6.15342 9.23077 6.15342C9.4349 6.15342 9.63066 6.23451 9.775 6.37884C9.91934 6.52318 10.0004 6.71895 10.0004 6.92308C10.0004 7.1272 9.91934 7.32297 9.775 7.46731L8.01058 9.23077H13.8462C14.0502 9.23077 14.2458 9.31181 14.3901 9.45607C14.5343 9.60033 14.6154 9.79599 14.6154 10C14.6154 10.204 14.5343 10.3997 14.3901 10.5439C14.2458 10.6882 14.0502 10.7692 13.8462 10.7692Z"
+            d="M8.125 0C9.73197 0 11.3029 0.476523 12.639 1.36931C13.9752 2.2621 15.0166 3.53105 15.6315 5.0157C16.2465 6.50035 16.4074 8.13401 16.0939 9.71011C15.7804 11.2862 15.0065 12.7339 13.8702 13.8702C12.7339 15.0065 11.2862 15.7804 9.7101 16.0939C8.13401 16.4074 6.50034 16.2465 5.01569 15.6315C3.53104 15.0166 2.26209 13.9752 1.36931 12.639C0.47652 11.3029 -3.8147e-06 9.73197 -3.8147e-06 8.125C0.00227165 5.97081 0.859026 3.90551 2.38227 2.38227C3.90551 0.85903 5.97081 0.00227486 8.125 0ZM8.125 15C9.48474 15 10.814 14.5968 11.9445 13.8414C13.0751 13.0859 13.9563 12.0122 14.4767 10.7559C14.997 9.49971 15.1332 8.11737 14.8679 6.78375C14.6026 5.45013 13.9478 4.22513 12.9864 3.26364C12.0249 2.30216 10.7999 1.64737 9.46624 1.3821C8.13262 1.11683 6.75029 1.25298 5.49405 1.77333C4.23781 2.29368 3.16408 3.17487 2.40864 4.30545C1.65321 5.43604 1.25 6.76525 1.25 8.125C1.25206 9.94773 1.97706 11.6952 3.26592 12.9841C4.55479 14.2729 6.30227 14.9979 8.125 15ZM4.375 8.125C4.375 8.29076 4.44084 8.44973 4.55805 8.56694C4.67526 8.68415 4.83424 8.75 5 8.75H9.7414L8.30781 10.1828C8.24974 10.2409 8.20368 10.3098 8.17225 10.3857C8.14082 10.4616 8.12465 10.5429 8.12465 10.625C8.12465 10.7071 8.14082 10.7884 8.17225 10.8643C8.20368 10.9402 8.24974 11.0091 8.30781 11.0672C8.36588 11.1253 8.43482 11.1713 8.51069 11.2027C8.58656 11.2342 8.66787 11.2503 8.75 11.2503C8.83212 11.2503 8.91344 11.2342 8.98931 11.2027C9.06518 11.1713 9.13412 11.1253 9.19218 11.0672L11.6922 8.56719C11.7503 8.50914 11.7964 8.44021 11.8278 8.36434C11.8593 8.28846 11.8755 8.20713 11.8755 8.125C11.8755 8.04287 11.8593 7.96154 11.8278 7.88566C11.7964 7.80979 11.7503 7.74086 11.6922 7.68281L9.19218 5.18281C9.07491 5.06554 8.91585 4.99965 8.75 4.99965C8.58414 4.99965 8.42508 5.06554 8.30781 5.18281C8.19053 5.30009 8.12465 5.45915 8.12465 5.625C8.12465 5.79085 8.19053 5.94991 8.30781 6.06719L9.7414 7.5H5C4.83424 7.5 4.67526 7.56585 4.55805 7.68306C4.44084 7.80027 4.375 7.95924 4.375 8.125Z"
             fill="#FFFFFF"
           />
         </svg>
       </button>
+
       <div
         className="carousel-card relative flex w-full max-w-[360px] shrink-0 flex-col overflow-hidden"
         style={{
@@ -691,58 +680,58 @@ function ManaGiftFlowCard({ onBack, containerStyle }) {
         }}
       >
         <article className="box-border w-full px-[15px] pb-5 pt-[15px]" style={manaGlassCardStyle}>
-        <p className="m-0" style={{ ...involveMana, fontSize: 18, lineHeight: '110%', color: '#FFFFFF' }}>
-          Подарок, как маркетинговая карта
-        </p>
-        <p className="m-0 mt-[10px]" style={{ ...involveMana, fontSize: 14, lineHeight: '110%', color: 'rgba(255,255,255,0.25)' }}>
-          Рассылка неполезного отсутствует.
-          <br />
-          Рассылка неинтересного тоже отсутствует
-        </p>
-
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Имя электронного ящика"
-          className="mt-[15px] h-[50px] w-full rounded-[10px] border border-[rgba(255,255,255,0.5)] bg-transparent px-[15px] outline-none placeholder:text-[rgba(255,255,255,0.5)]"
-          style={{ ...involveMana, fontSize: 16, lineHeight: '125%', color: '#FFFFFF' }}
-        />
-
-        <button
-          type="button"
-          onClick={() => setPrivacyAccepted((v) => !v)}
-          className="mt-[15px] flex w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] py-[8px] text-left"
-        >
-          <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)]" style={{ background: privacyAccepted ? '#FFFFFF' : 'transparent' }} />
-          <span style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: '#FFFFFF' }}>
-            Я, полностью соглашаюсь с условиями
+          <p className="m-0" style={{ ...involveMana, fontSize: 18, lineHeight: '110%', color: '#FFFFFF' }}>
+            Подарок, как маркетинговая карта
+          </p>
+          <p className="m-0 mt-[10px]" style={{ ...involveMana, fontSize: 14, lineHeight: '110%', color: 'rgba(255,255,255,0.25)' }}>
+            Рассылка неполезного отсутствует.
             <br />
-            <span className="underline">политики конфиденциальности сайта</span>
-          </span>
-        </button>
+            Рассылка неинтересного тоже отсутствует
+          </p>
 
-        <button
-          type="button"
-          onClick={() => setNewsAccepted((v) => !v)}
-          className="mt-[5px] flex w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] py-[8px] text-left"
-        >
-          <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)]" style={{ background: newsAccepted ? '#FFFFFF' : 'transparent' }} />
-          <span style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: '#FFFFFF' }}>
-            Я, полностью соглашаюсь с условиями
-            <br />
-            <span className="underline">политики новостной отправки сайта</span>
-          </span>
-        </button>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Имя электронного ящика"
+            className="mt-[15px] h-[50px] w-full rounded-[10px] border border-[rgba(255,255,255,0.5)] bg-transparent px-[15px] outline-none placeholder:text-[rgba(255,255,255,0.5)]"
+            style={{ ...involveMana, fontSize: 16, lineHeight: '125%', color: '#FFFFFF' }}
+          />
 
-        <button
-          type="button"
-          disabled={!canSubmit}
-          className={`mt-[15px] h-[50px] w-full rounded-[10px] border border-white ${canSubmit ? 'cursor-pointer' : 'cursor-not-allowed'}`}
-          style={{ ...involveMana, fontSize: 16, lineHeight: '315%', color: '#050505', background: '#FFFFFF', opacity: canSubmit ? 1 : 0.75 }}
-        >
-          Подтверждение
-        </button>
+          <button
+            type="button"
+            onClick={() => setPrivacyAccepted((v) => !v)}
+            className="mt-[15px] flex w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] py-[8px] text-left"
+          >
+            <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)]" style={{ background: privacyAccepted ? '#FFFFFF' : 'transparent' }} />
+            <span style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: '#FFFFFF' }}>
+              Я, полностью соглашаюсь с условиями
+              <br />
+              <span className="underline">политики конфиденциальности сайта</span>
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setNewsAccepted((v) => !v)}
+            className="mt-[5px] flex w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] py-[8px] text-left"
+          >
+            <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)]" style={{ background: newsAccepted ? '#FFFFFF' : 'transparent' }} />
+            <span style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: '#FFFFFF' }}>
+              Я, полностью соглашаюсь с условиями
+              <br />
+              <span className="underline">политики новостной отправки сайта</span>
+            </span>
+          </button>
+
+          <button
+            type="button"
+            disabled={!canSubmit}
+            className={`mt-[15px] h-[50px] w-full rounded-[10px] border border-white ${canSubmit ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+            style={{ ...involveMana, fontSize: 16, lineHeight: '315%', color: '#050505', background: '#FFFFFF', opacity: canSubmit ? 1 : 0.75 }}
+          >
+            Подтверждение
+          </button>
         </article>
       </div>
     </div>,
@@ -755,7 +744,6 @@ function ManaGiftFlowCard({ onBack, containerStyle }) {
  */
 function ManaGlassMarketingCarouselCardTwo({
   onGiftClick,
-  onArrowClick,
   onNavigateToOrder,
   onInformClick,
   variant = 'content',
@@ -763,7 +751,6 @@ function ManaGlassMarketingCarouselCardTwo({
   overridePrice,
   overrideButtonLabel,
   forceActionEnabled,
-  arrowFlipped = true,
   containerStyle,
 }) {
   const isSiteVariant = variant === 'site';
@@ -807,27 +794,7 @@ function ManaGlassMarketingCarouselCardTwo({
           <ManaGiftHeartIcon />
           Подарок
         </button>
-        <button
-          type="button"
-          onClick={onArrowClick}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[5px]"
-          aria-label="Далее"
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden
-            style={arrowFlipped ? { transform: 'scaleX(-1)' } : undefined}
-          >
-            <path
-              d="M10 0C8.02219 0 6.08879 0.58649 4.4443 1.6853C2.79981 2.78412 1.51809 4.3459 0.761209 6.17316C0.00433284 8.00042 -0.1937 10.0111 0.192152 11.9509C0.578004 13.8907 1.53041 15.6725 2.92894 17.0711C4.32746 18.4696 6.10929 19.422 8.0491 19.8078C9.98891 20.1937 11.9996 19.9957 13.8268 19.2388C15.6541 18.4819 17.2159 17.2002 18.3147 15.5557C19.4135 13.9112 20 11.9778 20 10C19.9972 7.34869 18.9427 4.80678 17.068 2.93202C15.1932 1.05727 12.6513 0.00279983 10 0ZM13.8462 10.7692H8.01058L9.775 12.5327C9.84647 12.6042 9.90316 12.689 9.94184 12.7824C9.98052 12.8758 10.0004 12.9758 10.0004 13.0769C10.0004 13.178 9.98052 13.2781 9.94184 13.3715C9.90316 13.4648 9.84647 13.5497 9.775 13.6212C9.70353 13.6926 9.61869 13.7493 9.52531 13.788C9.43193 13.8267 9.33184 13.8466 9.23077 13.8466C9.1297 13.8466 9.02962 13.8267 8.93624 13.788C8.84286 13.7493 8.75801 13.6926 8.68654 13.6212L5.60962 10.5442C5.5381 10.4728 5.48136 10.3879 5.44265 10.2946C5.40394 10.2012 5.38401 10.1011 5.38401 10C5.38401 9.89891 5.40394 9.79881 5.44265 9.70543C5.48136 9.61205 5.5381 9.52721 5.60962 9.45577L8.68654 6.37884C8.83088 6.23451 9.02665 6.15342 9.23077 6.15342C9.4349 6.15342 9.63066 6.23451 9.775 6.37884C9.91934 6.52318 10.0004 6.71895 10.0004 6.92308C10.0004 7.1272 9.91934 7.32297 9.775 7.46731L8.01058 9.23077H13.8462C14.0502 9.23077 14.2458 9.31181 14.3901 9.45607C14.5343 9.60033 14.6154 9.79599 14.6154 10C14.6154 10.204 14.5343 10.3997 14.3901 10.5439C14.2458 10.6882 14.0502 10.7692 13.8462 10.7692Z"
-              fill="#FFFFFF"
-            />
-          </svg>
-        </button>
+        <div className="h-10 w-10" aria-hidden />
       </div>
 
       <article className={articlePaddingClass} style={manaGlassCardStyle}>
@@ -1099,6 +1066,7 @@ function EducationTariffCard({
 export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsultation, scrollNavigate } = {}) {
   const router = useRouter();
   const isStacked = layout === 'stacked';
+  const stackedCarouselFrameRef = useRef(null);
   const stackedCarouselRef = useRef(null);
   const [consultationFlowOpen, setConsultationFlowOpen] = useState(false);
   const [detailsTariff] = useState(null);
@@ -1155,6 +1123,107 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
     },
   ];
   const [examCardA, examCardB] = examTariffCards;
+  const [hideStackedArrow, setHideStackedArrow] = useState(false);
+  const [isGiftOpenInStacked, setIsGiftOpenInStacked] = useState(false);
+  const [stackedActiveIndex, setStackedActiveIndex] = useState(0);
+  const [stackedCardsCount, setStackedCardsCount] = useState(0);
+  const [stackedArrowTop, setStackedArrowTop] = useState(0);
+  const stackedArrowTimerRef = useRef(null);
+
+  const updateStackedArrowPosition = useCallback(() => {
+    if (!isStacked) return;
+    const frame = stackedCarouselFrameRef.current;
+    const carousel = stackedCarouselRef.current;
+    if (!frame || !carousel) return;
+
+    const cards = Array.from(carousel.querySelectorAll('.carousel-card'));
+    if (!cards.length) return;
+
+    let activeCard = cards[0];
+    let smallestDelta = Number.POSITIVE_INFINITY;
+    cards.forEach((card) => {
+      const delta = Math.abs(card.offsetLeft - carousel.scrollLeft);
+      if (delta < smallestDelta) {
+        smallestDelta = delta;
+        activeCard = card;
+      }
+    });
+
+    const ARROW_SIZE = 40;
+    const GAP_ABOVE_CARD = 10;
+    const cardMainBlock = activeCard.querySelector('article');
+    const blockTop = cardMainBlock ? activeCard.offsetTop + cardMainBlock.offsetTop : activeCard.offsetTop;
+    const nextTop = Math.max(0, blockTop - ARROW_SIZE - GAP_ABOVE_CARD);
+    setStackedArrowTop((prevTop) => (Math.abs(prevTop - nextTop) > 0.5 ? nextTop : prevTop));
+  }, [isStacked]);
+
+  const updateStackedCarouselMeta = useCallback(() => {
+    if (!isStacked) return;
+    const carousel = stackedCarouselRef.current;
+    if (!carousel) return;
+
+    const cards = Array.from(carousel.querySelectorAll('.carousel-card'));
+    if (!cards.length) return;
+    setStackedCardsCount(cards.length);
+
+    let currentIndex = 0;
+    let smallestDelta = Number.POSITIVE_INFINITY;
+    cards.forEach((card, idx) => {
+      const delta = Math.abs(card.offsetLeft - carousel.scrollLeft);
+      if (delta < smallestDelta) {
+        smallestDelta = delta;
+        currentIndex = idx;
+      }
+    });
+    setStackedActiveIndex(currentIndex);
+  }, [isStacked]);
+
+  useEffect(() => {
+    return () => {
+      if (stackedArrowTimerRef.current) {
+        window.clearTimeout(stackedArrowTimerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isStacked) return;
+    updateStackedArrowPosition();
+    updateStackedCarouselMeta();
+
+    const carousel = stackedCarouselRef.current;
+    if (!carousel) return;
+
+    const onResize = () => updateStackedArrowPosition();
+    window.addEventListener('resize', onResize);
+
+    const ro =
+      typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(() => {
+            updateStackedArrowPosition();
+          })
+        : null;
+
+    ro?.observe(carousel);
+    Array.from(carousel.querySelectorAll('.carousel-card')).forEach((card) => ro?.observe(card));
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+      ro?.disconnect();
+    };
+  }, [isStacked, updateStackedArrowPosition, updateStackedCarouselMeta]);
+
+  const hideStackedArrowDuringCardTransition = () => {
+    setHideStackedArrow(true);
+    if (stackedArrowTimerRef.current) {
+      window.clearTimeout(stackedArrowTimerRef.current);
+    }
+    stackedArrowTimerRef.current = window.setTimeout(() => {
+      setHideStackedArrow(false);
+      window.requestAnimationFrame(updateStackedArrowPosition);
+      stackedArrowTimerRef.current = null;
+    }, 340);
+  };
 
   const scrollStackedCarouselToNext = () => {
     const el = stackedCarouselRef.current;
@@ -1178,14 +1247,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
     el.scrollTo({ left: nextCard.offsetLeft, behavior: 'smooth' });
   };
 
-  const scrollStackedCarouselToFirst = () => {
-    const el = stackedCarouselRef.current;
-    if (!el) return;
-    const cards = Array.from(el.querySelectorAll('.carousel-card'));
-    const firstCard = cards[0];
-    if (!firstCard) return;
-    el.scrollTo({ left: firstCard.offsetLeft, behavior: 'smooth' });
-  };
+  const isLastStackedCard = stackedCardsCount > 0 && stackedActiveIndex === stackedCardsCount - 1;
 
   return (
     <>
@@ -1228,7 +1290,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
               boxSizing: 'border-box',
             }}
           >
-            {!isStacked ? <ManaMarketingHeader onConsultationClick={openConsultation} menuHref="/" /> : null}
+            {!isStacked && !isGiftOpenInStacked ? <ManaMarketingHeader onConsultationClick={openConsultation} menuHref="/" /> : null}
 
             {/* Контейнер карусели: адаптивный верхний отступ, чтобы в in-app браузерах карточки не обрезались */}
             <div
@@ -1244,28 +1306,68 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
               }}
             >
               {/* Ряд без h-full: иначе cross-size строки = высота вьюпорта и карточка «растягивается» с пустотой под контентом */}
-              <div
-                ref={stackedCarouselRef}
-                className="carousel-container carousel-learning scrollbar-hide box-border flex w-full max-h-full min-h-0 flex-nowrap items-end overflow-x-auto overflow-y-visible"
-                style={{
-                  height: 'auto',
-                  gap: 10,
-                  scrollSnapType: 'x mandatory',
-                  scrollBehavior: 'smooth',
-                  scrollSnapStop: 'always',
-                  WebkitOverflowScrolling: 'touch',
-                  scrollbarWidth: 'none',
-                  msOverflowStyle: 'none',
-                  overscrollBehaviorX: 'contain',
-                }}
-              >
+              <div ref={stackedCarouselFrameRef} className="relative">
+                {isStacked ? (
+                  <div className="pointer-events-none absolute right-5 z-[3]" style={{ top: stackedArrowTop }}>
+                    <button
+                      type="button"
+                      onClick={scrollStackedCarouselToNext}
+                      className="pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[5px]"
+                      aria-label="Следующая карточка"
+                      style={{
+                        opacity: hideStackedArrow || isGiftOpenInStacked ? 0 : 1,
+                        pointerEvents: hideStackedArrow || isGiftOpenInStacked ? 'none' : 'auto',
+                        transition: 'opacity 160ms ease',
+                      }}
+                    >
+                      <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 17 17"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden
+                        style={{ transform: isLastStackedCard ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 160ms ease' }}
+                      >
+                        <path
+                          d="M8.125 0C9.73197 0 11.3029 0.476523 12.639 1.36931C13.9752 2.2621 15.0166 3.53105 15.6315 5.0157C16.2465 6.50035 16.4074 8.13401 16.0939 9.71011C15.7804 11.2862 15.0065 12.7339 13.8702 13.8702C12.7339 15.0065 11.2862 15.7804 9.7101 16.0939C8.13401 16.4074 6.50034 16.2465 5.01569 15.6315C3.53104 15.0166 2.26209 13.9752 1.36931 12.639C0.47652 11.3029 -3.8147e-06 9.73197 -3.8147e-06 8.125C0.00227165 5.97081 0.859026 3.90551 2.38227 2.38227C3.90551 0.85903 5.97081 0.00227486 8.125 0ZM8.125 15C9.48474 15 10.814 14.5968 11.9445 13.8414C13.0751 13.0859 13.9563 12.0122 14.4767 10.7559C14.997 9.49971 15.1332 8.11737 14.8679 6.78375C14.6026 5.45013 13.9478 4.22513 12.9864 3.26364C12.0249 2.30216 10.7999 1.64737 9.46624 1.3821C8.13262 1.11683 6.75029 1.25298 5.49405 1.77333C4.23781 2.29368 3.16408 3.17487 2.40864 4.30545C1.65321 5.43604 1.25 6.76525 1.25 8.125C1.25206 9.94773 1.97706 11.6952 3.26592 12.9841C4.55479 14.2729 6.30227 14.9979 8.125 15ZM4.375 8.125C4.375 8.29076 4.44084 8.44973 4.55805 8.56694C4.67526 8.68415 4.83424 8.75 5 8.75H9.7414L8.30781 10.1828C8.24974 10.2409 8.20368 10.3098 8.17225 10.3857C8.14082 10.4616 8.12465 10.5429 8.12465 10.625C8.12465 10.7071 8.14082 10.7884 8.17225 10.8643C8.20368 10.9402 8.24974 11.0091 8.30781 11.0672C8.36588 11.1253 8.43482 11.1713 8.51069 11.2027C8.58656 11.2342 8.66787 11.2503 8.75 11.2503C8.83212 11.2503 8.91344 11.2342 8.98931 11.2027C9.06518 11.1713 9.13412 11.1253 9.19218 11.0672L11.6922 8.56719C11.7503 8.50914 11.7964 8.44021 11.8278 8.36434C11.8593 8.28846 11.8755 8.20713 11.8755 8.125C11.8755 8.04287 11.8593 7.96154 11.8278 7.88566C11.7964 7.80979 11.7503 7.74086 11.6922 7.68281L9.19218 5.18281C9.07491 5.06554 8.91585 4.99965 8.75 4.99965C8.58414 4.99965 8.42508 5.06554 8.30781 5.18281C8.19053 5.30009 8.12465 5.45915 8.12465 5.625C8.12465 5.79085 8.19053 5.94991 8.30781 6.06719L9.7414 7.5H5C4.83424 7.5 4.67526 7.56585 4.55805 7.68306C4.44084 7.80027 4.375 7.95924 4.375 8.125Z"
+                          fill="#FFFFFF"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                ) : null}
+                <div
+                  ref={stackedCarouselRef}
+                  className="carousel-container carousel-learning scrollbar-hide box-border flex w-full max-h-full min-h-0 flex-nowrap items-end overflow-x-auto overflow-y-visible"
+                  style={{
+                    height: 'auto',
+                    gap: 10,
+                    scrollSnapType: 'x mandatory',
+                    scrollBehavior: 'smooth',
+                    scrollSnapStop: 'always',
+                    WebkitOverflowScrolling: 'touch',
+                    scrollbarWidth: 'none',
+                    msOverflowStyle: 'none',
+                    overscrollBehaviorX: 'contain',
+                  }}
+                  onScroll={
+                    isStacked
+                      ? () => {
+                          updateStackedArrowPosition();
+                          updateStackedCarouselMeta();
+                        }
+                      : undefined
+                  }
+                >
                 <div className="carousel-spacer-left shrink-0" aria-hidden />
 
                 {isStacked ? (
                   <ManaGlassMarketingCarouselCard
                     overrideButtonLabel="Консультирование"
                     forceActionEnabled
-                    onArrowClick={scrollStackedCarouselToNext}
+                    onTransitionStart={hideStackedArrowDuringCardTransition}
+                    onGiftOpenChange={setIsGiftOpenInStacked}
                     onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
                   />
                 ) : (
@@ -1286,7 +1388,8 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                     initialVariant="site"
                     allowInformSwitch
                     overrideButtonLabel="Консультирование"
-                    onArrowClick={scrollStackedCarouselToNext}
+                    onTransitionStart={hideStackedArrowDuringCardTransition}
+                    onGiftOpenChange={setIsGiftOpenInStacked}
                     onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
                   />
                 ) : (
@@ -1311,19 +1414,19 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                     overridePrice="около 35 тыс. р."
                     overrideButtonLabel="Уточнение"
                     forceActionEnabled
+                    onTransitionStart={hideStackedArrowDuringCardTransition}
+                    onGiftOpenChange={setIsGiftOpenInStacked}
                     expandedVariant="content"
                     expandedTitleOverride="Формирование имиджа"
                     expandedPriceOverride="около 35 тыс. р."
                     expandedButtonLabelOverride="Уточнение"
                     expandedForceActionEnabled
-                    arrowFlipped={false}
-                    expandedArrowFlipped={false}
-                    onArrowClick={scrollStackedCarouselToFirst}
                     onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
                   />
                 ) : null}
 
-                <div className="carousel-spacer-right shrink-0" aria-hidden />
+                  <div className="carousel-spacer-right shrink-0" aria-hidden />
+                </div>
               </div>
             </div>
           </div>
