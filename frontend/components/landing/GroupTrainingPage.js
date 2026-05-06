@@ -1527,6 +1527,8 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                     scrollSnapType: stackedCarouselSnapSuppress ? 'none' : 'x mandatory',
                     scrollBehavior: 'smooth',
                     scrollSnapStop: 'always',
+                    scrollPaddingLeft: 'var(--main-block-margin)',
+                    scrollPaddingRight: 'calc(var(--main-block-margin) + env(safe-area-inset-right, 0px))',
                     /* touch: убираем momentum-узел iOS — иначе жест «липнет» к горизонтали и ломает плавный вертикальный скролл родителя (snap-y). */
                     WebkitOverflowScrolling: 'auto',
                     scrollbarWidth: 'none',

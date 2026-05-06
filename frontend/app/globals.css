@@ -148,10 +148,16 @@ body::-webkit-scrollbar {
   flex-shrink: 0;
 }
 
+.carousel-container:not(.carousel-container--single-card) > .carousel-spacer-left {
+  scroll-snap-align: start;
+}
+
 .carousel-container:not(.carousel-container--single-card) > .carousel-spacer-right {
   /* Как у шапки: поле справа + safe area на вырезе. */
   min-width: calc(var(--main-block-margin) + env(safe-area-inset-right, 0px)) !important;
   width: calc(var(--main-block-margin) + env(safe-area-inset-right, 0px)) !important;
+  /* Иначе при snap-x mandatory последний «снимок» — только start карточки, без поля справа от экрана. */
+  scroll-snap-align: end;
 }
 
 .carousel-container.carousel-container--single-card {
