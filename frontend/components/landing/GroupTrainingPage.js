@@ -1182,7 +1182,8 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                     scrollBehavior: 'auto',
                     scrollSnapStop: 'always',
                     scrollPaddingLeft: 'var(--main-block-margin)',
-                    scrollPaddingRight: 'var(--main-block-margin)',
+                    scrollPaddingRight:
+                      'calc(var(--main-block-margin) + env(safe-area-inset-right, 0px))',
                     overflowAnchor: 'none',
                     /* touch: убираем momentum-узел iOS — иначе жест «липнет» к горизонтали и ломает плавный вертикальный скролл родителя (snap-y). */
                     WebkitOverflowScrolling: 'auto',

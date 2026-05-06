@@ -157,14 +157,13 @@ body::-webkit-scrollbar {
   scroll-snap-align: none;
 }
 
-/* MANA stacked: справа стабильно поле макета (20px = --main-block-margin), без env(safe-area-inset-right) —
-   иначе при раскрытии/сворачивании последней карточки и пересчёте вьюпорта «прыгал» хвост карусели. */
+/* MANA stacked: поле справа как у остального лендинга + safe-area (viewport-fit: cover на телефоне). */
 .carousel-container.carousel-learning {
-  scroll-padding-right: var(--main-block-margin);
+  scroll-padding-right: calc(var(--main-block-margin) + env(safe-area-inset-right, 0px));
 }
 .carousel-container.carousel-learning:not(.carousel-container--single-card) > .carousel-spacer-right {
-  min-width: var(--main-block-margin) !important;
-  width: var(--main-block-margin) !important;
+  min-width: calc(var(--main-block-margin) + env(safe-area-inset-right, 0px)) !important;
+  width: calc(var(--main-block-margin) + env(safe-area-inset-right, 0px)) !important;
 }
 
 /* Последний слайд MANA: конец карточки к правому краю с учётом scroll-padding-right (20px поле). */
