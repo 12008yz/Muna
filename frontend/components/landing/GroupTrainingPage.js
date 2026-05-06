@@ -268,6 +268,7 @@ function ManaGlassMarketingCarouselCard({
 
   const handleExpandedGiftClick = () => {
     if (expandedLeaving || showGiftScreen || !showInformScreen) return;
+    onTransitionStart?.();
     setExpandedLeaving(true);
     window.setTimeout(() => {
       setShowInformScreen(false);
@@ -280,6 +281,7 @@ function ManaGlassMarketingCarouselCard({
 
   const handleGiftBackClick = () => {
     if (giftLeaving || !showGiftScreen) return;
+    onTransitionStart?.();
     setGiftLeaving(true);
     window.setTimeout(() => {
       setShowGiftScreen(false);
@@ -844,6 +846,10 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
   const pendingCarouselCardIndexRef = useRef(null);
   /** Пока true — не дёргаем стрелку/meta от ResizeObserver/scroll (убирает «ходун» при смене высоты ряда). */
   const carouselLayoutSettlingRef = useRef(false);
+  /** На время раскрытия карточки фиксируем горизонтальный скролл (иначе WebKit/snap уводит ряд). */
+  const stackedCarouselScrollLockLeftRef = useRef(null);
+  /** Каждый кадр подтягиваем scrollLeft — часть движков меняет позицию без события scroll. */
+  const carouselScrollLockRafRef = useRef(0);
 
   const updateStackedArrowPosition = useCallback(() => {
     const frame = stackedCarouselFrameRef.current;
@@ -900,6 +906,10 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
       if (stackedArrowTimerRef.current) {
         window.clearTimeout(stackedArrowTimerRef.current);
       }
+      if (carouselScrollLockRafRef.current) {
+        cancelAnimationFrame(carouselScrollLockRafRef.current);
+        carouselScrollLockRafRef.current = 0;
+      }
     };
   }, []);
 
@@ -911,6 +921,15 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
     if (!carousel) return;
 
     const onResize = () => {
+      const el = stackedCarouselRef.current;
+      if (
+        carouselLayoutSettlingRef.current &&
+        el &&
+        stackedCarouselScrollLockLeftRef.current != null
+      ) {
+        el.scrollLeft = stackedCarouselScrollLockLeftRef.current;
+        return;
+      }
       if (carouselLayoutSettlingRef.current) return;
       updateStackedArrowPosition();
     };
@@ -919,6 +938,15 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
     const ro =
       typeof ResizeObserver !== 'undefined'
         ? new ResizeObserver(() => {
+            const el = stackedCarouselRef.current;
+            if (
+              carouselLayoutSettlingRef.current &&
+              el &&
+              stackedCarouselScrollLockLeftRef.current != null
+            ) {
+              el.scrollLeft = stackedCarouselScrollLockLeftRef.current;
+              return;
+            }
             if (carouselLayoutSettlingRef.current) return;
             updateStackedArrowPosition();
           })
@@ -937,9 +965,15 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
     const carousel = stackedCarouselRef.current;
     let prevSnapType = '';
     let prevOverflowX = '';
+    let prevScrollBehavior = '';
+    if (carouselScrollLockRafRef.current) {
+      cancelAnimationFrame(carouselScrollLockRafRef.current);
+      carouselScrollLockRafRef.current = 0;
+    }
     if (carousel) {
       pendingCarouselCardIndexRef.current =
         typeof lockedCardIndex === 'number' ? lockedCardIndex : getStackedCarouselActiveCardIndex(carousel);
+      stackedCarouselScrollLockLeftRef.current = carousel.scrollLeft;
       carouselLayoutSettlingRef.current = true;
       /* Без этого iOS/WebKit при смене высоты/snap-цели может «дотянуть» scrollLeft к соседней карточке. */
       prevSnapType = carousel.style.scrollSnapType;
@@ -947,36 +981,75 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
       /* Гасим горизонтальный дрейф и «рваный» snap, пока карточка меняет высоту/transform. */
       prevOverflowX = carousel.style.overflowX;
       carousel.style.overflowX = 'hidden';
+      /* smooth + snap даёт догоняющую анимацию и визуальный «уход» ряда вбок. */
+      prevScrollBehavior = carousel.style.scrollBehavior;
+      carousel.style.scrollBehavior = 'auto';
+
+      const tickScrollLock = () => {
+        if (
+          !carouselLayoutSettlingRef.current ||
+          stackedCarouselScrollLockLeftRef.current == null
+        ) {
+          carouselScrollLockRafRef.current = 0;
+          return;
+        }
+        const el = stackedCarouselRef.current;
+        const lock = stackedCarouselScrollLockLeftRef.current;
+        if (el != null && Math.abs(el.scrollLeft - lock) > 0.5) {
+          el.scrollLeft = lock;
+        }
+        carouselScrollLockRafRef.current = requestAnimationFrame(tickScrollLock);
+      };
+      carouselScrollLockRafRef.current = requestAnimationFrame(tickScrollLock);
+    } else {
+      stackedCarouselScrollLockLeftRef.current = null;
     }
     setHideStackedArrow(true);
     if (stackedArrowTimerRef.current) {
       window.clearTimeout(stackedArrowTimerRef.current);
     }
-    /* Дети меняют разметку через ~320ms; два rAF — стабильный offsetLeft после reflow без боя mandatory snap + scrollLeft. */
+    /* 320ms transition + reflow; три rAF — стабильный offsetLeft в WebKit перед финальным scrollTo. */
     stackedArrowTimerRef.current = window.setTimeout(() => {
+      if (carouselScrollLockRafRef.current) {
+        cancelAnimationFrame(carouselScrollLockRafRef.current);
+        carouselScrollLockRafRef.current = 0;
+      }
       setHideStackedArrow(false);
       const el = stackedCarouselRef.current;
       const idx = pendingCarouselCardIndexRef.current;
       pendingCarouselCardIndexRef.current = null;
       window.requestAnimationFrame(() => {
         window.requestAnimationFrame(() => {
-          if (el != null && typeof idx === 'number') {
-            const cards = Array.from(el.querySelectorAll('.carousel-card'));
-            const card = cards[idx];
-            const n = cards.length;
-            if (card) el.scrollTo({ left: getCarouselSnapScrollLeftForCard(el, card, idx, n), behavior: 'auto' });
-          }
-          if (el) {
-            el.style.scrollSnapType = prevSnapType || 'x mandatory';
-            el.style.overflowX = prevOverflowX || '';
-          }
-          carouselLayoutSettlingRef.current = false;
-          updateStackedArrowPosition();
-          updateStackedCarouselMeta();
+          window.requestAnimationFrame(() => {
+            if (el != null && typeof idx === 'number') {
+              const cards = Array.from(el.querySelectorAll('.carousel-card'));
+              const card = cards[idx];
+              const n = cards.length;
+              if (card) {
+                const targetLeft = getCarouselSnapScrollLeftForCard(el, card, idx, n);
+                el.scrollTo({ left: targetLeft, behavior: 'auto' });
+                /* Дубль без анимации: иногда snap/композитор двигают позицию на следующий кадр. */
+                requestAnimationFrame(() => {
+                  if (el && Math.abs(el.scrollLeft - targetLeft) > 1) {
+                    el.scrollLeft = targetLeft;
+                  }
+                });
+              }
+            }
+            stackedCarouselScrollLockLeftRef.current = null;
+            if (el) {
+              el.style.scrollSnapType = prevSnapType || 'x mandatory';
+              el.style.overflowX = prevOverflowX || '';
+              el.style.scrollBehavior = prevScrollBehavior || '';
+            }
+            carouselLayoutSettlingRef.current = false;
+            updateStackedArrowPosition();
+            updateStackedCarouselMeta();
+          });
         });
       });
       stackedArrowTimerRef.current = null;
-    }, 400);
+    }, 500);
   };
 
   const scrollStackedCarouselToNext = () => {
@@ -1105,7 +1178,8 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                     gap: 10,
                     /* Покарточный скролл (как секции по вертикали). Срыв на соседний слайд при «Информирование» гасится restore по индексу. */
                     scrollSnapType: 'x mandatory',
-                    scrollBehavior: 'smooth',
+                    /* auto: иначе при mandatory snap после смены высоты карточки ряд «подползает» вбок. Кнопка «далее» сама передаёт behavior: 'smooth'. */
+                    scrollBehavior: 'auto',
                     scrollSnapStop: 'always',
                     scrollPaddingLeft: 'var(--main-block-margin)',
                     scrollPaddingRight: 'var(--main-block-margin)',
@@ -1117,7 +1191,18 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                     overscrollBehaviorX: 'contain',
                   }}
                   onScroll={() => {
-                    if (carouselLayoutSettlingRef.current) return;
+                    const el = stackedCarouselRef.current;
+                    if (
+                      carouselLayoutSettlingRef.current &&
+                      el &&
+                      stackedCarouselScrollLockLeftRef.current != null
+                    ) {
+                      const lock = stackedCarouselScrollLockLeftRef.current;
+                      if (Math.abs(el.scrollLeft - lock) > 0.5) {
+                        el.scrollLeft = lock;
+                      }
+                      return;
+                    }
                     updateStackedArrowPosition();
                     updateStackedCarouselMeta();
                   }}
