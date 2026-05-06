@@ -89,6 +89,43 @@ function redirectVerticalWheelFromCarousel(event) {
   scrollParent.scrollBy({ top: event.deltaY, behavior: 'auto' });
 }
 
+function getCarouselScrollPaddingLeft(el) {
+  if (!el || typeof getComputedStyle === 'undefined') return 0;
+  const n = parseFloat(getComputedStyle(el).scrollPaddingLeft);
+  return Number.isFinite(n) ? n : 0;
+}
+
+/**
+ * Целевой scrollLeft для выравнивания карточки под scroll-snap + scroll-padding-left.
+ * Сырой card.offsetLeft без вычитания padding даёт сдвиг; mandatory snap на следующем кадре «дотягивает» — визуальный прыжок.
+ */
+function getCarouselSnapScrollLeftForCard(carousel, card) {
+  if (!carousel || !card) return 0;
+  const padL = getCarouselScrollPaddingLeft(carousel);
+  const raw = card.offsetLeft - padL;
+  const max = Math.max(0, carousel.scrollWidth - carousel.clientWidth);
+  return Math.max(0, Math.min(raw, max));
+}
+
+/** Индекс карточки, ближайшей к текущему scrollLeft (для стабильного восстановления после «Информирование»). */
+function getStackedCarouselActiveCardIndex(carousel) {
+  if (!carousel || typeof carousel.querySelectorAll !== 'function') return 0;
+  const cards = Array.from(carousel.querySelectorAll('.carousel-card'));
+  if (!cards.length) return 0;
+  const sl = carousel.scrollLeft;
+  let bestIdx = 0;
+  let smallest = Number.POSITIVE_INFINITY;
+  cards.forEach((card, idx) => {
+    const ideal = getCarouselSnapScrollLeftForCard(carousel, card);
+    const delta = Math.abs(sl - ideal);
+    if (delta < smallest) {
+      smallest = delta;
+      bestIdx = idx;
+    }
+  });
+  return bestIdx;
+}
+
 function CollapseIcon() {
   return (
     <span className="flex h-5 w-5 shrink-0 items-center justify-center" aria-hidden>
@@ -167,7 +204,7 @@ function TariffDetailsOverlay({ tariff, onCollapse, onConsultation }) {
     const cards = el.querySelectorAll('.carousel-card');
     const targetCard = cards[targetIndex];
     if (!targetCard) return;
-    el.scrollTo({ left: targetCard.offsetLeft, behavior: 'auto' });
+    el.scrollTo({ left: getCarouselSnapScrollLeftForCard(el, targetCard), behavior: 'auto' });
     setActiveIndex(targetIndex);
   }, [tariff]);
 
@@ -240,7 +277,8 @@ function TariffDetailsOverlay({ tariff, onCollapse, onConsultation }) {
               let closest = 0;
               let best = Number.POSITIVE_INFINITY;
               cards.forEach((card, idx) => {
-                const delta = Math.abs(card.offsetLeft - el.scrollLeft);
+                const ideal = getCarouselSnapScrollLeftForCard(el, card);
+                const delta = Math.abs(el.scrollLeft - ideal);
                 if (delta < best) {
                   best = delta;
                   closest = idx;
@@ -1262,9 +1300,10 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
   const [stackedArrowTop, setStackedArrowTop] = useState(0);
   const stackedArrowTimerRef = useRef(null);
   const giftOriginScrollLeftRef = useRef(0);
-  /** Сохранённый scrollLeft при анимации «Информирование» / смене высоты карточки (иначе snap-x на мобильных уводит на соседний слайд). */
-  const pendingCarouselScrollRestoreRef = useRef(null);
-  const [stackedCarouselSnapSuppress, setStackedCarouselSnapSuppress] = useState(false);
+  /** Индекс карточки для восстановления горизонтального скролла после «Информирование» (точнее, чем сырой scrollLeft). */
+  const pendingCarouselCardIndexRef = useRef(null);
+  /** Пока true — не дёргаем стрелку/meta от ResizeObserver/scroll (убирает «ходун» при смене высоты ряда). */
+  const carouselLayoutSettlingRef = useRef(false);
 
   const updateStackedArrowPosition = useCallback(() => {
     if (!isStacked) return;
@@ -1278,7 +1317,8 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
     let activeCard = cards[0];
     let smallestDelta = Number.POSITIVE_INFINITY;
     cards.forEach((card) => {
-      const delta = Math.abs(card.offsetLeft - carousel.scrollLeft);
+      const ideal = getCarouselSnapScrollLeftForCard(carousel, card);
+      const delta = Math.abs(carousel.scrollLeft - ideal);
       if (delta < smallestDelta) {
         smallestDelta = delta;
         activeCard = card;
@@ -1305,7 +1345,8 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
     let currentIndex = 0;
     let smallestDelta = Number.POSITIVE_INFINITY;
     cards.forEach((card, idx) => {
-      const delta = Math.abs(card.offsetLeft - carousel.scrollLeft);
+      const ideal = getCarouselSnapScrollLeftForCard(carousel, card);
+      const delta = Math.abs(carousel.scrollLeft - ideal);
       if (delta < smallestDelta) {
         smallestDelta = delta;
         currentIndex = idx;
@@ -1330,12 +1371,16 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
     const carousel = stackedCarouselRef.current;
     if (!carousel) return;
 
-    const onResize = () => updateStackedArrowPosition();
+    const onResize = () => {
+      if (carouselLayoutSettlingRef.current) return;
+      updateStackedArrowPosition();
+    };
     window.addEventListener('resize', onResize);
 
     const ro =
       typeof ResizeObserver !== 'undefined'
         ? new ResizeObserver(() => {
+            if (carouselLayoutSettlingRef.current) return;
             updateStackedArrowPosition();
           })
         : null;
@@ -1352,26 +1397,29 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
   const hideStackedArrowDuringCardTransition = () => {
     const carousel = stackedCarouselRef.current;
     if (carousel) {
-      pendingCarouselScrollRestoreRef.current = carousel.scrollLeft;
-      setStackedCarouselSnapSuppress(true);
+      pendingCarouselCardIndexRef.current = getStackedCarouselActiveCardIndex(carousel);
+      carouselLayoutSettlingRef.current = true;
     }
     setHideStackedArrow(true);
     if (stackedArrowTimerRef.current) {
       window.clearTimeout(stackedArrowTimerRef.current);
     }
-    /* Дети переключают разметку через ~320ms — ждём дольше, иначе snap-x на мобильных уводит скролл на соседнюю карточку. */
+    /* Дети меняют разметку через ~320ms; два rAF — стабильный offsetLeft после reflow без боя mandatory snap + scrollLeft. */
     stackedArrowTimerRef.current = window.setTimeout(() => {
       setHideStackedArrow(false);
       const el = stackedCarouselRef.current;
-      const left = pendingCarouselScrollRestoreRef.current;
+      const idx = pendingCarouselCardIndexRef.current;
+      pendingCarouselCardIndexRef.current = null;
       window.requestAnimationFrame(() => {
-        if (el != null && left !== null) {
-          el.scrollTo({ left, behavior: 'auto' });
-        }
-        pendingCarouselScrollRestoreRef.current = null;
         window.requestAnimationFrame(() => {
-          setStackedCarouselSnapSuppress(false);
+          if (el != null && typeof idx === 'number') {
+            const cards = Array.from(el.querySelectorAll('.carousel-card'));
+            const card = cards[idx];
+            if (card) el.scrollTo({ left: getCarouselSnapScrollLeftForCard(el, card), behavior: 'auto' });
+          }
+          carouselLayoutSettlingRef.current = false;
           updateStackedArrowPosition();
+          updateStackedCarouselMeta();
         });
       });
       stackedArrowTimerRef.current = null;
@@ -1387,7 +1435,8 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
     let currentIndex = 0;
     let smallestDelta = Number.POSITIVE_INFINITY;
     cards.forEach((card, idx) => {
-      const delta = Math.abs(card.offsetLeft - el.scrollLeft);
+      const ideal = getCarouselSnapScrollLeftForCard(el, card);
+      const delta = Math.abs(el.scrollLeft - ideal);
       if (delta < smallestDelta) {
         smallestDelta = delta;
         currentIndex = idx;
@@ -1397,7 +1446,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
     const nextIndex = (currentIndex + 1) % cards.length;
     const nextCard = cards[nextIndex];
     if (!nextCard) return;
-    el.scrollTo({ left: nextCard.offsetLeft, behavior: 'smooth' });
+    el.scrollTo({ left: getCarouselSnapScrollLeftForCard(el, nextCard), behavior: 'smooth' });
   };
 
   const handleGiftOpenChange = useCallback(
@@ -1524,11 +1573,13 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                   style={{
                     height: 'auto',
                     gap: 10,
-                    scrollSnapType: stackedCarouselSnapSuppress ? 'none' : 'x mandatory',
+                    /* Покарточный скролл (как секции по вертикали). Срыв на соседний слайд при «Информирование» гасится restore по индексу. */
+                    scrollSnapType: 'x mandatory',
                     scrollBehavior: 'smooth',
                     scrollSnapStop: 'always',
                     scrollPaddingLeft: 'var(--main-block-margin)',
-                    scrollPaddingRight: 'calc(var(--main-block-margin) + env(safe-area-inset-right, 0px))',
+                    scrollPaddingRight: 'var(--main-block-margin)',
+                    overflowAnchor: 'none',
                     /* touch: убираем momentum-узел iOS — иначе жест «липнет» к горизонтали и ломает плавный вертикальный скролл родителя (snap-y). */
                     WebkitOverflowScrolling: 'auto',
                     scrollbarWidth: 'none',
@@ -1538,6 +1589,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                   onScroll={
                     isStacked
                       ? () => {
+                          if (carouselLayoutSettlingRef.current) return;
                           updateStackedArrowPosition();
                           updateStackedCarouselMeta();
                         }

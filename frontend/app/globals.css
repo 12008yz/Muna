@@ -152,6 +152,21 @@ body::-webkit-scrollbar {
   scroll-snap-align: start;
 }
 
+/* MANA stacked: левый спейсер только для поля, не snap-цель — иначе mandatory + stop даёт лишний «блок» пустоты в начале. */
+.carousel-container.carousel-learning:not(.carousel-container--single-card) > .carousel-spacer-left {
+  scroll-snap-align: none;
+}
+
+/* MANA stacked: справа стабильно поле макета (20px = --main-block-margin), без env(safe-area-inset-right) —
+   иначе при раскрытии/сворачивании последней карточки и пересчёте вьюпорта «прыгал» хвост карусели. */
+.carousel-container.carousel-learning {
+  scroll-padding-right: var(--main-block-margin);
+}
+.carousel-container.carousel-learning:not(.carousel-container--single-card) > .carousel-spacer-right {
+  min-width: var(--main-block-margin) !important;
+  width: var(--main-block-margin) !important;
+}
+
 .carousel-container:not(.carousel-container--single-card) > .carousel-spacer-right {
   /* Как у шапки: поле справа + safe area на вырезе. */
   min-width: calc(var(--main-block-margin) + env(safe-area-inset-right, 0px)) !important;
