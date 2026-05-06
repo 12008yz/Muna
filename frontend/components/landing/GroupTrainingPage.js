@@ -1394,11 +1394,16 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
     };
   }, [isStacked, updateStackedArrowPosition, updateStackedCarouselMeta]);
 
-  const hideStackedArrowDuringCardTransition = () => {
+  const hideStackedArrowDuringCardTransition = (lockedCardIndex) => {
     const carousel = stackedCarouselRef.current;
+    let prevSnapType = '';
     if (carousel) {
-      pendingCarouselCardIndexRef.current = getStackedCarouselActiveCardIndex(carousel);
+      pendingCarouselCardIndexRef.current =
+        typeof lockedCardIndex === 'number' ? lockedCardIndex : getStackedCarouselActiveCardIndex(carousel);
       carouselLayoutSettlingRef.current = true;
+      /* Без этого iOS/WebKit при смене высоты/snap-цели может «дотянуть» scrollLeft к соседней карточке. */
+      prevSnapType = carousel.style.scrollSnapType;
+      carousel.style.scrollSnapType = 'none';
     }
     setHideStackedArrow(true);
     if (stackedArrowTimerRef.current) {
@@ -1416,6 +1421,9 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
             const cards = Array.from(el.querySelectorAll('.carousel-card'));
             const card = cards[idx];
             if (card) el.scrollTo({ left: getCarouselSnapScrollLeftForCard(el, card), behavior: 'auto' });
+          }
+          if (el) {
+            el.style.scrollSnapType = prevSnapType || 'x mandatory';
           }
           carouselLayoutSettlingRef.current = false;
           updateStackedArrowPosition();
@@ -1603,7 +1611,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                   <ManaGlassMarketingCarouselCard
                     overrideButtonLabel="Консультирование"
                     forceActionEnabled
-                    onTransitionStart={hideStackedArrowDuringCardTransition}
+                    onTransitionStart={() => hideStackedArrowDuringCardTransition(0)}
                     onGiftOpenChange={handleGiftOpenChange}
                     onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
                   />
@@ -1625,7 +1633,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                     initialVariant="site"
                     allowInformSwitch
                     overrideButtonLabel="Консультирование"
-                    onTransitionStart={hideStackedArrowDuringCardTransition}
+                    onTransitionStart={() => hideStackedArrowDuringCardTransition(1)}
                     onGiftOpenChange={handleGiftOpenChange}
                     onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
                   />
@@ -1651,7 +1659,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                     overridePrice="около 35 тыс. р."
                     overrideButtonLabel="Уточнение"
                     forceActionEnabled
-                    onTransitionStart={hideStackedArrowDuringCardTransition}
+                    onTransitionStart={() => hideStackedArrowDuringCardTransition(2)}
                     onGiftOpenChange={handleGiftOpenChange}
                     expandedVariant="content"
                     expandedTitleOverride="Формирование имиджа"
