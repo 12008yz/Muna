@@ -1490,14 +1490,15 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                 ) : null}
                 <div
                   ref={stackedCarouselRef}
-                  className="carousel-container carousel-learning scrollbar-hide box-border flex w-full max-h-full min-h-0 flex-nowrap items-end overflow-x-auto overflow-y-visible"
+                  className="carousel-container carousel-learning scrollbar-hide box-border flex w-full max-h-full min-h-0 flex-nowrap items-end overflow-x-auto overflow-y-hidden"
                   style={{
                     height: 'auto',
                     gap: 10,
                     scrollSnapType: 'x mandatory',
                     scrollBehavior: 'smooth',
                     scrollSnapStop: 'always',
-                    WebkitOverflowScrolling: 'touch',
+                    /* touch: убираем momentum-узел iOS — иначе жест «липнет» к горизонтали и ломает плавный вертикальный скролл родителя (snap-y). */
+                    WebkitOverflowScrolling: 'auto',
                     scrollbarWidth: 'none',
                     msOverflowStyle: 'none',
                     overscrollBehaviorX: 'contain',
