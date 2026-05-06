@@ -689,8 +689,10 @@ function ManaGiftFlowCard({ onBack, containerStyle }) {
   const [email, setEmail] = useState('');
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [newsAccepted, setNewsAccepted] = useState(false);
+  const normalizedEmail = email.trim();
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail);
 
-  const canSubmit = email.trim().length > 0 && privacyAccepted && newsAccepted;
+  const canSubmit = normalizedEmail.length > 0 && privacyAccepted && newsAccepted;
 
   useEffect(() => {
     setPortalReady(true);
@@ -763,12 +765,14 @@ function ManaGiftFlowCard({ onBack, containerStyle }) {
               className="h-[50px] w-[330px] rounded-[10px] border border-[rgba(255,255,255,0.5)] bg-transparent px-[15px] pr-[44px] outline-none placeholder:text-[rgba(255,255,255,0.5)]"
               style={{ ...involveMana, fontSize: 16, lineHeight: '125%', color: '#FFFFFF' }}
             />
-            <span className="pointer-events-none absolute right-[12px] top-1/2 -translate-y-1/2" aria-hidden>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="8" cy="8" r="8" fill="white" />
-                <path d="M4.8 8.2L6.8 10.2L11.2 5.8" stroke="#050505" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
+            {isEmailValid ? (
+              <span className="pointer-events-none absolute right-[12px] top-1/2 -translate-y-1/2" aria-hidden>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="8" cy="8" r="8" fill="white" />
+                  <path d="M4.8 8.2L6.8 10.2L11.2 5.8" stroke="#050505" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+            ) : null}
           </div>
 
           <button
