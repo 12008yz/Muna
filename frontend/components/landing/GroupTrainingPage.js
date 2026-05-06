@@ -658,35 +658,46 @@ function ManaGiftFlowCard({ onBack, containerStyle }) {
     setPortalReady(true);
   }, []);
 
-  if (!portalReady) return null;
+  const carouselPlaceholder = (
+    <div
+      className="carousel-card box-border h-[335px] w-[360px] shrink-0"
+      style={{ scrollSnapAlign: 'start', maxWidth: '100%', ...containerStyle }}
+      aria-hidden
+    />
+  );
 
-  return createPortal(
-    <div className="fixed inset-0 z-[20000] flex items-end justify-center bg-[#050505] px-[20px] pb-[20px] pt-[80px]">
-      <button
-        type="button"
-        onClick={onBack}
-        className="absolute left-[20px] top-[calc(var(--sat,0px)+10px)] z-[1] flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[5px]"
-        aria-label="Назад"
-      >
-        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden style={{ transform: 'scaleX(-1)' }}>
-          <path
-            d="M8.125 0C9.73197 0 11.3029 0.476523 12.639 1.36931C13.9752 2.2621 15.0166 3.53105 15.6315 5.0157C16.2465 6.50035 16.4074 8.13401 16.0939 9.71011C15.7804 11.2862 15.0065 12.7339 13.8702 13.8702C12.7339 15.0065 11.2862 15.7804 9.7101 16.0939C8.13401 16.4074 6.50034 16.2465 5.01569 15.6315C3.53104 15.0166 2.26209 13.9752 1.36931 12.639C0.47652 11.3029 -3.8147e-06 9.73197 -3.8147e-06 8.125C0.00227165 5.97081 0.859026 3.90551 2.38227 2.38227C3.90551 0.85903 5.97081 0.00227486 8.125 0ZM8.125 15C9.48474 15 10.814 14.5968 11.9445 13.8414C13.0751 13.0859 13.9563 12.0122 14.4767 10.7559C14.997 9.49971 15.1332 8.11737 14.8679 6.78375C14.6026 5.45013 13.9478 4.22513 12.9864 3.26364C12.0249 2.30216 10.7999 1.64737 9.46624 1.3821C8.13262 1.11683 6.75029 1.25298 5.49405 1.77333C4.23781 2.29368 3.16408 3.17487 2.40864 4.30545C1.65321 5.43604 1.25 6.76525 1.25 8.125C1.25206 9.94773 1.97706 11.6952 3.26592 12.9841C4.55479 14.2729 6.30227 14.9979 8.125 15ZM4.375 8.125C4.375 8.29076 4.44084 8.44973 4.55805 8.56694C4.67526 8.68415 4.83424 8.75 5 8.75H9.7414L8.30781 10.1828C8.24974 10.2409 8.20368 10.3098 8.17225 10.3857C8.14082 10.4616 8.12465 10.5429 8.12465 10.625C8.12465 10.7071 8.14082 10.7884 8.17225 10.8643C8.20368 10.9402 8.24974 11.0091 8.30781 11.0672C8.36588 11.1253 8.43482 11.1713 8.51069 11.2027C8.58656 11.2342 8.66787 11.2503 8.75 11.2503C8.83212 11.2503 8.91344 11.2342 8.98931 11.2027C9.06518 11.1713 9.13412 11.1253 9.19218 11.0672L11.6922 8.56719C11.7503 8.50914 11.7964 8.44021 11.8278 8.36434C11.8593 8.28846 11.8755 8.20713 11.8755 8.125C11.8755 8.04287 11.8593 7.96154 11.8278 7.88566C11.7964 7.80979 11.7503 7.74086 11.6922 7.68281L9.19218 5.18281C9.07491 5.06554 8.91585 4.99965 8.75 4.99965C8.58414 4.99965 8.42508 5.06554 8.30781 5.18281C8.19053 5.30009 8.12465 5.45915 8.12465 5.625C8.12465 5.79085 8.19053 5.94991 8.30781 6.06719L9.7414 7.5H5C4.83424 7.5 4.67526 7.56585 4.55805 7.68306C4.44084 7.80027 4.375 7.95924 4.375 8.125Z"
-            fill="#FFFFFF"
-          />
-        </svg>
-      </button>
+  if (!portalReady) return carouselPlaceholder;
 
-      <div
-        className="carousel-card relative flex w-full max-w-[360px] shrink-0 flex-col overflow-hidden"
-        style={{
-          height: 'auto',
-          alignSelf: 'flex-end',
-          scrollSnapAlign: 'start',
-          boxSizing: 'border-box',
-          ...containerStyle,
-        }}
-      >
-        <article className="box-border w-full px-[15px] pb-5 pt-[15px]" style={manaGlassCardStyle}>
+  return (
+    <>
+      {carouselPlaceholder}
+      {createPortal(
+        <div className="fixed inset-0 z-[20000] flex items-end justify-center bg-[#050505] px-[20px] pb-[20px] pt-[80px]">
+          <button
+            type="button"
+            onClick={onBack}
+            className="absolute left-[20px] top-[calc(var(--sat,0px)+10px)] z-[1] flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[5px]"
+            aria-label="Назад"
+          >
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden style={{ transform: 'scaleX(-1)' }}>
+              <path
+                d="M8.125 0C9.73197 0 11.3029 0.476523 12.639 1.36931C13.9752 2.2621 15.0166 3.53105 15.6315 5.0157C16.2465 6.50035 16.4074 8.13401 16.0939 9.71011C15.7804 11.2862 15.0065 12.7339 13.8702 13.8702C12.7339 15.0065 11.2862 15.7804 9.7101 16.0939C8.13401 16.4074 6.50034 16.2465 5.01569 15.6315C3.53104 15.0166 2.26209 13.9752 1.36931 12.639C0.47652 11.3029 -3.8147e-06 9.73197 -3.8147e-06 8.125C0.00227165 5.97081 0.859026 3.90551 2.38227 2.38227C3.90551 0.85903 5.97081 0.00227486 8.125 0ZM8.125 15C9.48474 15 10.814 14.5968 11.9445 13.8414C13.0751 13.0859 13.9563 12.0122 14.4767 10.7559C14.997 9.49971 15.1332 8.11737 14.8679 6.78375C14.6026 5.45013 13.9478 4.22513 12.9864 3.26364C12.0249 2.30216 10.7999 1.64737 9.46624 1.3821C8.13262 1.11683 6.75029 1.25298 5.49405 1.77333C4.23781 2.29368 3.16408 3.17487 2.40864 4.30545C1.65321 5.43604 1.25 6.76525 1.25 8.125C1.25206 9.94773 1.97706 11.6952 3.26592 12.9841C4.55479 14.2729 6.30227 14.9979 8.125 15ZM4.375 8.125C4.375 8.29076 4.44084 8.44973 4.55805 8.56694C4.67526 8.68415 4.83424 8.75 5 8.75H9.7414L8.30781 10.1828C8.24974 10.2409 8.20368 10.3098 8.17225 10.3857C8.14082 10.4616 8.12465 10.5429 8.12465 10.625C8.12465 10.7071 8.14082 10.7884 8.17225 10.8643C8.20368 10.9402 8.24974 11.0091 8.30781 11.0672C8.36588 11.1253 8.43482 11.1713 8.51069 11.2027C8.58656 11.2342 8.66787 11.2503 8.75 11.2503C8.83212 11.2503 8.91344 11.2342 8.98931 11.2027C9.06518 11.1713 9.13412 11.1253 9.19218 11.0672L11.6922 8.56719C11.7503 8.50914 11.7964 8.44021 11.8278 8.36434C11.8593 8.28846 11.8755 8.20713 11.8755 8.125C11.8755 8.04287 11.8593 7.96154 11.8278 7.88566C11.7964 7.80979 11.7503 7.74086 11.6922 7.68281L9.19218 5.18281C9.07491 5.06554 8.91585 4.99965 8.75 4.99965C8.58414 4.99965 8.42508 5.06554 8.30781 5.18281C8.19053 5.30009 8.12465 5.45915 8.12465 5.625C8.12465 5.79085 8.19053 5.94991 8.30781 6.06719L9.7414 7.5H5C4.83424 7.5 4.67526 7.56585 4.55805 7.68306C4.44084 7.80027 4.375 7.95924 4.375 8.125Z"
+                fill="#FFFFFF"
+              />
+            </svg>
+          </button>
+
+          <div
+            className="carousel-card relative flex w-full max-w-[360px] shrink-0 flex-col overflow-hidden"
+            style={{
+              height: 335,
+              alignSelf: 'flex-end',
+              scrollSnapAlign: 'start',
+              boxSizing: 'border-box',
+              ...containerStyle,
+            }}
+          >
+            <article className="box-border h-[335px] w-[360px] px-[15px] pb-[15px] pt-[15px]" style={manaGlassCardStyle}>
           <p className="m-0" style={{ ...involveMana, fontSize: 18, lineHeight: '110%', color: '#FFFFFF' }}>
             Подарок, как маркетинговая карта
           </p>
@@ -696,21 +707,37 @@ function ManaGiftFlowCard({ onBack, containerStyle }) {
             Рассылка неинтересного тоже отсутствует
           </p>
 
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Имя электронного ящика"
-            className="mt-[15px] h-[50px] w-full rounded-[10px] border border-[rgba(255,255,255,0.5)] bg-transparent px-[15px] outline-none placeholder:text-[rgba(255,255,255,0.5)]"
-            style={{ ...involveMana, fontSize: 16, lineHeight: '125%', color: '#FFFFFF' }}
-          />
+          <div className="relative mt-[15px]">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Имя электронного ящика"
+              className="h-[50px] w-[330px] rounded-[10px] border border-[rgba(255,255,255,0.5)] bg-transparent px-[15px] pr-[44px] outline-none placeholder:text-[rgba(255,255,255,0.5)]"
+              style={{ ...involveMana, fontSize: 16, lineHeight: '125%', color: '#FFFFFF' }}
+            />
+            <span className="pointer-events-none absolute right-[12px] top-1/2 -translate-y-1/2" aria-hidden>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="8" cy="8" r="8" fill="white" />
+                <path d="M4.8 8.2L6.8 10.2L11.2 5.8" stroke="#050505" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </div>
 
           <button
             type="button"
             onClick={() => setPrivacyAccepted((v) => !v)}
-            className="mt-[15px] flex w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] py-[8px] text-left"
+            className="mt-[5px] flex h-[50px] w-[330px] items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] text-left"
           >
-            <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)]" style={{ background: privacyAccepted ? '#FFFFFF' : 'transparent' }} />
+            <span className="h-4 w-4 shrink-0" aria-hidden>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="8" cy="8" r="7.5" stroke="rgba(255,255,255,0.5)" />
+                {privacyAccepted ? <circle cx="8" cy="8" r="8" fill="white" /> : null}
+                {privacyAccepted ? (
+                  <path d="M4.8 8.2L6.8 10.2L11.2 5.8" stroke="#050505" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                ) : null}
+              </svg>
+            </span>
             <span style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: '#FFFFFF' }}>
               Я, полностью соглашаюсь с условиями
               <br />
@@ -721,9 +748,17 @@ function ManaGiftFlowCard({ onBack, containerStyle }) {
           <button
             type="button"
             onClick={() => setNewsAccepted((v) => !v)}
-            className="mt-[5px] flex w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] py-[8px] text-left"
+            className="mt-[8px] flex h-[50px] w-[330px] items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] text-left"
           >
-            <span className="h-4 w-4 shrink-0 rounded-full border border-[rgba(255,255,255,0.5)]" style={{ background: newsAccepted ? '#FFFFFF' : 'transparent' }} />
+            <span className="h-4 w-4 shrink-0" aria-hidden>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="8" cy="8" r="7.5" stroke="rgba(255,255,255,0.5)" />
+                {newsAccepted ? <circle cx="8" cy="8" r="8" fill="white" /> : null}
+                {newsAccepted ? (
+                  <path d="M4.8 8.2L6.8 10.2L11.2 5.8" stroke="#050505" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                ) : null}
+              </svg>
+            </span>
             <span style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: '#FFFFFF' }}>
               Я, полностью соглашаюсь с условиями
               <br />
@@ -734,15 +769,17 @@ function ManaGiftFlowCard({ onBack, containerStyle }) {
           <button
             type="button"
             disabled={!canSubmit}
-            className={`mt-[15px] h-[50px] w-full rounded-[10px] border border-white ${canSubmit ? 'cursor-pointer' : 'cursor-not-allowed'}`}
-            style={{ ...involveMana, fontSize: 16, lineHeight: '315%', color: '#050505', background: '#FFFFFF', opacity: canSubmit ? 1 : 0.75 }}
+            className={`mt-[10px] h-[50px] w-full rounded-[10px] border border-white ${canSubmit ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+            style={{ ...involveMana, fontSize: 16, lineHeight: '315%', color: '#050505', background: '#FFFFFF', opacity: 1 }}
           >
             Подтверждение
           </button>
-        </article>
-      </div>
-    </div>,
-    document.body
+            </article>
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }
 
@@ -1156,6 +1193,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
   const [stackedCardsCount, setStackedCardsCount] = useState(0);
   const [stackedArrowTop, setStackedArrowTop] = useState(0);
   const stackedArrowTimerRef = useRef(null);
+  const giftOriginScrollLeftRef = useRef(0);
 
   const updateStackedArrowPosition = useCallback(() => {
     if (!isStacked) return;
@@ -1273,6 +1311,27 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
     if (!nextCard) return;
     el.scrollTo({ left: nextCard.offsetLeft, behavior: 'smooth' });
   };
+
+  const handleGiftOpenChange = useCallback(
+    (isOpen) => {
+      setIsGiftOpenInStacked(isOpen);
+      const carousel = stackedCarouselRef.current;
+      if (!carousel) return;
+
+      if (isOpen) {
+        giftOriginScrollLeftRef.current = carousel.scrollLeft;
+        return;
+      }
+
+      const restoreLeft = giftOriginScrollLeftRef.current;
+      window.requestAnimationFrame(() => {
+        carousel.scrollTo({ left: restoreLeft, behavior: 'auto' });
+        updateStackedCarouselMeta();
+        updateStackedArrowPosition();
+      });
+    },
+    [updateStackedArrowPosition, updateStackedCarouselMeta]
+  );
 
   const isLastStackedCard = stackedCardsCount > 0 && stackedActiveIndex === stackedCardsCount - 1;
 
@@ -1394,7 +1453,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                     overrideButtonLabel="Консультирование"
                     forceActionEnabled
                     onTransitionStart={hideStackedArrowDuringCardTransition}
-                    onGiftOpenChange={setIsGiftOpenInStacked}
+                    onGiftOpenChange={handleGiftOpenChange}
                     onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
                   />
                 ) : (
@@ -1416,7 +1475,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                     allowInformSwitch
                     overrideButtonLabel="Консультирование"
                     onTransitionStart={hideStackedArrowDuringCardTransition}
-                    onGiftOpenChange={setIsGiftOpenInStacked}
+                    onGiftOpenChange={handleGiftOpenChange}
                     onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
                   />
                 ) : (
@@ -1442,7 +1501,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                     overrideButtonLabel="Уточнение"
                     forceActionEnabled
                     onTransitionStart={hideStackedArrowDuringCardTransition}
-                    onGiftOpenChange={setIsGiftOpenInStacked}
+                    onGiftOpenChange={handleGiftOpenChange}
                     expandedVariant="content"
                     expandedTitleOverride="Формирование имиджа"
                     expandedPriceOverride="около 35 тыс. р."

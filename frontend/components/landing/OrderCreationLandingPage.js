@@ -575,7 +575,7 @@ export default function OrderCreationLandingPage({
       style={{
         left: 'var(--main-block-margin)',
         width: 360,
-        height: 335,
+        height: 260,
         bottom: 0,
         borderRadius: 20,
         display: 'flex',
@@ -590,16 +590,23 @@ export default function OrderCreationLandingPage({
         ...wizardDissolveStyle,
       }}
     >
-      <h1 className="m-0 w-full max-w-[330px] flex-shrink-0" style={{ ...involve, fontSize: 20, lineHeight: '125%', color: '#FFFFFF' }}>
-        Маркетинговое прогнозирование
-        <br />
-        потенциала для захвата рынка
-        <br />
-        при помощи медиа и сайта,
-        <br />
-        малого и среднего дела
+      <h1
+        className="m-0 w-[330px] max-w-none flex-shrink-0 whitespace-pre"
+        style={{ ...involve, fontSize: 18, lineHeight: '125%', letterSpacing: '-0.01em', color: '#FFFFFF' }}
+      >
+        {'Маркетинговое прогнозирование\nпотенциала для захвата рынка\nпри помощи медиа и сайта,\nмалого и среднего дела'}
       </h1>
-      <p className="m-0 mt-[15px] w-full max-w-[330px]" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: 'rgba(255, 255, 255, 0.5)' }}>
+      <p
+        className="m-0 mt-[15px] h-[40px] w-[330px]"
+        style={{
+          fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+          fontStyle: 'normal',
+          fontWeight: 400,
+          fontSize: 16,
+          lineHeight: '125%',
+          color: 'rgba(255, 255, 255, 0.5)',
+        }}
+      >
         Прогнозирование однозначно важного,
         <br />
         одновременно, сейчас неизвестного
@@ -607,7 +614,7 @@ export default function OrderCreationLandingPage({
 
       <button
         type="button"
-        className="box-border mt-[20px] flex w-full max-w-[330px] min-w-0 shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
+        className="box-border mt-auto flex w-full max-w-[330px] min-w-0 shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
         style={{
           ...involve,
           width: '100%',
