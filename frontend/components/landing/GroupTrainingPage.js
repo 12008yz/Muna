@@ -399,7 +399,7 @@ function ManaGlassPriceFab({ onClick, className = '' }) {
     <button
       type="button"
       onClick={onClick}
-      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] bg-transparent ${className}`}
+      className={`flex h-10 w-10 shrink-0 items-center justify-end rounded-[20px] bg-transparent ${className}`}
       aria-label="Далее к заявке"
     >
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
