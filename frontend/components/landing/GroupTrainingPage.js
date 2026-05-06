@@ -886,7 +886,7 @@ function ManaGlassMarketingCarouselCardTwo({
         minHeight: 473,
         height: 'auto',
         width: 360,
-        alignSelf: 'flex-start',
+        alignSelf: 'flex-end',
         scrollSnapAlign: 'start',
         boxSizing: 'border-box',
         maxWidth: '100%',
@@ -1262,6 +1262,9 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
   const [stackedArrowTop, setStackedArrowTop] = useState(0);
   const stackedArrowTimerRef = useRef(null);
   const giftOriginScrollLeftRef = useRef(0);
+  /** Сохранённый scrollLeft при анимации «Информирование» / смене высоты карточки (иначе snap-x на мобильных уводит на соседний слайд). */
+  const pendingCarouselScrollRestoreRef = useRef(null);
+  const [stackedCarouselSnapSuppress, setStackedCarouselSnapSuppress] = useState(false);
 
   const updateStackedArrowPosition = useCallback(() => {
     if (!isStacked) return;
@@ -1347,15 +1350,32 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
   }, [isStacked, updateStackedArrowPosition, updateStackedCarouselMeta]);
 
   const hideStackedArrowDuringCardTransition = () => {
+    const carousel = stackedCarouselRef.current;
+    if (carousel) {
+      pendingCarouselScrollRestoreRef.current = carousel.scrollLeft;
+      setStackedCarouselSnapSuppress(true);
+    }
     setHideStackedArrow(true);
     if (stackedArrowTimerRef.current) {
       window.clearTimeout(stackedArrowTimerRef.current);
     }
+    /* Дети переключают разметку через ~320ms — ждём дольше, иначе snap-x на мобильных уводит скролл на соседнюю карточку. */
     stackedArrowTimerRef.current = window.setTimeout(() => {
       setHideStackedArrow(false);
-      window.requestAnimationFrame(updateStackedArrowPosition);
+      const el = stackedCarouselRef.current;
+      const left = pendingCarouselScrollRestoreRef.current;
+      window.requestAnimationFrame(() => {
+        if (el != null && left !== null) {
+          el.scrollTo({ left, behavior: 'auto' });
+        }
+        pendingCarouselScrollRestoreRef.current = null;
+        window.requestAnimationFrame(() => {
+          setStackedCarouselSnapSuppress(false);
+          updateStackedArrowPosition();
+        });
+      });
       stackedArrowTimerRef.current = null;
-    }, 340);
+    }, 400);
   };
 
   const scrollStackedCarouselToNext = () => {
@@ -1504,7 +1524,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                   style={{
                     height: 'auto',
                     gap: 10,
-                    scrollSnapType: 'x mandatory',
+                    scrollSnapType: stackedCarouselSnapSuppress ? 'none' : 'x mandatory',
                     scrollBehavior: 'smooth',
                     scrollSnapStop: 'always',
                     /* touch: убираем momentum-узел iOS — иначе жест «липнет» к горизонтали и ломает плавный вертикальный скролл родителя (snap-y). */
