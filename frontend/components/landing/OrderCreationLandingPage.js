@@ -714,7 +714,7 @@ export default function OrderCreationLandingPage({
                 }}
               >
                 <h2 className="m-0 flex w-full max-w-[330px] flex-shrink-0 items-center self-stretch" style={wizardTitleStyle}>
-                  Формирование тарифного плана
+                  {orderStep === 4 ? 'Прогнозирование' : 'Формирование тарифного плана'}
                 </h2>
 
                 {orderStep === 1 && (
@@ -1000,16 +1000,36 @@ export default function OrderCreationLandingPage({
 
                     <div className="mt-[90px] flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
                       <div
-                        className="box-border flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent px-[10px]"
+                        className="box-border flex h-[105px] w-full items-start gap-[10px] rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent px-[10px] pt-[15px]"
                       >
-                        <span className="flex h-4 w-4 shrink-0 items-center justify-center">
-                          <ManaStyleSelectedCheckIcon />
+                        <span className="mt-[4px] flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-white">
+                          <span style={{ ...involve, fontWeight: 500, fontSize: 14, lineHeight: '100%', color: '#050505' }}>!</span>
                         </span>
                         <div className="min-w-0">
-                          <p className="m-0" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: '#FFFFFF' }}>
+                          <p
+                            className="m-0"
+                            style={{
+                              fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                              fontStyle: 'normal',
+                              fontWeight: 400,
+                              fontSize: 16,
+                              lineHeight: '125%',
+                              color: '#FFFFFF',
+                            }}
+                          >
                             Категорически важно ведение маркетингового и медиа, и сайта
                           </p>
-                          <p className="m-0" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: '#5050FF' }}>
+                          <p
+                            className="m-0 mt-[10px]"
+                            style={{
+                              fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                              fontStyle: 'normal',
+                              fontWeight: 400,
+                              fontSize: 16,
+                              lineHeight: '125%',
+                              color: '#5050FF',
+                            }}
+                          >
                             Риск у компании · {selectedSubjectIds.includes('load-high') ? 'низкий' : 'высокий'}
                           </p>
                         </div>
