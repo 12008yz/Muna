@@ -225,12 +225,6 @@ function ManaGlassMarketingCarouselCard({
   const isSiteVariant = initialVariant === 'site';
   const [showInformScreen, setShowInformScreen] = useState(false);
   const [showGiftScreen, setShowGiftScreen] = useState(false);
-  const [leavingDown, setLeavingDown] = useState(false);
-  const [baseEntering, setBaseEntering] = useState(false);
-  const [expandedEntering, setExpandedEntering] = useState(false);
-  const [expandedLeaving, setExpandedLeaving] = useState(false);
-  const [giftEntering, setGiftEntering] = useState(false);
-  const [giftLeaving, setGiftLeaving] = useState(false);
   const defaultTitle = isSiteVariant ? 'Формирование сайта' : 'Формирование медиа';
   const defaultDescription = 'Наличие интересного медиа служит важным маркетинговым инструментом малого и среднего предпринимательства';
   const defaultPrice = isSiteVariant ? 'около 35 тыс. р.' : 'около 45 тыс. р.';
@@ -242,52 +236,28 @@ function ManaGlassMarketingCarouselCard({
   const expandedVariantResolved = expandedVariant || (isSiteVariant ? 'site' : 'content');
 
   const handleInformClick = () => {
-    if (!allowInformSwitch || leavingDown || showInformScreen) return;
-    if (typeof onTransitionStart === 'function') onTransitionStart();
-    setLeavingDown(true);
-    window.setTimeout(() => {
-      setShowInformScreen(true);
-      setExpandedEntering(true);
-      setLeavingDown(false);
-      window.requestAnimationFrame(() => setExpandedEntering(false));
-    }, 320);
+    if (!allowInformSwitch || showInformScreen) return;
+    onTransitionStart?.();
+    setShowInformScreen(true);
   };
 
   const handleExpandedInformClick = () => {
-    if (expandedLeaving || !showInformScreen) return;
-    if (typeof onTransitionStart === 'function') onTransitionStart();
-    setExpandedLeaving(true);
-    window.setTimeout(() => {
-      setShowInformScreen(false);
-      setLeavingDown(false);
-      setExpandedLeaving(false);
-      setBaseEntering(true);
-      window.requestAnimationFrame(() => setBaseEntering(false));
-    }, 320);
+    if (!showInformScreen) return;
+    onTransitionStart?.();
+    setShowInformScreen(false);
   };
 
   const handleExpandedGiftClick = () => {
-    if (expandedLeaving || showGiftScreen || !showInformScreen) return;
-    setExpandedLeaving(true);
-    window.setTimeout(() => {
-      setShowInformScreen(false);
-      setShowGiftScreen(true);
-      setExpandedLeaving(false);
-      setGiftEntering(true);
-      window.requestAnimationFrame(() => setGiftEntering(false));
-    }, 320);
+    if (showGiftScreen || !showInformScreen) return;
+    onTransitionStart?.();
+    setShowInformScreen(false);
+    setShowGiftScreen(true);
   };
 
   const handleGiftBackClick = () => {
-    if (giftLeaving || !showGiftScreen) return;
-    setGiftLeaving(true);
-    window.setTimeout(() => {
-      setShowGiftScreen(false);
-      setGiftLeaving(false);
-      setShowInformScreen(true);
-      setExpandedEntering(true);
-      window.requestAnimationFrame(() => setExpandedEntering(false));
-    }, 320);
+    if (!showGiftScreen) return;
+    setShowGiftScreen(false);
+    setShowInformScreen(true);
   };
 
   useEffect(() => {
@@ -300,17 +270,7 @@ function ManaGlassMarketingCarouselCard({
   }, [showGiftScreen, onGiftOpenChange]);
 
   if (showGiftScreen) {
-    return (
-      <ManaGiftFlowCard
-        stackCarouselLast={stackCarouselLast}
-        onBack={handleGiftBackClick}
-        containerStyle={{
-          transform: giftEntering || giftLeaving ? 'translateY(120%)' : 'translateY(0)',
-          opacity: giftEntering || giftLeaving ? 0 : 1,
-          transition: 'transform 320ms ease, opacity 320ms ease',
-        }}
-      />
-    );
+    return <ManaGiftFlowCard stackCarouselLast={stackCarouselLast} onBack={handleGiftBackClick} />;
   }
 
   if (showInformScreen) {
@@ -325,11 +285,6 @@ function ManaGlassMarketingCarouselCard({
         overridePrice={expandedPriceOverride}
         overrideButtonLabel={expandedButtonLabelOverride}
         forceActionEnabled={expandedForceActionEnabled}
-        containerStyle={{
-          transform: expandedEntering || expandedLeaving ? 'translateY(120%)' : 'translateY(0)',
-          opacity: expandedEntering || expandedLeaving ? 0 : 1,
-          transition: 'transform 320ms ease, opacity 320ms ease',
-        }}
       />
     );
   }
@@ -342,13 +297,10 @@ function ManaGlassMarketingCarouselCard({
       style={{
         height: 'auto',
         width: 360,
-        alignSelf: 'flex-start',
+        alignSelf: 'flex-end',
         scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
         boxSizing: 'border-box',
         maxWidth: '100%',
-        transform: leavingDown || baseEntering ? 'translateY(120%)' : 'translateY(0)',
-        opacity: leavingDown || baseEntering ? 0 : 1,
-        transition: 'transform 320ms ease, opacity 320ms ease',
       }}
     >
       <div className="mb-3 flex w-full items-center justify-end">
@@ -465,7 +417,7 @@ function ManaGlassMarketingCarouselCard({
   );
 }
 
-function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false }) {
+function ManaGiftFlowCard({ onBack, stackCarouselLast = false }) {
   const [portalReady, setPortalReady] = useState(false);
   const [email, setEmail] = useState('');
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
@@ -481,9 +433,9 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false })
 
   const carouselPlaceholder = (
     <div
-      className={`carousel-card box-border h-[335px] w-[360px] shrink-0${stackCarouselLast ? ' carousel-card--stacked-last' : ''}`}
+      className={`carousel-card box-border min-h-[473px] w-[360px] shrink-0${stackCarouselLast ? ' carousel-card--stacked-last' : ''}`}
       data-vertical-scroll-handle=""
-      style={{ scrollSnapAlign: stackCarouselLast ? 'end' : 'start', maxWidth: '100%', ...containerStyle }}
+      style={{ scrollSnapAlign: stackCarouselLast ? 'end' : 'start', maxWidth: '100%' }}
       aria-hidden
     />
   );
@@ -524,14 +476,8 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false })
           <div
             data-fluid-cursor-block
             data-vertical-scroll-handle=""
-            className={`carousel-card relative flex w-full max-w-[360px] shrink-0 flex-col overflow-hidden${stackCarouselLast ? ' carousel-card--stacked-last' : ''}`}
-            style={{
-              height: 335,
-              alignSelf: 'flex-start',
-              scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
-              boxSizing: 'border-box',
-              ...containerStyle,
-            }}
+            className="relative flex w-full max-w-[360px] shrink-0 flex-col overflow-hidden"
+            style={{ height: 335, boxSizing: 'border-box' }}
           >
             <article className="box-border h-[335px] w-[360px] px-[15px] pb-[15px] pt-[15px]" style={manaGlassCardStyle}>
           <p className="m-0" style={{ ...involveMana, fontSize: 18, lineHeight: '110%', color: '#FFFFFF' }}>
@@ -633,7 +579,6 @@ function ManaGlassMarketingCarouselCardTwo({
   overridePrice,
   overrideButtonLabel,
   forceActionEnabled,
-  containerStyle,
   stackCarouselLast = false,
 }) {
   const isSiteVariant = variant === 'site';
@@ -661,11 +606,10 @@ function ManaGlassMarketingCarouselCardTwo({
         minHeight: 473,
         height: 'auto',
         width: 360,
-        alignSelf: 'flex-start',
+        alignSelf: 'flex-end',
         scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
         boxSizing: 'border-box',
         maxWidth: '100%',
-        ...containerStyle,
       }}
     >
       <div className={topRowClass}>
@@ -1100,7 +1044,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   </div>
                 <div
                   ref={stackedCarouselRef}
-                  className="carousel-container carousel-learning scrollbar-hide box-border flex w-full max-h-full min-h-0 flex-nowrap items-start overflow-x-auto overflow-y-hidden"
+                  className="carousel-container carousel-learning scrollbar-hide box-border flex w-full max-h-full min-h-0 flex-nowrap items-end overflow-x-auto overflow-y-hidden"
                   style={{
                     height: 'auto',
                     gap: 10,
