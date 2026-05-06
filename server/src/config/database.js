@@ -42,9 +42,9 @@ function createSequelize() {
   }
 
   return new Sequelize(
-    process.env.DB_NAME || 'mnozh_db',
-    process.env.DB_USER || 'mnozh_user',
-    process.env.DB_PASSWORD || 'mnozh_password',
+    process.env.DB_NAME || 'mana_db',
+    process.env.DB_USER || 'mana_user',
+    process.env.DB_PASSWORD || 'mana_password',
     {
       host: process.env.DB_HOST || 'localhost',
       port: parseInt(process.env.DB_PORT || '5432', 10),

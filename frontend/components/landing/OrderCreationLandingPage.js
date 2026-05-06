@@ -266,7 +266,7 @@ export default function OrderCreationLandingPage({
   initialOrderStep = 0,
   exposeOpenConsultation,
   onAfterPhoneLead,
-  /** Только stacked: шаги 1–4 мастера — родитель скрывает глобальную шапку и показывает слот под портал */
+  /** Только stacked: шаги 1–4 мастера — родитель скрывает глобальную шапку и показывает слот под React-портал */
   onStackedWizardStepsActive,
   onConsultationFlowOpenChange,
 } = {}) {

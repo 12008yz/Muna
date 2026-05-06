@@ -18,7 +18,7 @@ describe('HTTP API', () => {
   it('GET /health', async () => {
     const res = await request(app).get('/health');
     expect(res.status).toBe(200);
-    expect(res.body.service).toBe('mnozh-learning-api');
+    expect(res.body.service).toBe('mana-api');
   });
 
   it('неизвестный путь — 404 JSON', async () => {
@@ -41,7 +41,7 @@ describe('HTTP API', () => {
   it('GET /api/tariffs/:id', async () => {
     const res = await request(app).get('/api/tariffs/group-preparation');
     expect(res.status).toBe(200);
-    expect(res.body.data.name).toContain('Групповая');
+    expect(res.body.data.name).toContain('Формирование');
   });
 
   it('GET /api/tariffs/:id 404', async () => {
@@ -54,7 +54,7 @@ describe('HTTP API', () => {
     const res = await request(app).get('/api/legal/privacy');
     expect(res.status).toBe(200);
     expect(res.body.data.title).toBe('Политика приватности');
-    expect(res.body.data.text).toContain('mnozh.ru');
+    expect(res.body.data.text).toContain('MANA');
   });
 
   it('POST /api/leads/consultation создаёт лид', async () => {

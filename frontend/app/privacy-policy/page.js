@@ -1,7 +1,7 @@
 import PrivacyPolicyPage from '@/components/privacy/PrivacyPolicyPage';
 
 export const metadata = {
-  title: 'Политика приватности — МНОЖИТЕЛ',
+  title: 'Политика приватности — MANA',
   description: 'Обработка персональных данных',
 };
 

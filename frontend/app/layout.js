@@ -22,8 +22,8 @@ const involve = localFont({
 });
 
 export const metadata = {
-  title: "МНОЖИТЕЛ",
-  description: "Подготовка к экзаменам",
+  title: "MANA",
+  description: "Маркетинговое сопровождение: медиа и сайт для малого и среднего бизнеса",
 };
 
 /**

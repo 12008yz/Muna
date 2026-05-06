@@ -1,7 +1,7 @@
 import OrdersPanelPage from '@/components/orders/OrdersPanelPage';
 
 export const metadata = {
-  title: 'Заявки — МНОЖИТЕЛ',
+  title: 'Заявки — MANA',
   description: 'Внутренняя панель входящих заявок',
 };
 

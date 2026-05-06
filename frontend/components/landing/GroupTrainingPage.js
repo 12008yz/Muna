@@ -815,7 +815,7 @@ function ManaGlassMarketingCarouselCardTwo({
 }
 
 /**
- * Секция карусели тарифов MANA на главной (stacked). Старый полноэкранный UI «школа/ЕГЭ» удалён — в приложении он не используется.
+ * Секция карусели тарифов MANA на главной (высота секции задаётся родителем).
  */
 export default function GroupTrainingPage({ exposeOpenConsultation, scrollNavigate } = {}) {
   const router = useRouter();

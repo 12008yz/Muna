@@ -255,7 +255,7 @@ export default function ConsultationLandingPage({
       if (typeof onAfterLeadSuccess === 'function') {
         onAfterLeadSuccess();
       } else {
-        router.push('/group-training');
+        router.push('/#section-tariffs');
       }
     }, 1000);
     return () => clearTimeout(id);
@@ -670,13 +670,11 @@ export default function ConsultationLandingPage({
                   paddingBottom: 15,
                 }}
               >
-                Подготавливание школьников
+                Маркетинговое сопровождение
                 <br />
-                с 5 по 11 класс, чтобы все
+                для захвата целевого клиента
                 <br />
-                государственные экзамены
-                <br />
-                сдали на топ баллов
+                при помощи медиа и сайта
               </h1>
 
               <div
@@ -697,7 +695,7 @@ export default function ConsultationLandingPage({
                   className="flex min-h-0 min-w-0 flex-1 items-center overflow-hidden text-ellipsis whitespace-nowrap text-[12px] font-medium leading-[25px] text-[rgba(16,16,16,0.75)]"
                   style={involve}
                 >
-                  свыше 999+ школьников подготовились с нами
+                  свыше 8+ лет в продвижении и организации
                 </span>
               </div>
 
@@ -806,7 +804,7 @@ export default function ConsultationLandingPage({
                       >
                         политики приватности
                       </Link>{' '}
-                      этого портала
+                      сайта
                     </span>
                   </button>
                 </div>

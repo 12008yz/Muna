@@ -1,7 +1,7 @@
 {
-  "name": "mnozh-learning-api",
+  "name": "mana-api",
   "version": "1.0.0",
-  "description": "API для портала подготовки к экзаменам (МНОЖИТЕЛ / learning)",
+  "description": "Backend API для сайта сервиса MANA",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",

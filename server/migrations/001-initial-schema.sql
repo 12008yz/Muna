@@ -1,5 +1,5 @@
 -- Референсная схема (таблицы создаёт Sequelize sync; файл — для DBA / ручного деплоя).
--- CREATE DATABASE mnozh_db;
+-- CREATE DATABASE mana_db;
 
 CREATE TABLE IF NOT EXISTS consultation_leads (
   id SERIAL PRIMARY KEY,

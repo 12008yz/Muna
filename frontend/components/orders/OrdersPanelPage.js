@@ -13,10 +13,6 @@ const MOCK_LEADS = [
     name: 'Тестовый пользователь',
     contactMethod: 'phone',
     source: 'landing',
-    trainingType: 'group',
-    grade: 9,
-    subjectIds: ['math', 'russian'],
-    durationId: '3m',
   },
 ];
 
@@ -78,7 +74,7 @@ export default function OrdersPanelPage({ embedded = false } = {}) {
         trainingType: lead.trainingType === 'group' ? 'Групповая' : lead.trainingType === 'personal' ? 'Персональная' : '—',
         grade: lead.grade != null ? `${lead.grade}` : '—',
         details: Array.isArray(lead.subjectIds) && lead.subjectIds.length
-          ? `Предметы: ${lead.subjectIds.join(', ')}; Срок: ${lead.durationId || '—'}`
+          ? `Выборы: ${lead.subjectIds.join(', ')}${lead.durationId ? `; срок: ${lead.durationId}` : ''}`
           : lead.durationId
             ? `Срок: ${lead.durationId}`
             : '—',
@@ -124,9 +120,9 @@ export default function OrdersPanelPage({ embedded = false } = {}) {
                   <th className="px-3 py-2 font-semibold">Имя</th>
                   <th className="px-3 py-2 font-semibold">Канал</th>
                   <th className="px-3 py-2 font-semibold">Источник</th>
-                  <th className="px-3 py-2 font-semibold">Тип обучения</th>
-                  <th className="px-3 py-2 font-semibold">Класс</th>
-                  <th className="px-3 py-2 font-semibold">Прочее</th>
+                  <th className="px-3 py-2 font-semibold">Формат</th>
+                  <th className="px-3 py-2 font-semibold">Этап</th>
+                  <th className="px-3 py-2 font-semibold">Детали</th>
                 </tr>
               </thead>
               <tbody>

@@ -15,7 +15,7 @@ function createApp() {
   app.use(express.urlencoded({ extended: true }));
 
   app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'ok', service: 'mnozh-learning-api' });
+    res.status(200).json({ status: 'ok', service: 'mana-api' });
   });
 
   app.use('/api/leads', leadsRoutes);
