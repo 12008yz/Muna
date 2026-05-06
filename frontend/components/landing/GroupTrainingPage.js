@@ -52,6 +52,43 @@ const MANA_GLASS_INFORM_ROWS = [
 const DETAIL_TEXT =
   'Подготовка к экзаменам стала на изи. Подготовка к экзаменам стала на изи. Подготовка к экзаменам стала на изи. Подготовка к экзаменам стала на изи. Подготовка к экзаменам стала на изи.';
 
+function findNearestVerticalScrollParentForDelta(startNode, deltaY) {
+  if (typeof window === 'undefined') return null;
+  let node = startNode?.parentElement ?? null;
+  const scrollingUp = deltaY < 0;
+  const scrollingDown = deltaY > 0;
+  while (node) {
+    const styles = window.getComputedStyle(node);
+    const overflowY = styles.overflowY;
+    const isScrollableContainer =
+      (overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay') && node.scrollHeight > node.clientHeight + 1;
+    if (isScrollableContainer) {
+      const hasRoomUp = node.scrollTop > 0;
+      const hasRoomDown = node.scrollTop + node.clientHeight < node.scrollHeight - 1;
+      if ((scrollingUp && hasRoomUp) || (scrollingDown && hasRoomDown)) return node;
+    }
+    node = node.parentElement;
+  }
+  const docScroll = document.scrollingElement || document.documentElement;
+  if (!docScroll) return null;
+  const hasRoomUp = docScroll.scrollTop > 0;
+  const hasRoomDown = docScroll.scrollTop + docScroll.clientHeight < docScroll.scrollHeight - 1;
+  if ((scrollingUp && hasRoomUp) || (scrollingDown && hasRoomDown)) return docScroll;
+  return docScroll;
+}
+
+function redirectVerticalWheelFromCarousel(event) {
+  if (Math.abs(event.deltaY) < 1) return;
+  const carousel = event.currentTarget;
+  const scrollParent = findNearestVerticalScrollParentForDelta(carousel, event.deltaY);
+  if (!scrollParent || scrollParent === carousel) {
+    if (event.cancelable) event.preventDefault();
+    return;
+  }
+  if (event.cancelable) event.preventDefault();
+  scrollParent.scrollBy({ top: event.deltaY, behavior: 'auto' });
+}
+
 function CollapseIcon() {
   return (
     <span className="flex h-5 w-5 shrink-0 items-center justify-center" aria-hidden>
@@ -206,6 +243,7 @@ function TariffDetailsOverlay({ tariff, onCollapse, onConsultation }) {
               });
               if (closest !== activeIndex) setActiveIndex(closest);
             }}
+            onWheel={redirectVerticalWheelFromCarousel}
           >
             <div className="carousel-spacer-left" aria-hidden style={{ alignSelf: 'stretch' }} />
             <LongTariffCard title="Групповая подготовка" features={EXAM_GROUP_FEATURES} />
@@ -1445,6 +1483,7 @@ export default function GroupTrainingPage({ layout = 'viewport', exposeOpenConsu
                         }
                       : undefined
                   }
+                  onWheel={redirectVerticalWheelFromCarousel}
                 >
                 <div className="carousel-spacer-left shrink-0" aria-hidden />
 

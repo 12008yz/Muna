@@ -17,6 +17,8 @@ const involve = {
 /** Карточка мастера /order — заголовок (Figma: 330×20, Involve 500, 18px, line-height 110%) */
 const wizardTitleStyle = {
   ...involve,
+  fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+  fontWeight: 400,
   width: 330,
   maxWidth: '100%',
   height: 20,
@@ -26,15 +28,18 @@ const wizardTitleStyle = {
   color: '#FFFFFF',
   display: 'flex',
   alignItems: 'center',
-  marginBottom: 6,
+  marginBottom: 5,
 };
 
 /** Подзаголовок мастера (Figma: 330×15, 14px, line-height 110%, color 50%) */
 const wizardSubtitleStyle = {
   ...involve,
+  fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+  fontWeight: 400,
   width: 330,
   maxWidth: '100%',
-  minHeight: 15,
+  height: 30,
+  minHeight: 30,
   fontSize: 14,
   lineHeight: '110%',
   color: 'rgba(255, 255, 255, 0.25)',
@@ -45,10 +50,10 @@ const wizardSubtitleStyle = {
 function CollapseIcon() {
   return (
     <span className="flex h-5 w-5 shrink-0 items-center justify-center" aria-hidden>
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
-          d="M10 0C8.02219 0 6.08879 0.58649 4.4443 1.6853C2.79981 2.78412 1.51809 4.3459 0.761209 6.17316C0.00433284 8.00042 -0.1937 10.0111 0.192152 11.9509C0.578004 13.8907 1.53041 15.6725 2.92894 17.0711C4.32746 18.4696 6.10929 19.422 8.0491 19.8078C9.98891 20.1937 11.9996 19.9957 13.8268 19.2388C15.6541 18.4819 17.2159 17.2002 18.3147 15.5557C19.4135 13.9112 20 11.9778 20 10C19.9972 7.34869 18.9427 4.80678 17.068 2.93202C15.1932 1.05727 12.6513 0.00279983 10 0ZM13.8462 10.7692H8.01058L9.775 12.5327C9.84647 12.6042 9.90316 12.689 9.94184 12.7824C9.98052 12.8758 10.0004 12.9758 10.0004 13.0769C10.0004 13.178 9.98052 13.2781 9.94184 13.3715C9.90316 13.4648 9.84647 13.5497 9.775 13.6212C9.70353 13.6926 9.61869 13.7493 9.52531 13.788C9.43193 13.8267 9.33184 13.8466 9.23077 13.8466C9.1297 13.8466 9.02962 13.8267 8.93624 13.788C8.84286 13.7493 8.75801 13.6926 8.68654 13.6212L5.60962 10.5442C5.5381 10.4728 5.48136 10.3879 5.44265 10.2946C5.40394 10.2012 5.38401 10.1011 5.38401 10C5.38401 9.89891 5.40394 9.79881 5.44265 9.70543C5.48136 9.61205 5.5381 9.52721 5.60962 9.45577L8.68654 6.37884C8.83088 6.23451 9.02665 6.15342 9.23077 6.15342C9.4349 6.15342 9.63066 6.23451 9.775 6.37884C9.91934 6.52318 10.0004 6.71895 10.0004 6.92308C10.0004 7.1272 9.91934 7.32297 9.775 7.46731L8.01058 9.23077H13.8462C14.0502 9.23077 14.2458 9.31181 14.3901 9.45607C14.5343 9.60033 14.6154 9.79599 14.6154 10C14.6154 10.204 14.5343 10.3997 14.3901 10.5439C14.2458 10.6882 14.0502 10.7692 13.8462 10.7692Z"
-          fill="#101010"
+          d="M8.125 0C6.51803 0 4.94714 0.476523 3.611 1.36931C2.27485 2.2621 1.23344 3.53105 0.618482 5.0157C0.00352044 6.50035 -0.157382 8.13401 0.156123 9.71011C0.469628 11.2862 1.24346 12.7339 2.37976 13.8702C3.51606 15.0065 4.9638 15.7804 6.5399 16.0939C8.11599 16.4074 9.74966 16.2465 11.2343 15.6315C12.719 15.0166 13.9879 13.9752 14.8807 12.639C15.7735 11.3029 16.25 9.73197 16.25 8.125C16.2477 5.97081 15.391 3.90551 13.8677 2.38227C12.3445 0.85903 10.2792 0.00227486 8.125 0ZM8.125 15C6.76526 15 5.43605 14.5968 4.30546 13.8414C3.17487 13.0859 2.29368 12.0122 1.77333 10.7559C1.25298 9.49971 1.11683 8.11737 1.3821 6.78375C1.64738 5.45013 2.30216 4.22513 3.26364 3.26364C4.22513 2.30216 5.45014 1.64737 6.78376 1.3821C8.11738 1.11683 9.49971 1.25298 10.756 1.77333C12.0122 2.29368 13.0859 3.17487 13.8414 4.30545C14.5968 5.43604 15 6.76525 15 8.125C14.9979 9.94773 14.2729 11.6952 12.9841 12.9841C11.6952 14.2729 9.94773 14.9979 8.125 15ZM11.875 8.125C11.875 8.29076 11.8092 8.44973 11.6919 8.56694C11.5747 8.68415 11.4158 8.75 11.25 8.75H6.5086L7.94219 10.1828C8.00026 10.2409 8.04632 10.3098 8.07775 10.3857C8.10918 10.4616 8.12535 10.5429 8.12535 10.625C8.12535 10.7071 8.10918 10.7884 8.07775 10.8643C8.04632 10.9402 8.00026 11.0091 7.94219 11.0672C7.88412 11.1253 7.81518 11.1713 7.73931 11.2027C7.66344 11.2342 7.58213 11.2503 7.5 11.2503C7.41788 11.2503 7.33656 11.2342 7.26069 11.2027C7.18482 11.1713 7.11588 11.1253 7.05782 11.0672L4.55782 8.56719C4.49971 8.50914 4.45361 8.44021 4.42215 8.36434C4.3907 8.28846 4.37451 8.20713 4.37451 8.125C4.37451 8.04287 4.3907 7.96154 4.42215 7.88566C4.45361 7.80979 4.49971 7.74086 4.55782 7.68281L7.05782 5.18281C7.17509 5.06554 7.33415 4.99965 7.5 4.99965C7.66586 4.99965 7.82492 5.06554 7.94219 5.18281C8.05947 5.30009 8.12535 5.45915 8.12535 5.625C8.12535 5.79085 8.05947 5.94991 7.94219 6.06719L6.5086 7.5H11.25C11.4158 7.5 11.5747 7.56585 11.6919 7.68306C11.8092 7.80027 11.875 7.95924 11.875 8.125Z"
+          fill="white"
         />
       </svg>
     </span>
@@ -533,12 +538,7 @@ export default function OrderCreationLandingPage({
       className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90 outline-none focus:outline-none"
       aria-label="Свернуть окно"
     >
-      <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }} aria-hidden>
-        <path
-          d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z"
-          fill="#FFFFFF"
-        />
-      </svg>
+      <CollapseIcon />
     </button>
   );
 
@@ -691,11 +691,11 @@ export default function OrderCreationLandingPage({
               ) : null}
 
               <div
-                className="scrollbar-hide mt-auto flex w-full min-w-0 flex-shrink-0 flex-col rounded-[20px]"
+                className="scrollbar-hide relative mt-auto flex w-full min-w-0 flex-shrink-0 flex-col rounded-[20px]"
                 style={{
                   marginLeft: 'var(--main-block-margin)',
                   width: 360,
-                  height: 335,
+                  height: 360,
                   boxSizing: 'border-box',
                   padding: 15,
                   marginBottom: 0,
@@ -725,15 +725,25 @@ export default function OrderCreationLandingPage({
                       Незаменимое во всех ответах, это честность
                     </p>
                     <div className="h-0 w-full max-w-[330px] border-t border-[rgba(255,255,255,0.1)]" />
-                    <p className="m-0 mt-[10px] mb-[15px]" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: 'rgba(255,255,255,0.5)' }}>
-                      Посмотрите сейчас на своё предприятие
-                      <br />
-                      со стороны, например, как ваш клиент.
-                      <br />
-                      Кликните на очень похожее мнение
+                    <p
+                      className="m-0 absolute left-[15px] top-[90px] h-[60px] w-[330px]"
+                      style={{
+                        fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                        fontStyle: 'normal',
+                        fontWeight: 400,
+                        fontSize: 16,
+                        lineHeight: '125%',
+                        letterSpacing: '-0.01em',
+                        color: 'rgba(255,255,255,0.5)',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <span className="block whitespace-nowrap">Посмотрите сейчас на своё предприятие</span>
+                      <span className="block whitespace-nowrap">со стороны, например, как ваш клиент.</span>
+                      <span className="block whitespace-nowrap">Кликните на очень похожее мнение</span>
                     </p>
 
-                    <div className="flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="mt-[90px] flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
                       {[
                         { id: 'low-known', label: 'Компания малоизвестна в сети' },
                         { id: 'high-known', label: 'Компания известна в сети' },
@@ -755,7 +765,18 @@ export default function OrderCreationLandingPage({
                                 <span className="h-4 w-4 rounded-full border border-[rgba(255,255,255,0.5)]" />
                               )}
                             </span>
-                            <span style={{ ...involve, fontSize: 16, lineHeight: '125%', color: selected || showRequired ? '#FFFFFF' : 'rgba(255,255,255,0.5)' }}>{item.label}</span>
+                            <span
+                              style={{
+                                fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                                fontStyle: 'normal',
+                                fontWeight: 400,
+                                fontSize: 16,
+                                lineHeight: '125%',
+                                color: selected || showRequired ? '#FFFFFF' : 'rgba(255,255,255,0.5)',
+                              }}
+                            >
+                              {item.label}
+                            </span>
                           </button>
                         );
                       })}
@@ -779,7 +800,11 @@ export default function OrderCreationLandingPage({
                         type="button"
                         onClick={handlePrepTypeNext}
                         className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
-                        style={wizardNextStyle(1)}
+                        style={{
+                          ...wizardNextStyle(1),
+                          fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                          fontWeight: 400,
+                        }}
                       >
                         Далее
                       </button>
@@ -795,15 +820,25 @@ export default function OrderCreationLandingPage({
                       Незаменимое во всех ответах, это честность
                     </p>
                     <div className="h-0 w-full max-w-[330px] border-t border-[rgba(255,255,255,0.1)]" />
-                    <p className="m-0 mt-[10px] mb-[15px]" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: 'rgba(255,255,255,0.5)' }}>
-                      Посмотрите сейчас на своё предприятие
-                      <br />
-                      со стороны, например, как ваш клиент.
-                      <br />
-                      Кликните на очень похожее мнение
+                    <p
+                      className="m-0 absolute left-[15px] top-[90px] h-[60px] w-[330px]"
+                      style={{
+                        fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                        fontStyle: 'normal',
+                        fontWeight: 400,
+                        fontSize: 16,
+                        lineHeight: '125%',
+                        letterSpacing: '-0.01em',
+                        color: 'rgba(255,255,255,0.5)',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <span className="block whitespace-nowrap">Посмотрите сейчас на своё предприятие</span>
+                      <span className="block whitespace-nowrap">со стороны, например, как ваш клиент.</span>
+                      <span className="block whitespace-nowrap">Кликните на очень похожее мнение</span>
                     </p>
 
-                    <div className="flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="mt-[90px] flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
                       {[
                         { id: 0, label: 'Компания незнакома с трендами' },
                         { id: 1, label: 'Компания знакома с трендами' },
@@ -865,15 +900,25 @@ export default function OrderCreationLandingPage({
                       Незаменимое во всех ответах, это честность
                     </p>
                     <div className="h-0 w-full max-w-[330px] border-t border-[rgba(255,255,255,0.1)]" />
-                    <p className="m-0 mt-[10px] mb-[15px]" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: 'rgba(255,255,255,0.5)' }}>
-                      Посмотрите сейчас на своё предприятие
-                      <br />
-                      со стороны, например, как ваш клиент.
-                      <br />
-                      Кликните на очень похожее мнение
+                    <p
+                      className="m-0 absolute left-[15px] top-[90px] h-[60px] w-[330px]"
+                      style={{
+                        fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                        fontStyle: 'normal',
+                        fontWeight: 400,
+                        fontSize: 16,
+                        lineHeight: '125%',
+                        letterSpacing: '-0.01em',
+                        color: 'rgba(255,255,255,0.5)',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <span className="block whitespace-nowrap">Посмотрите сейчас на своё предприятие</span>
+                      <span className="block whitespace-nowrap">со стороны, например, как ваш клиент.</span>
+                      <span className="block whitespace-nowrap">Кликните на очень похожее мнение</span>
                     </p>
 
-                    <div className="flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="mt-[90px] flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
                       {[
                         { id: 'load-low', label: 'Компания не загружена на 95%' },
                         { id: 'load-high', label: 'Компания загружена на 95%' },
@@ -935,15 +980,25 @@ export default function OrderCreationLandingPage({
                       Незаменимое во всех ответах, это честность
                     </p>
                     <div className="h-0 w-full max-w-[330px] border-t border-[rgba(255,255,255,0.1)]" />
-                    <p className="m-0 mt-[10px] mb-[15px]" style={{ ...involve, fontSize: 16, lineHeight: '125%', color: 'rgba(255,255,255,0.5)' }}>
-                      Посмотрите сейчас на своё предприятие
-                      <br />
-                      со стороны, например, как ваш клиент.
-                      <br />
-                      Кликните на очень похожее мнение
+                    <p
+                      className="m-0 absolute left-[15px] top-[90px] h-[60px] w-[330px]"
+                      style={{
+                        fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                        fontStyle: 'normal',
+                        fontWeight: 400,
+                        fontSize: 16,
+                        lineHeight: '125%',
+                        letterSpacing: '-0.01em',
+                        color: 'rgba(255,255,255,0.5)',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <span className="block whitespace-nowrap">Посмотрите сейчас на своё предприятие</span>
+                      <span className="block whitespace-nowrap">со стороны, например, как ваш клиент.</span>
+                      <span className="block whitespace-nowrap">Кликните на очень похожее мнение</span>
                     </p>
 
-                    <div className="flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="mt-[90px] flex w-full max-w-[330px] flex-col gap-[5px]" style={{ marginBottom: 20 }}>
                       <div
                         className="box-border flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent px-[10px]"
                       >
