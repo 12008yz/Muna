@@ -5,7 +5,9 @@
     "postinstall": "npm install --prefix server && npm install --prefix frontend",
     "dev": "concurrently -n api,web -c blue,green \"npm run dev --prefix server\" \"npm run dev --prefix frontend\"",
     "dev:api": "npm run dev --prefix server",
-    "dev:web": "npm run dev --prefix frontend"
+    "dev:web": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "build:web": "npm run build --prefix frontend"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"

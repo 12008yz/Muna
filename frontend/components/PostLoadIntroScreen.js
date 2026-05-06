@@ -10,7 +10,7 @@ const involve = {
 };
 
 /**
- * После загрузочного экрана (Figma ne-400-5-1-1): колонна до 400×870, фон #050505,
+ * После загрузочного экрана (Figma ne-400-5-1-1): колонна до 400×870, фон чёрный,
  * нижний слот 125px под декор (в макете background без url), кнопка «Далее» по отступам макета.
  */
 export default function PostLoadIntroScreen({ onContinue }) {
@@ -25,10 +25,10 @@ export default function PostLoadIntroScreen({ onContinue }) {
 
   return (
     <div
-      className="fixed inset-0 z-[9998] flex justify-center bg-[#050505] pt-[var(--sat,0px)]"
+      className="fixed inset-0 z-[9998] flex justify-center bg-black pt-[var(--sat,0px)]"
     >
       <div
-        className="relative box-border w-full max-w-[400px] bg-[#050505]"
+        className="relative box-border w-full max-w-[400px] bg-black"
         style={{
           height: 'min(calc(100dvh - var(--sat, 0px)), 870px)',
         }}
