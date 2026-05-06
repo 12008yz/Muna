@@ -574,9 +574,8 @@ export default function OrderCreationLandingPage({
       className="absolute box-border"
       style={{
         left: 'var(--main-block-margin)',
-        right: 'var(--main-block-margin)',
-        width: 'calc(100% - 2 * var(--main-block-margin))',
-        maxWidth: 360,
+        width: 360,
+        height: 335,
         bottom: 0,
         borderRadius: 20,
         display: 'flex',
@@ -688,9 +687,8 @@ export default function OrderCreationLandingPage({
                 className="scrollbar-hide mt-auto flex w-full min-w-0 flex-shrink-0 flex-col rounded-[20px]"
                 style={{
                   marginLeft: 'var(--main-block-margin)',
-                  marginRight: 'var(--main-block-margin)',
-                  width: 'calc(100% - 2 * var(--main-block-margin))',
-                  maxWidth: 360,
+                  width: 360,
+                  height: 335,
                   boxSizing: 'border-box',
                   padding: 15,
                   marginBottom: 0,
