@@ -225,6 +225,12 @@ function ManaGlassMarketingCarouselCard({
   const isSiteVariant = initialVariant === 'site';
   const [showInformScreen, setShowInformScreen] = useState(false);
   const [showGiftScreen, setShowGiftScreen] = useState(false);
+  const [leavingDown, setLeavingDown] = useState(false);
+  const [baseEntering, setBaseEntering] = useState(false);
+  const [expandedEntering, setExpandedEntering] = useState(false);
+  const [expandedLeaving, setExpandedLeaving] = useState(false);
+  const [giftEntering, setGiftEntering] = useState(false);
+  const [giftLeaving, setGiftLeaving] = useState(false);
   const defaultTitle = isSiteVariant ? 'Формирование сайта' : 'Формирование медиа';
   const defaultDescription = 'Наличие интересного медиа служит важным маркетинговым инструментом малого и среднего предпринимательства';
   const defaultPrice = isSiteVariant ? 'около 35 тыс. р.' : 'около 45 тыс. р.';
@@ -236,28 +242,52 @@ function ManaGlassMarketingCarouselCard({
   const expandedVariantResolved = expandedVariant || (isSiteVariant ? 'site' : 'content');
 
   const handleInformClick = () => {
-    if (!allowInformSwitch || showInformScreen) return;
+    if (!allowInformSwitch || leavingDown || showInformScreen) return;
     onTransitionStart?.();
-    setShowInformScreen(true);
+    setLeavingDown(true);
+    window.setTimeout(() => {
+      setShowInformScreen(true);
+      setExpandedEntering(true);
+      setLeavingDown(false);
+      window.requestAnimationFrame(() => setExpandedEntering(false));
+    }, 320);
   };
 
   const handleExpandedInformClick = () => {
-    if (!showInformScreen) return;
+    if (expandedLeaving || !showInformScreen) return;
     onTransitionStart?.();
-    setShowInformScreen(false);
+    setExpandedLeaving(true);
+    window.setTimeout(() => {
+      setShowInformScreen(false);
+      setLeavingDown(false);
+      setExpandedLeaving(false);
+      setBaseEntering(true);
+      window.requestAnimationFrame(() => setBaseEntering(false));
+    }, 320);
   };
 
   const handleExpandedGiftClick = () => {
-    if (showGiftScreen || !showInformScreen) return;
-    onTransitionStart?.();
-    setShowInformScreen(false);
-    setShowGiftScreen(true);
+    if (expandedLeaving || showGiftScreen || !showInformScreen) return;
+    setExpandedLeaving(true);
+    window.setTimeout(() => {
+      setShowInformScreen(false);
+      setShowGiftScreen(true);
+      setExpandedLeaving(false);
+      setGiftEntering(true);
+      window.requestAnimationFrame(() => setGiftEntering(false));
+    }, 320);
   };
 
   const handleGiftBackClick = () => {
-    if (!showGiftScreen) return;
-    setShowGiftScreen(false);
-    setShowInformScreen(true);
+    if (giftLeaving || !showGiftScreen) return;
+    setGiftLeaving(true);
+    window.setTimeout(() => {
+      setShowGiftScreen(false);
+      setGiftLeaving(false);
+      setShowInformScreen(true);
+      setExpandedEntering(true);
+      window.requestAnimationFrame(() => setExpandedEntering(false));
+    }, 320);
   };
 
   useEffect(() => {
@@ -270,7 +300,17 @@ function ManaGlassMarketingCarouselCard({
   }, [showGiftScreen, onGiftOpenChange]);
 
   if (showGiftScreen) {
-    return <ManaGiftFlowCard stackCarouselLast={stackCarouselLast} onBack={handleGiftBackClick} />;
+    return (
+      <ManaGiftFlowCard
+        stackCarouselLast={stackCarouselLast}
+        onBack={handleGiftBackClick}
+        containerStyle={{
+          transform: giftEntering || giftLeaving ? 'translateY(120%)' : 'translateY(0)',
+          opacity: giftEntering || giftLeaving ? 0 : 1,
+          transition: 'transform 320ms ease, opacity 320ms ease',
+        }}
+      />
+    );
   }
 
   if (showInformScreen) {
@@ -285,6 +325,11 @@ function ManaGlassMarketingCarouselCard({
         overridePrice={expandedPriceOverride}
         overrideButtonLabel={expandedButtonLabelOverride}
         forceActionEnabled={expandedForceActionEnabled}
+        containerStyle={{
+          transform: expandedEntering || expandedLeaving ? 'translateY(120%)' : 'translateY(0)',
+          opacity: expandedEntering || expandedLeaving ? 0 : 1,
+          transition: 'transform 320ms ease, opacity 320ms ease',
+        }}
       />
     );
   }
@@ -301,6 +346,9 @@ function ManaGlassMarketingCarouselCard({
         scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
         boxSizing: 'border-box',
         maxWidth: '100%',
+        transform: leavingDown || baseEntering ? 'translateY(120%)' : 'translateY(0)',
+        opacity: leavingDown || baseEntering ? 0 : 1,
+        transition: 'transform 320ms ease, opacity 320ms ease',
       }}
     >
       <div className="mb-3 flex w-full items-center justify-end">
@@ -417,7 +465,7 @@ function ManaGlassMarketingCarouselCard({
   );
 }
 
-function ManaGiftFlowCard({ onBack, stackCarouselLast = false }) {
+function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false }) {
   const [portalReady, setPortalReady] = useState(false);
   const [email, setEmail] = useState('');
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
@@ -435,7 +483,12 @@ function ManaGiftFlowCard({ onBack, stackCarouselLast = false }) {
     <div
       className={`carousel-card box-border min-h-[473px] w-[360px] shrink-0${stackCarouselLast ? ' carousel-card--stacked-last' : ''}`}
       data-vertical-scroll-handle=""
-      style={{ scrollSnapAlign: stackCarouselLast ? 'end' : 'start', maxWidth: '100%' }}
+      style={{
+        alignSelf: 'flex-end',
+        scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
+        maxWidth: '100%',
+        ...containerStyle,
+      }}
       aria-hidden
     />
   );
@@ -477,7 +530,7 @@ function ManaGiftFlowCard({ onBack, stackCarouselLast = false }) {
             data-fluid-cursor-block
             data-vertical-scroll-handle=""
             className="relative flex w-full max-w-[360px] shrink-0 flex-col overflow-hidden"
-            style={{ height: 335, boxSizing: 'border-box' }}
+            style={{ height: 335, boxSizing: 'border-box', ...containerStyle }}
           >
             <article className="box-border h-[335px] w-[360px] px-[15px] pb-[15px] pt-[15px]" style={manaGlassCardStyle}>
           <p className="m-0" style={{ ...involveMana, fontSize: 18, lineHeight: '110%', color: '#FFFFFF' }}>
@@ -579,6 +632,7 @@ function ManaGlassMarketingCarouselCardTwo({
   overridePrice,
   overrideButtonLabel,
   forceActionEnabled,
+  containerStyle,
   stackCarouselLast = false,
 }) {
   const isSiteVariant = variant === 'site';
@@ -610,6 +664,7 @@ function ManaGlassMarketingCarouselCardTwo({
         scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
         boxSizing: 'border-box',
         maxWidth: '100%',
+        ...containerStyle,
       }}
     >
       <div className={topRowClass}>
