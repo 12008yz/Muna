@@ -503,7 +503,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
           <button
             type="button"
             onClick={() => setPrivacyAccepted((v) => !v)}
-            className="mt-[5px] flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] text-left"
+            className="mt-[5px] flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] pl-[15px] pr-[10px] text-left"
           >
             <span className="h-4 w-4 shrink-0" aria-hidden>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -524,7 +524,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
           <button
             type="button"
             onClick={() => setNewsAccepted((v) => !v)}
-            className="mt-[8px] flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] text-left"
+            className="mt-[8px] flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] pl-[15px] pr-[10px] text-left"
           >
             <span className="h-4 w-4 shrink-0" aria-hidden>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

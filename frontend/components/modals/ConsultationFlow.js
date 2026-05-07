@@ -586,9 +586,8 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
               type="button"
               className="relative box-border flex w-full min-w-0 cursor-pointer items-center rounded-[10px] border border-solid bg-transparent text-left outline-none focus:outline-none"
               style={{
-                height: 50,
                 minHeight: 50,
-                paddingLeft: 10,
+                paddingLeft: 15,
                 paddingRight: 10,
                 boxSizing: 'border-box',
                 borderColor: privacyAccepted ? stackMuted : privacyShowStrongBorder ? stackStrong : 'rgba(255, 255, 255, 0.1)',
@@ -603,14 +602,24 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
                 style={{
                   width: 16,
                   height: 16,
-                  marginRight: 5,
+                  marginRight: 10,
                   borderColor: privacyAccepted ? 'transparent' : privacyShowStrongBorder ? stackStrong : 'rgba(255, 255, 255, 0.5)',
                   background: privacyAccepted ? '#FFFFFF' : 'transparent',
                 }}
               >
                 {privacyAccepted ? <ConsentCheckDarkIcon /> : null}
               </span>
-              <span className="text-[14px] font-normal leading-[105%] text-white" style={{ ...involve, flex: 1, minWidth: 0 }}>
+              <span
+                className="text-[14px] font-normal text-white"
+                style={{
+                  ...involve,
+                  flex: 1,
+                  minWidth: 0,
+                  lineHeight: '110%',
+                  display: 'block',
+                  paddingTop: 1,
+                }}
+              >
                 Я, полностью соглашаюсь с условиями{' '}
                 <Link
                   href={PRIVACY_HREF}

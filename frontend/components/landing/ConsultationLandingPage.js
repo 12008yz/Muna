@@ -550,7 +550,7 @@ export default function ConsultationLandingPage({
                     style={{
                       height: 50,
                       minHeight: 50,
-                      paddingLeft: 10,
+                      paddingLeft: 15,
                       paddingRight: 10,
                       boxSizing: 'border-box',
                       borderColor: privacyAccepted
@@ -758,7 +758,7 @@ export default function ConsultationLandingPage({
                     style={{
                       height: 50,
                       minHeight: 50,
-                      paddingLeft: 10,
+                      paddingLeft: 15,
                       paddingRight: 10,
                       boxSizing: 'border-box',
                       borderColor: privacyAccepted
