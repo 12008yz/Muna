@@ -287,7 +287,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
           width: 'calc(100% - 2 * var(--main-block-margin))',
           minWidth: 0,
           maxWidth: 390,
-          height: 'auto',
+          height: 335,
           minHeight: 335,
           marginTop: 'auto',
           marginBottom: 0,
@@ -483,7 +483,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
             width: 'calc(100% - 2 * var(--main-block-margin))',
             minWidth: 0,
             maxWidth: 390,
-            height: 'auto',
+            height: 335,
             minHeight: 335,
             marginTop: 'auto',
             marginBottom: 0,
@@ -510,7 +510,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
             Рекламирование ненужного тоже отсутствует.
           </div>
 
-          <div className="flex flex-col gap-[5px]" style={{ marginBottom: '15px' }}>
+          <div className="flex flex-col gap-[5px]" style={{ marginBottom: '5px' }}>
             <label className="sr-only" htmlFor="consult-callback-name">
               Имя
             </label>

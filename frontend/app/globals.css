@@ -155,13 +155,18 @@ body::-webkit-scrollbar {
 /* MANA stacked: левый спейсер только для поля, не snap-цель — иначе mandatory + stop даёт лишний «блок» пустоты в начале. */
 .carousel-container.carousel-learning:not(.carousel-container--single-card) > .carousel-spacer-left {
   scroll-snap-align: none;
-  min-width: 0 !important;
-  width: 0 !important;
+  min-width: var(--main-block-margin) !important;
+  width: var(--main-block-margin) !important;
 }
 
 /* MANA stacked: поле справа как у остального лендинга + safe-area (viewport-fit: cover на телефоне). */
 .carousel-container.carousel-learning {
+  scroll-padding-left: 20px;
   scroll-padding-right: 20px;
+}
+.carousel-container.carousel-learning:not(.carousel-container--single-card) > .carousel-spacer-left {
+  min-width: 20px !important;
+  width: 20px !important;
 }
 .carousel-container.carousel-learning:not(.carousel-container--single-card) > .carousel-spacer-right {
   min-width: 0 !important;

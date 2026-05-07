@@ -858,6 +858,59 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
   }, []);
 
   useEffect(() => {
+    const el = stackedCarouselRef.current;
+    if (!el) return;
+
+    let startX = 0;
+    let startY = 0;
+    let hasTouch = false;
+
+    const onTouchStart = (e) => {
+      const t = e.touches?.[0];
+      if (!t) return;
+      hasTouch = true;
+      startX = t.clientX;
+      startY = t.clientY;
+    };
+
+    const onTouchMove = (e) => {
+      if (!hasTouch) return;
+      const t = e.touches?.[0];
+      if (!t) return;
+
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
+      if (Math.abs(dx) <= Math.abs(dy)) return;
+
+      const atLeftEdge = el.scrollLeft <= 0.5;
+      const maxLeft = Math.max(0, el.scrollWidth - el.clientWidth);
+      const atRightEdge = el.scrollLeft >= maxLeft - 0.5;
+      const draggingOutLeft = atLeftEdge && dx > 0;
+      const draggingOutRight = atRightEdge && dx < 0;
+
+      if ((draggingOutLeft || draggingOutRight) && e.cancelable) {
+        e.preventDefault();
+      }
+    };
+
+    const onTouchEnd = () => {
+      hasTouch = false;
+    };
+
+    el.addEventListener('touchstart', onTouchStart, { passive: true });
+    el.addEventListener('touchmove', onTouchMove, { passive: false });
+    el.addEventListener('touchend', onTouchEnd, { passive: true });
+    el.addEventListener('touchcancel', onTouchEnd, { passive: true });
+
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart);
+      el.removeEventListener('touchmove', onTouchMove);
+      el.removeEventListener('touchend', onTouchEnd);
+      el.removeEventListener('touchcancel', onTouchEnd);
+    };
+  }, []);
+
+  useEffect(() => {
     updateStackedArrowPosition();
     updateStackedCarouselMeta();
 
@@ -1170,7 +1223,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                     WebkitOverflowScrolling: 'auto',
                     scrollbarWidth: 'none',
                     msOverflowStyle: 'none',
-                    overscrollBehaviorX: 'contain',
+                    overscrollBehaviorX: 'none',
                   }}
                   onScroll={() => {
                     const el = stackedCarouselRef.current;
