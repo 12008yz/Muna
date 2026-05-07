@@ -380,6 +380,9 @@ function ManaGlassMarketingCarouselCard({
           >
             {cardTitle}
           </h2>
+          <div className="mt-2">
+            <ManaGlassDivider />
+          </div>
           <p
             className="m-0 mt-2 w-full max-w-[330px]"
             style={{
@@ -706,6 +709,9 @@ function ManaGlassMarketingCarouselCardTwo({
           >
             {expandedTitle}
           </h2>
+          <div className="mt-2">
+            <ManaGlassDivider />
+          </div>
         </div>
 
         <div className={dividerGap}>
