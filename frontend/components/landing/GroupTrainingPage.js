@@ -68,10 +68,23 @@ function getCarouselScrollPaddingRight(el) {
   return Number.isFinite(n) ? n : 0;
 }
 
-/** Целевой scrollLeft для выравнивания карточки под scroll-snap + scroll-padding (всегда по start). */
+/**
+ * Целевой scrollLeft для выравнивания карточки под scroll-snap + scroll-padding.
+ * Для последнего слайда используем end + scroll-padding-right, чтобы справа всегда было поле.
+ */
 function getCarouselSnapScrollLeftForCard(carousel, card, cardIndex, totalCards) {
   if (!carousel || !card) return 0;
   const max = Math.max(0, carousel.scrollWidth - carousel.clientWidth);
+  const useEndSnap =
+    typeof cardIndex === 'number' &&
+    typeof totalCards === 'number' &&
+    totalCards >= 2 &&
+    cardIndex === totalCards - 1;
+  if (useEndSnap) {
+    const padR = getCarouselScrollPaddingRight(carousel);
+    const raw = card.offsetLeft + card.offsetWidth - carousel.clientWidth + padR;
+    return Math.max(0, Math.min(raw, max));
+  }
   const padL = getCarouselScrollPaddingLeft(carousel);
   const raw = card.offsetLeft - padL;
   return Math.max(0, Math.min(raw, max));
@@ -279,7 +292,7 @@ function ManaGlassMarketingCarouselCard({
         width: 'calc(100% - 40px)',
         minWidth: 'calc(100% - 40px)',
         alignSelf: 'flex-end',
-        scrollSnapAlign: 'start',
+        scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
         boxSizing: 'border-box',
         maxWidth: 360,
         transform: leavingDown || baseEntering || isParallelAnimating ? 'translateY(24px)' : 'translateY(0)',
@@ -426,7 +439,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
         width: 'calc(100% - 40px)',
         minWidth: 'calc(100% - 40px)',
         alignSelf: 'flex-end',
-        scrollSnapAlign: 'start',
+        scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
         maxWidth: 360,
         ...containerStyle,
       }}
@@ -603,7 +616,7 @@ function ManaGlassMarketingCarouselCardTwo({
         width: 'calc(100% - 40px)',
         minWidth: 'calc(100% - 40px)',
         alignSelf: 'flex-end',
-        scrollSnapAlign: 'start',
+        scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
         boxSizing: 'border-box',
         maxWidth: 360,
         ...containerStyle,
@@ -1300,6 +1313,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                 <ManaGlassMarketingCarouselCard
                   initialVariant="site"
                   allowInformSwitch
+                  stackCarouselLast
                   overrideTitle="Формирование имиджа"
                   overrideDescription="Наличие интересного медиа служит важным маркетинговым инструментом малого и среднего предпринимательства"
                   overridePrice="около 35 тыс. р."

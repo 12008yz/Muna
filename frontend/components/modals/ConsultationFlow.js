@@ -375,14 +375,10 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
     [clearStepTransitionHandles]
   );
 
-  const handleBackgroundClick = useCallback(() => {
-    setIsAnimating(false);
-    setTimeout(() => {
-      setShouldRender(false);
-      if (onSkip) onSkip();
-      else onClose();
-    }, 300);
-  }, [onSkip, onClose]);
+  const handleBackgroundClick = useCallback((e) => {
+    // Пустой клик больше не закрывает модалку.
+    e.stopPropagation();
+  }, []);
 
   const renderContactMethod = () => (
     <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#050505]">
@@ -903,7 +899,8 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
     <div
       ref={modalRootRef}
       data-fluid-cursor-block
-      className="fixed inset-0 z-[10050] flex w-full min-w-0 cursor-pointer flex-col items-stretch overflow-hidden bg-[#050505]"
+      data-vertical-scroll-handle=""
+      className="fixed inset-0 z-[10050] flex w-full min-w-0 cursor-default flex-col items-stretch overflow-hidden bg-[#050505]"
       style={{
         opacity: isAnimating ? 1 : 0,
         transform: isAnimating ? 'translateY(0)' : 'translateY(12px)',
