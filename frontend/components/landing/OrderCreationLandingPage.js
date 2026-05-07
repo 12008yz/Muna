@@ -1081,7 +1081,7 @@ export default function OrderCreationLandingPage({
           onSubmit={handleConsultationFlowSubmit}
           onPhoneCallbackBack={() => {
             setConsultationFlowOpen(false);
-            setOrderStepAnimated(0, { immediate: true });
+            setConsultationInitialStep('contact-method');
           }}
         />
       ) : null}

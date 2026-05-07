@@ -735,6 +735,7 @@ function ManaGlassMarketingCarouselCardTwo({
 
         <button
           type="button"
+          onClick={expandedButtonDisabled ? undefined : onNavigateToOrder}
           disabled={expandedButtonDisabled}
           className={`mt-[20px] box-border flex h-[50px] w-full max-w-[330px] items-center justify-center rounded-[10px] border border-solid border-white outline-none ${
             expandedButtonDisabled ? 'cursor-not-allowed' : 'cursor-pointer'
@@ -763,6 +764,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
   const stackedCarouselFrameRef = useRef(null);
   const stackedCarouselRef = useRef(null);
   const [consultationFlowOpen, setConsultationFlowOpen] = useState(false);
+  const [consultationInitialStep, setConsultationInitialStep] = useState('contact-method');
   const [expandAllCards, setExpandAllCards] = useState(false);
   const [showSingleGiftCta, setShowSingleGiftCta] = useState(false);
   const [isGlobalGiftOpen, setIsGlobalGiftOpen] = useState(false);
@@ -770,10 +772,16 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
   useEffect(() => {
     if (typeof exposeOpenConsultation !== 'function') return;
     exposeOpenConsultation(() => {
+      setConsultationInitialStep('contact-method');
       setConsultationFlowOpen(true);
     });
     return () => exposeOpenConsultation(null);
   }, [exposeOpenConsultation]);
+
+  const openConsultationCallbackForm = useCallback(() => {
+    setConsultationInitialStep('phone-callback-form');
+    setConsultationFlowOpen(true);
+  }, []);
 
   const carouselTop = 'clamp(12px, 3vh, 36px)';
 
@@ -1238,11 +1246,13 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                 <ManaGlassMarketingCarouselCard
                   overrideButtonLabel="Консультирование"
                   forceActionEnabled
+                  expandedButtonLabelOverride="Уточнение"
+                  expandedForceActionEnabled
                   onTransitionStart={() => hideStackedArrowDuringCardTransition(0)}
                   isExpanded={expandAllCards}
                   onExpandedChange={setExpandAllCards}
                   onExpandedCollapseStart={handleExpandedCollapseStart}
-                  onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
+                  onNavigateToOrder={openConsultationCallbackForm}
                 />
 
                 <ManaGlassMarketingCarouselCard
@@ -1253,7 +1263,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   isExpanded={expandAllCards}
                   onExpandedChange={setExpandAllCards}
                   onExpandedCollapseStart={handleExpandedCollapseStart}
-                  onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
+                  onNavigateToOrder={openConsultationCallbackForm}
                 />
 
                 <ManaGlassMarketingCarouselCard
@@ -1273,7 +1283,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   expandedPriceOverride="около 35 тыс. р."
                   expandedButtonLabelOverride="Уточнение"
                   expandedForceActionEnabled
-                  onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
+                  onNavigateToOrder={openConsultationCallbackForm}
                 />
 
                   <div className="carousel-spacer-right shrink-0" aria-hidden />
@@ -1304,7 +1314,11 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
           onSubmit={() => {
             setConsultationFlowOpen(false);
           }}
-          initialStep="contact-method"
+          onPhoneCallbackBack={() => {
+            setConsultationFlowOpen(false);
+            setConsultationInitialStep('contact-method');
+          }}
+          initialStep={consultationInitialStep}
         />
       ) : null}
     </>
