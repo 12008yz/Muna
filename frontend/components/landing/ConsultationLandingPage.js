@@ -252,14 +252,10 @@ export default function ConsultationLandingPage({
   useEffect(() => {
     if (!showLeadSuccessBanner || isStacked) return;
     const id = setTimeout(() => {
-      if (typeof onAfterLeadSuccess === 'function') {
-        onAfterLeadSuccess();
-      } else {
-        router.push('/#section-tariffs');
-      }
+      // Автоскролл в консультировании отключён.
     }, 1000);
     return () => clearTimeout(id);
-  }, [showLeadSuccessBanner, router, onAfterLeadSuccess, isStacked]);
+  }, [showLeadSuccessBanner, isStacked]);
 
   useEffect(() => {
     setPortalReady(true);
@@ -841,16 +837,8 @@ export default function ConsultationLandingPage({
         <ConsultationFlow
           onClose={() => setConsultationFlowOpen(false)}
           onSkip={() => setConsultationFlowOpen(false)}
-          onSubmit={(payload) => {
+          onSubmit={() => {
             setConsultationFlowOpen(false);
-            if (payload?.method === 'phone') {
-              if (isStacked && scrollNavigate?.toHero) scrollNavigate.toHero();
-              else router.push('/');
-            } else if (isStacked && scrollNavigate?.toOrder) {
-              scrollNavigate.toOrder();
-            } else {
-              router.push('/order');
-            }
           }}
           initialStep="contact-method"
         />

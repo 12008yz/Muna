@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { HINT_TOP } from '@/components/common/ClickOutsideHint';
-import { dispatchNavigateToOrderLanding } from '@/lib/navigateToOrderLanding';
 
 const PRIVACY_HREF = '/privacy-policy';
 
@@ -270,7 +269,6 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
           <button
             type="button"
             onClick={() => {
-              dispatchNavigateToOrderLanding();
               onClose();
             }}
             className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
@@ -286,12 +284,11 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
           ...glassSheet,
           marginLeft: 'var(--main-block-margin)',
           marginRight: 'var(--main-block-margin)',
-          width: 360,
-          minWidth: 360,
-          maxWidth: 360,
-          height: 335,
+          width: 'calc(100% - 2 * var(--main-block-margin))',
+          minWidth: 0,
+          maxWidth: 390,
+          height: 'auto',
           minHeight: 335,
-          maxHeight: 335,
           marginTop: 'auto',
           marginBottom: 0,
           padding: '15px',
@@ -311,7 +308,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
         >
           Взаимодействие
         </div>
-        <div style={{ ...subtitleTextStyle, marginBottom: '15px' }}>
+        <div style={{ ...subtitleTextStyle, marginBottom: '20px' }}>
           Навязывание ненужного отсутствует.
           <br />
           Рекламирование ненужного тоже отсутствует.
@@ -397,7 +394,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
           </div>
         </div>
 
-        <div className="mt-auto flex items-center gap-[5px]">
+        <div className="flex items-center gap-[5px]">
           <button
             type="button"
             onClick={handleBack}
@@ -468,7 +465,6 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
             <button
               type="button"
               onClick={() => {
-                dispatchNavigateToOrderLanding();
                 onClose();
               }}
               className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
@@ -484,12 +480,11 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
             ...glassSheet,
             marginLeft: 'var(--main-block-margin)',
             marginRight: 'var(--main-block-margin)',
-            width: 360,
-            minWidth: 360,
-          maxWidth: 360,
-            height: 335,
+            width: 'calc(100% - 2 * var(--main-block-margin))',
+            minWidth: 0,
+            maxWidth: 390,
+            height: 'auto',
             minHeight: 335,
-            maxHeight: 335,
             marginTop: 'auto',
             marginBottom: 0,
             padding: '15px',
@@ -509,13 +504,13 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
           >
             Взаимодействие
           </div>
-          <div style={{ ...subtitleTextStyle, marginBottom: '15px' }}>
+        <div style={{ ...subtitleTextStyle, marginBottom: '20px' }}>
             Навязывание ненужного отсутствует.
             <br />
             Рекламирование ненужного тоже отсутствует.
           </div>
 
-          <div className="flex flex-col gap-[5px]" style={{ marginBottom: '5px' }}>
+          <div className="flex flex-col gap-[5px]" style={{ marginBottom: '15px' }}>
             <label className="sr-only" htmlFor="consult-callback-name">
               Имя
             </label>
@@ -630,7 +625,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
             </button>
           </div>
 
-          <div className="mt-auto flex items-center gap-[5px]">
+          <div className="flex items-center gap-[5px]">
             <button
               type="button"
               onClick={handleBack}
@@ -690,7 +685,6 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
           <button
             type="button"
             onClick={() => {
-              dispatchNavigateToOrderLanding();
               onClose();
             }}
             className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
@@ -707,6 +701,10 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
           marginLeft: 'var(--main-block-margin)',
           marginRight: 'var(--main-block-margin)',
           width: 'calc(100% - 2 * var(--main-block-margin))',
+          minWidth: 0,
+          maxWidth: 390,
+          marginLeft: 'auto',
+          marginRight: 'auto',
           marginTop: 'auto',
           marginBottom: 0,
           padding: '15px',

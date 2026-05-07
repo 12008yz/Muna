@@ -1259,16 +1259,8 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
         <ConsultationFlow
           onClose={() => setConsultationFlowOpen(false)}
           onSkip={() => setConsultationFlowOpen(false)}
-          onSubmit={(payload) => {
+          onSubmit={() => {
             setConsultationFlowOpen(false);
-            if (payload?.method === 'phone') {
-              if (scrollNavigate?.toHero) scrollNavigate.toHero();
-              else router.push('/');
-            } else if (scrollNavigate?.toOrder) {
-              scrollNavigate.toOrder();
-            } else {
-              router.push('/order');
-            }
           }}
           initialStep="contact-method"
         />
