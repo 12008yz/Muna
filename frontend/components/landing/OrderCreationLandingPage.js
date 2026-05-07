@@ -230,6 +230,7 @@ function ConsentCheckIcon() {
 }
 
 const ORDER_PREP_TYPE_KEY = 'orderPrepType';
+const ORDER_STYLE_KEY = 'orderStyle';
 const ORDER_GRADE_KEY = 'orderGrade';
 const ORDER_SUBJECT_IDS_KEY = 'orderSubjectIds';
 const ORDER_DURATION_KEY = 'orderDuration';
@@ -266,16 +267,18 @@ export default function OrderCreationLandingPage({
   initialOrderStep = 0,
   exposeOpenConsultation,
   onAfterPhoneLead,
-  /** Только stacked: шаги 1–4 мастера — родитель скрывает глобальную шапку и показывает слот под React-портал */
+  /** Только stacked: шаги 1–5 мастера — родитель скрывает глобальную шапку и показывает слот под React-портал */
   onStackedWizardStepsActive,
   onConsultationFlowOpenChange,
 } = {}) {
   const router = useRouter();
   const isStacked = layout === 'stacked';
-  /** 0 — лендинг; 1–4 — мастер; 5 — финальная карточка; после «Далее» на шаге 4 — модалка */
+  /** 0 — лендинг; 1–5 — мастер; после «Продолжение» на шаге 5 — модалка */
   const [orderStep, setOrderStep] = useState(initialOrderStep);
   /** 'group' | 'personal' | null — без выбора по умолчанию */
   const [prepType, setPrepType] = useState(null);
+  /** 'style-low' | 'style-high' | null */
+  const [styleReadiness, setStyleReadiness] = useState(null);
   /** 5–11 | null */
   const [grade, setGrade] = useState(null);
   /** id из SUBJECT_OPTIONS */
@@ -341,14 +344,14 @@ export default function OrderCreationLandingPage({
     if (prepType != null) setAttemptedStep1(false);
   }, [prepType]);
   useEffect(() => {
-    if (grade != null) setAttemptedStep2(false);
+    if (styleReadiness != null) setAttemptedStep2(false);
+  }, [styleReadiness]);
+  useEffect(() => {
+    if (grade != null) setAttemptedStep3(false);
   }, [grade]);
   useEffect(() => {
-    if (selectedSubjectIds.length > 0) setAttemptedStep3(false);
+    if (selectedSubjectIds.length > 0) setAttemptedStep4(false);
   }, [selectedSubjectIds]);
-  useEffect(() => {
-    if (durationId != null) setAttemptedStep4(false);
-  }, [durationId]);
 
   /** На тёмном фоне: сначала кнопка активная, после невалидного клика — приглушённая до валидного выбора */
   const wizardNextStyle = (step) => {
@@ -364,10 +367,10 @@ export default function OrderCreationLandingPage({
       step === 1
         ? prepType != null
         : step === 2
-          ? grade != null
+          ? styleReadiness != null
           : step === 3
-            ? selectedSubjectIds.length > 0
-            : durationId != null;
+            ? grade != null
+            : selectedSubjectIds.length > 0;
     const solid = !attempted || valid;
     return {
       ...involve,
@@ -396,7 +399,7 @@ export default function OrderCreationLandingPage({
 
   useLayoutEffect(() => {
     if (typeof onStackedWizardStepsActive !== 'function') return;
-    onStackedWizardStepsActive(isStacked && orderStep >= 1 && orderStep <= 4);
+    onStackedWizardStepsActive(isStacked && orderStep >= 1 && orderStep <= 5);
   }, [isStacked, orderStep, onStackedWizardStepsActive]);
 
   useEffect(() => {
@@ -443,9 +446,24 @@ export default function OrderCreationLandingPage({
     setOrderStepAnimated(2);
   };
 
+  const handleStyleNext = () => {
+    if (!styleReadiness) {
+      setAttemptedStep2(true);
+      return;
+    }
+    try {
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem(ORDER_STYLE_KEY, styleReadiness);
+      }
+    } catch {
+      // игнорируем
+    }
+    setOrderStepAnimated(3);
+  };
+
   const handleGradeNext = () => {
     if (grade == null) {
-      setAttemptedStep2(true);
+      setAttemptedStep3(true);
       return;
     }
     try {
@@ -455,7 +473,7 @@ export default function OrderCreationLandingPage({
     } catch {
       // игнорируем
     }
-    setOrderStepAnimated(3);
+    setOrderStepAnimated(4);
   };
 
   const toggleSubject = (subjectId) => {
@@ -466,7 +484,7 @@ export default function OrderCreationLandingPage({
 
   const handleSubjectsNext = () => {
     if (selectedSubjectIds.length === 0) {
-      setAttemptedStep3(true);
+      setAttemptedStep4(true);
       return;
     }
     try {
@@ -476,7 +494,7 @@ export default function OrderCreationLandingPage({
     } catch {
       // игнорируем
     }
-    setOrderStepAnimated(4);
+    setOrderStepAnimated(5);
   };
 
   const handleDurationNext = () => {
@@ -498,6 +516,7 @@ export default function OrderCreationLandingPage({
           contactMethod,
           source: 'order',
           trainingType: prepType,
+          styleReadiness,
           grade,
           subjectIds: selectedSubjectIds,
           durationId,
@@ -555,7 +574,7 @@ export default function OrderCreationLandingPage({
   const stackedWizardCollapsePortal =
     isStacked &&
     orderStep >= 1 &&
-    orderStep <= 4 &&
+    orderStep <= 5 &&
     typeof document !== 'undefined' &&
     (() => {
       const slot = document.getElementById('stacked-order-wizard-header-slot');
@@ -677,7 +696,7 @@ export default function OrderCreationLandingPage({
             boxSizing: 'border-box',
           }}
         >
-          {(orderStep === 0 || orderStep === 5) && !isStacked ? (
+          {orderStep === 0 && !isStacked ? (
             <ManaMarketingHeader
               onConsultationClick={() => {
                 setConsultationInitialStep('contact-method');
@@ -689,7 +708,7 @@ export default function OrderCreationLandingPage({
 
           {orderStep === 0 && renderLeadCard(goToTariffStep)}
 
-        {(orderStep === 1 || orderStep === 2 || orderStep === 3 || orderStep === 4) && (
+        {(orderStep === 1 || orderStep === 2 || orderStep === 3 || orderStep === 4 || orderStep === 5) && (
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden" style={{ boxSizing: 'border-box' }}>
             <div className={`relative flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden ${isStacked ? 'bg-transparent' : 'bg-background'}`}>
               {!isStacked ? (
@@ -730,9 +749,7 @@ export default function OrderCreationLandingPage({
                   ...wizardDissolveStyle,
                 }}
               >
-                <h2 className="m-0 flex w-full min-w-0 flex-shrink-0 items-center self-stretch" style={wizardTitleStyle}>
-                  {orderStep === 4 ? 'Прогнозирование' : 'Формирование тарифного плана'}
-                </h2>
+                <h2 className="m-0 flex w-full min-w-0 flex-shrink-0 items-center self-stretch" style={wizardTitleStyle}>Прогнозирование</h2>
 
                 {orderStep === 1 && (
                   <>
@@ -857,16 +874,16 @@ export default function OrderCreationLandingPage({
 
                     <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]" style={{ marginBottom: 20 }}>
                       {[
-                        { id: 0, label: 'Компания незнакома с трендами' },
-                        { id: 1, label: 'Компания знакома с трендами' },
+                        { id: 'style-low', label: 'Компания скорее не имеет стиль' },
+                        { id: 'style-high', label: 'Компания скорее имеет стиль' },
                       ].map((item) => {
-                        const selected = grade === item.id;
-                        const showRequired = attemptedStep2 && grade == null;
+                        const selected = styleReadiness === item.id;
+                        const showRequired = attemptedStep2 && !styleReadiness;
                         return (
                           <button
                             key={item.id}
                             type="button"
-                            onClick={() => setGrade(item.id)}
+                            onClick={() => setStyleReadiness(item.id)}
                             className="box-border flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-solid bg-transparent px-[10px] text-left outline-none"
                             style={{ borderColor: showRequired ? 'rgba(255,255,255,0.5)' : selected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.1)' }}
                           >
@@ -899,7 +916,7 @@ export default function OrderCreationLandingPage({
                       </button>
                       <button
                         type="button"
-                        onClick={handleGradeNext}
+                        onClick={handleStyleNext}
                         className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
                         style={wizardNextStyle(2)}
                       >
@@ -937,16 +954,16 @@ export default function OrderCreationLandingPage({
 
                     <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]" style={{ marginBottom: 20 }}>
                       {[
-                        { id: 'load-low', label: 'Компания не загружена на 95%' },
-                        { id: 'load-high', label: 'Компания загружена на 95%' },
+                        { id: 0, label: 'Компания незнакома с трендами' },
+                        { id: 1, label: 'Компания знакома с трендами' },
                       ].map((item) => {
-                        const selected = selectedSubjectIds.includes(item.id);
-                        const showRequired = attemptedStep3 && selectedSubjectIds.length === 0;
+                        const selected = grade === item.id;
+                        const showRequired = attemptedStep3 && grade == null;
                         return (
                           <button
                             key={item.id}
                             type="button"
-                            onClick={() => setSelectedSubjectIds([item.id])}
+                            onClick={() => setGrade(item.id)}
                             className="box-border flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-solid bg-transparent px-[10px] text-left outline-none"
                             style={{ borderColor: showRequired ? 'rgba(255,255,255,0.5)' : selected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.1)' }}
                           >
@@ -979,7 +996,7 @@ export default function OrderCreationLandingPage({
                       </button>
                       <button
                         type="button"
-                        onClick={handleSubjectsNext}
+                        onClick={handleGradeNext}
                         className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
                         style={wizardNextStyle(3)}
                       >
@@ -990,6 +1007,86 @@ export default function OrderCreationLandingPage({
                 )}
 
                 {orderStep === 4 && (
+                  <>
+                    <p className="m-0 flex w-full min-w-0 flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
+                      Главное во всех ответах, это четкость.
+                      <br />
+                      Незаменимое во всех ответах, это честность
+                    </p>
+                    <div className="h-0 w-full min-w-0 border-t border-[rgba(255,255,255,0.1)]" />
+                    <p
+                      className="m-0 absolute left-[15px] right-[15px] top-[90px] h-[60px] w-auto min-w-0"
+                      style={{
+                        fontFamily: "'TT Firs Neue', system-ui, sans-serif",
+                        fontStyle: 'normal',
+                        fontWeight: 400,
+                        fontSize: 16,
+                        lineHeight: '125%',
+                        letterSpacing: '-0.01em',
+                        color: 'rgba(255,255,255,0.5)',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <span className="block whitespace-nowrap">Посмотрите сейчас на своё предприятие</span>
+                      <span className="block whitespace-nowrap">со стороны, например, как ваш клиент.</span>
+                      <span className="block whitespace-nowrap">Кликните на очень похожее мнение</span>
+                    </p>
+
+                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                      {[
+                        { id: 'load-low', label: 'Компания не загружена на 95%' },
+                        { id: 'load-high', label: 'Компания загружена на 95%' },
+                      ].map((item) => {
+                        const selected = selectedSubjectIds.includes(item.id);
+                        const showRequired = attemptedStep4 && selectedSubjectIds.length === 0;
+                        return (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => setSelectedSubjectIds([item.id])}
+                            className="box-border flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-solid bg-transparent px-[10px] text-left outline-none"
+                            style={{ borderColor: showRequired ? 'rgba(255,255,255,0.5)' : selected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.1)' }}
+                          >
+                            <span className="flex h-4 w-4 shrink-0 items-center justify-center">
+                              {selected ? (
+                                <ManaStyleSelectedCheckIcon />
+                              ) : (
+                                <span className="h-4 w-4 rounded-full border border-[rgba(255,255,255,0.5)]" />
+                              )}
+                            </span>
+                            <span style={{ ...involve, fontSize: 16, lineHeight: '125%', color: selected || showRequired ? '#FFFFFF' : 'rgba(255,255,255,0.5)' }}>{item.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div className="flex w-full min-w-0 items-center gap-[5px]">
+                      <button
+                        type="button"
+                        onClick={() => setOrderStepAnimated(3)}
+                        className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
+                        aria-label="Назад"
+                      >
+                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }} aria-hidden>
+                          <path
+                            d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z"
+                            fill="#FFFFFF"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleSubjectsNext}
+                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                        style={wizardNextStyle(4)}
+                      >
+                        Далее
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                {orderStep === 5 && (
                   <>
                     <p className="m-0 flex w-full min-w-0 flex-shrink-0 items-center self-stretch" style={wizardSubtitleStyle}>
                       Главное во всех ответах, это четкость.
