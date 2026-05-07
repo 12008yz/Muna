@@ -30,14 +30,18 @@ function PaperPlaneIcon() {
 const circleBtn =
   'flex h-10 w-10 shrink-0 box-border items-center justify-center rounded-[20px] border border-solid border-[rgba(255,255,255,0.1)] bg-[#050505] transition-opacity hover:opacity-90';
 
-export default function ManaMarketingHeader({ onConsultationClick, menuHref = '#section-hero' }) {
+export default function ManaMarketingHeader({ onConsultationClick, menuHref = '#section-hero', onMenuClick }) {
   return (
     <>
       <div
         className="absolute z-10 h-10 w-10 cursor-pointer"
         style={{ left: 'var(--main-block-margin)', top: 'var(--header-top, 50px)' }}
       >
-        {menuHref.startsWith('#') ? (
+        {typeof onMenuClick === 'function' ? (
+          <button type="button" className={circleBtn} aria-label="Главная" onClick={onMenuClick}>
+            <GlobeIcon />
+          </button>
+        ) : menuHref.startsWith('#') ? (
           <a href={menuHref} className={circleBtn} aria-label="Главная">
             <GlobeIcon />
           </a>

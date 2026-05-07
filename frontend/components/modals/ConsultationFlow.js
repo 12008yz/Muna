@@ -393,19 +393,27 @@ export default function ConsultationFlow({
 
   const handleCloseAnimated = useCallback(
     (afterClose) => {
-      setIsAnimating(false);
-      if (closeAnimationTimerRef.current) window.clearTimeout(closeAnimationTimerRef.current);
-      closeAnimationTimerRef.current = window.setTimeout(() => {
+      if (closeAnimationTimerRef.current) {
+        window.clearTimeout(closeAnimationTimerRef.current);
         closeAnimationTimerRef.current = null;
-        if (typeof afterClose === 'function') afterClose();
-        else {
-          setShouldRender(false);
-          onClose();
-        }
-      }, 300);
+      }
+      if (typeof afterClose === 'function') afterClose();
+      else {
+        setShouldRender(false);
+        onClose();
+      }
     },
     [onClose]
   );
+
+  const handleCloseImmediate = useCallback(() => {
+    if (closeAnimationTimerRef.current) {
+      window.clearTimeout(closeAnimationTimerRef.current);
+      closeAnimationTimerRef.current = null;
+    }
+    setShouldRender(false);
+    onClose();
+  }, [onClose]);
 
   const formatPhoneNumber = useCallback((value) => {
     const digits = value.replace(/\D/g, '').slice(0, 11);
@@ -462,7 +470,10 @@ export default function ConsultationFlow({
         handleCloseAnimated(onPhoneCallbackBack);
         return;
       }
-      switchStepAnimated('contact-method');
+      clearStepTransitionHandles();
+      setStep('contact-method');
+      setDisplayedStep('contact-method');
+      setStepVisualState('in');
       setCallbackFormAttempted(false);
       setCallbackName('');
       setPrivacyAccepted(false);
@@ -474,7 +485,7 @@ export default function ConsultationFlow({
       return;
     }
     else handleCloseAnimated();
-  }, [step, onPhoneCallbackBack, switchStepAnimated, handleCloseAnimated]);
+  }, [step, onPhoneCallbackBack, handleCloseAnimated, clearStepTransitionHandles]);
 
   const handleCallbackFormSubmit = useCallback(() => {
     setPrivacyConsentTouched(true);
@@ -544,7 +555,7 @@ export default function ConsultationFlow({
           >
             <button
               type="button"
-              onClick={handleCloseAnimated}
+              onClick={handleCloseImmediate}
               className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
               aria-label="Свернуть окно"
             >
@@ -722,7 +733,7 @@ export default function ConsultationFlow({
           >
             <button
               type="button"
-              onClick={handleCloseAnimated}
+              onClick={handleCloseImmediate}
               className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
               aria-label="Свернуть окно"
             >
@@ -955,7 +966,7 @@ export default function ConsultationFlow({
         >
           <button
             type="button"
-            onClick={handleCloseAnimated}
+            onClick={handleCloseImmediate}
             className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
             aria-label="Свернуть окно"
           >
@@ -1048,7 +1059,7 @@ export default function ConsultationFlow({
         zIndex: overlayZIndex,
         opacity: isAnimating ? 1 : 0,
         transform: isAnimating ? 'translateY(0)' : 'translateY(12px)',
-        transition: 'opacity 460ms cubic-bezier(0.22, 1, 0.36, 1), transform 460ms cubic-bezier(0.22, 1, 0.36, 1)',
+        transition: 'none',
         paddingTop: 'var(--sat, 0px)',
         paddingBottom: 'calc(var(--main-block-margin) + var(--sab, 0px))',
         height: '100dvh',
@@ -1064,7 +1075,7 @@ export default function ConsultationFlow({
         style={{
           zIndex: 3,
           transform: isAnimating ? 'scale(1)' : 'scale(0.985)',
-          transition: 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1)',
+          transition: 'none',
           boxSizing: 'border-box',
           background: modalLayerColor,
         }}
@@ -1075,7 +1086,7 @@ export default function ConsultationFlow({
           style={{
             transform: stepVisualState === 'in' ? 'translateY(0)' : 'translateY(24px)',
             opacity: stepVisualState === 'in' ? 1 : 0,
-            transition: 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1), opacity 460ms cubic-bezier(0.22, 1, 0.36, 1)',
+            transition: 'none',
           }}
         >
           {displayedStep === 'contact-method' && renderContactMethod()}

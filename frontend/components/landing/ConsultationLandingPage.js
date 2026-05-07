@@ -633,7 +633,17 @@ export default function ConsultationLandingPage({
           }}
         >
           <div className="relative box-border flex h-full min-h-0 w-full min-w-0 flex-col bg-background" style={{ boxSizing: 'border-box' }}>
-            <ManaMarketingHeader onConsultationClick={() => setConsultationFlowOpen(true)} menuHref="/" />
+            <ManaMarketingHeader
+              onConsultationClick={() => setConsultationFlowOpen(true)}
+              onMenuClick={() => {
+                if (typeof window !== 'undefined' && window.history.length > 1) {
+                  router.back();
+                  return;
+                }
+                router.replace('/?consultation=1');
+              }}
+              menuHref="/?consultation=1"
+            />
 
             {notificationsEnabled ? notificationsNode : null}
 

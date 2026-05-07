@@ -9,29 +9,32 @@ import CursorFluidEffect from '@/components/common/CursorFluidEffect';
 
 export default function HomeClient() {
   const searchParams = useSearchParams();
+  const isConsultationMode = searchParams.get('consultation') === '1';
   /** Полный текст политики — оверлей по клику на уведомление на лендинге */
   const [privacyPolicyOpen, setPrivacyPolicyOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [hasPassedIntro, setHasPassedIntro] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const [mainRevealVisible, setMainRevealVisible] = useState(false);
+  const [mainRevealVisible, setMainRevealVisible] = useState(isConsultationMode);
   const isCompleteRef = useRef(false);
   const mainRef = useRef(null);
 
   useEffect(() => {
-    if (searchParams.get('consultation') === '1') {
+    if (isConsultationMode) {
       isCompleteRef.current = true;
       setLoadingProgress(100);
       setIsLoading(false);
       setHasPassedIntro(true);
     }
-  }, [searchParams]);
+  }, [isConsultationMode]);
 
   useEffect(() => {
-    if (searchParams.get('consultation') === '1') {
+    if (isConsultationMode) {
       return;
     }
 
+    const LOADING_MIN_MS = 1500;
+    const loadingStartedAt = Date.now();
     let completedSteps = 0;
     const totalSteps = 5;
 
@@ -46,7 +49,9 @@ export default function HomeClient() {
       if (isCompleteRef.current) return;
       isCompleteRef.current = true;
       setLoadingProgress(100);
-      setTimeout(() => setIsLoading(false), 300);
+      const elapsed = Date.now() - loadingStartedAt;
+      const hideDelay = Math.max(0, LOADING_MIN_MS - elapsed);
+      setTimeout(() => setIsLoading(false), hideDelay);
     };
 
     if (document.readyState === 'loading') {
@@ -142,10 +147,10 @@ export default function HomeClient() {
       if (intervalId) clearInterval(intervalId);
       clearTimeout(timeout);
     };
-  }, [searchParams]);
+  }, [isConsultationMode]);
 
-  const showAppLoading = searchParams.get('consultation') !== '1' && isLoading;
-  const showPostLoadIntro = searchParams.get('consultation') !== '1' && !isLoading && !hasPassedIntro;
+  const showAppLoading = !isConsultationMode && isLoading;
+  const showPostLoadIntro = !isConsultationMode && !isLoading && !hasPassedIntro;
   const mainHiddenBehindGate = showAppLoading || showPostLoadIntro;
 
   useEffect(() => {
@@ -153,9 +158,13 @@ export default function HomeClient() {
       setMainRevealVisible(false);
       return;
     }
+    if (isConsultationMode) {
+      setMainRevealVisible(true);
+      return;
+    }
     const raf = window.requestAnimationFrame(() => setMainRevealVisible(true));
     return () => window.cancelAnimationFrame(raf);
-  }, [mainHiddenBehindGate]);
+  }, [mainHiddenBehindGate, isConsultationMode]);
 
   return (
     <div ref={mainRef}>
@@ -171,7 +180,7 @@ export default function HomeClient() {
           position: 'relative',
           opacity: mainHiddenBehindGate ? 0 : mainRevealVisible ? 1 : 0,
           transform: 'translateY(0)',
-          transition: 'opacity 680ms cubic-bezier(0.22, 1, 0.36, 1)',
+          transition: isConsultationMode ? 'none' : 'opacity 680ms cubic-bezier(0.22, 1, 0.36, 1)',
         }}
       >
         <HomePage
