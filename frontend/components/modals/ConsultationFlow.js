@@ -787,7 +787,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
           className="fixed z-[10051] box-border"
           style={{
             left: 'var(--main-block-margin)',
-            top: 'calc(var(--sat, 0px) + 125px)',
+            top: 'var(--notification-top)',
             width: 360,
             height: 70,
             boxSizing: 'border-box',

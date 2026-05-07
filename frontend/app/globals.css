@@ -21,14 +21,14 @@
   --header-top: 10px;
   /** Высота круглых кнопок в шапке (как в next Header) */
   --header-height: 40px;
-  /** Уведомления ниже шапки с отступом 10px — как в Frame4/5 (контейнер с шапкой внутри страницы) */
-  --notification-top: calc(var(--header-top) + var(--header-height) + 10px);
+  /** Уведомления ниже шапки с отступом 10px (фиксируются в viewport, поэтому учитываем safe area). */
+  --notification-top: calc(var(--sat) + var(--header-top) + var(--header-height) + 10px);
   /**
    * Под фиксированной шапкой HomePage: pt(sat) + высота блока как у header в HomePage.js
    * + 10px зазор под уведомление.
    */
-  /** Stacked MANA cookie (Figma Group 7476): top 125px, left = --main-block-margin (20px) */
-  --notification-top-stacked: 125px;
+  /** В stacked-режиме используем тот же отступ: header + 10px. */
+  --notification-top-stacked: var(--notification-top);
   --header-zone: 50px;
   --sab: env(safe-area-inset-bottom, 0px);
   /**

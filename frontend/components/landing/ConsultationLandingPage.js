@@ -331,7 +331,7 @@ export default function ConsultationLandingPage({
     <div
       className="pointer-events-none fixed z-[10060] flex w-auto min-w-0 flex-col"
       style={{
-        top: 125,
+        top: notificationsTop,
         left: 'var(--main-block-margin)',
         right: 'var(--main-block-margin)',
         isolation: 'isolate',
@@ -473,8 +473,9 @@ export default function ConsultationLandingPage({
               <div
                 className="box-border flex min-w-0 shrink-0 items-center gap-[5px] self-start rounded-[100px] border border-solid border-[rgba(255,255,255,0.1)] px-[5px]"
                 style={{
-                  width: '100%',
-                  maxWidth: '100%',
+                  width: 292,
+                  minWidth: 292,
+                  maxWidth: 292,
                   height: 25,
                   minHeight: 25,
                   maxHeight: 25,
@@ -680,8 +681,9 @@ export default function ConsultationLandingPage({
               <div
                 className="box-border flex min-w-0 shrink-0 items-center gap-[5px] self-start rounded-[100px] bg-[#ebebeb] px-[5px]"
                 style={{
-                  width: 'calc(100% - 10px)',
-                  maxWidth: '100%',
+                  width: 292,
+                  minWidth: 292,
+                  maxWidth: 292,
                   height: 25,
                   minHeight: 25,
                   maxHeight: 25,

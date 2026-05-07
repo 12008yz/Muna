@@ -503,7 +503,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false })
       {createPortal(
         <div
           data-fluid-cursor-block
-          className="fixed inset-0 z-[20000] flex items-end justify-center bg-[#050505] px-[20px] pb-[20px] pt-[80px]"
+          className="fixed inset-0 z-[20000] flex items-end justify-center bg-[#050505] px-[var(--main-block-margin)] pb-[20px] pt-[80px]"
         >
           <button
             type="button"
@@ -531,10 +531,10 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false })
           <div
             data-fluid-cursor-block
             data-vertical-scroll-handle=""
-            className="relative flex w-full max-w-[360px] shrink-0 flex-col overflow-hidden"
+            className="relative flex w-full shrink-0 flex-col overflow-hidden"
             style={{ height: 335, boxSizing: 'border-box', ...containerStyle }}
           >
-            <article className="box-border h-[335px] w-[360px] px-[15px] pb-[15px] pt-[15px]" style={manaGlassCardStyle}>
+            <article className="box-border h-[335px] w-full max-w-full px-[15px] pb-[15px] pt-[15px]" style={manaGlassCardStyle}>
           <p className="m-0" style={{ ...involveMana, fontSize: 18, lineHeight: '110%', color: '#FFFFFF' }}>
             Подарок, как маркетинговая карта
           </p>
@@ -550,7 +550,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false })
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Имя электронного ящика"
-              className="h-[50px] w-[330px] rounded-[10px] border border-[rgba(255,255,255,0.5)] bg-transparent px-[15px] pr-[44px] outline-none placeholder:text-[rgba(255,255,255,0.5)]"
+              className="h-[50px] w-full rounded-[10px] border border-[rgba(255,255,255,0.5)] bg-transparent px-[15px] pr-[44px] outline-none placeholder:text-[rgba(255,255,255,0.5)]"
               style={{ ...involveMana, fontSize: 16, lineHeight: '125%', color: '#FFFFFF' }}
             />
             {isEmailValid ? (
@@ -566,7 +566,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false })
           <button
             type="button"
             onClick={() => setPrivacyAccepted((v) => !v)}
-            className="mt-[5px] flex h-[50px] w-[330px] items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] text-left"
+            className="mt-[5px] flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] text-left"
           >
             <span className="h-4 w-4 shrink-0" aria-hidden>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -587,7 +587,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false })
           <button
             type="button"
             onClick={() => setNewsAccepted((v) => !v)}
-            className="mt-[8px] flex h-[50px] w-[330px] items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] text-left"
+            className="mt-[8px] flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] px-[10px] text-left"
           >
             <span className="h-4 w-4 shrink-0" aria-hidden>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
