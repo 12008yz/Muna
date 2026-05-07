@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 const involve = {
-  fontFamily: 'var(--font-involve), system-ui, sans-serif',
+  fontFamily: "'TT Firs Neue', system-ui, sans-serif",
   fontStyle: 'normal',
   fontWeight: 400,
   fontSynthesis: 'none',

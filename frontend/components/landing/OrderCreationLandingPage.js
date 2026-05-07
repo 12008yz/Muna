@@ -8,7 +8,7 @@ import ConsultationFlow from '@/components/modals/ConsultationFlow';
 import { HINT_TOP } from '@/components/common/ClickOutsideHint';
 import { NAVIGATE_TO_ORDER_LANDING_EVENT } from '@/lib/navigateToOrderLanding';
 const involve = {
-  fontFamily: 'var(--font-involve), system-ui, sans-serif',
+  fontFamily: "'TT Firs Neue', system-ui, sans-serif",
   fontStyle: 'normal',
   fontWeight: 500,
   fontSynthesis: 'none',
@@ -17,7 +17,7 @@ const involve = {
 /** Карточка мастера /order — заголовок (Figma: 330×20, Involve 500, 18px, line-height 110%) */
 const wizardTitleStyle = {
   ...involve,
-  fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+  fontFamily: "'TT Firs Neue', system-ui, sans-serif",
   fontWeight: 400,
   width: '100%',
   maxWidth: '100%',
@@ -34,7 +34,7 @@ const wizardTitleStyle = {
 /** Подзаголовок мастера (Figma: 330×15, 14px, line-height 110%, color 50%) */
 const wizardSubtitleStyle = {
   ...involve,
-  fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+  fontFamily: "'TT Firs Neue', system-ui, sans-serif",
   fontWeight: 400,
   width: '100%',
   maxWidth: '100%',
@@ -603,7 +603,7 @@ export default function OrderCreationLandingPage({
       <p
         className="m-0 mt-[20px] min-h-[40px] w-full min-w-0"
         style={{
-          fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+          fontFamily: "'TT Firs Neue', system-ui, sans-serif",
           fontStyle: 'normal',
           fontWeight: 400,
           fontSize: 16,
@@ -736,7 +736,7 @@ export default function OrderCreationLandingPage({
                     <p
                       className="m-0 absolute left-[15px] right-[15px] top-[90px] h-[60px] w-auto min-w-0"
                       style={{
-                        fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                        fontFamily: "'TT Firs Neue', system-ui, sans-serif",
                         fontStyle: 'normal',
                         fontWeight: 400,
                         fontSize: 16,
@@ -775,7 +775,7 @@ export default function OrderCreationLandingPage({
                             </span>
                             <span
                               style={{
-                                fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                                fontFamily: "'TT Firs Neue', system-ui, sans-serif",
                                 fontStyle: 'normal',
                                 fontWeight: 400,
                                 fontSize: 16,
@@ -810,7 +810,7 @@ export default function OrderCreationLandingPage({
                         className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
                         style={{
                           ...wizardNextStyle(1),
-                          fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                          fontFamily: "'TT Firs Neue', system-ui, sans-serif",
                           fontWeight: 400,
                         }}
                       >
@@ -831,7 +831,7 @@ export default function OrderCreationLandingPage({
                     <p
                       className="m-0 absolute left-[15px] right-[15px] top-[90px] h-[60px] w-auto min-w-0"
                       style={{
-                        fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                        fontFamily: "'TT Firs Neue', system-ui, sans-serif",
                         fontStyle: 'normal',
                         fontWeight: 400,
                         fontSize: 16,
@@ -911,7 +911,7 @@ export default function OrderCreationLandingPage({
                     <p
                       className="m-0 absolute left-[15px] right-[15px] top-[90px] h-[60px] w-auto min-w-0"
                       style={{
-                        fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                        fontFamily: "'TT Firs Neue', system-ui, sans-serif",
                         fontStyle: 'normal',
                         fontWeight: 400,
                         fontSize: 16,
@@ -991,7 +991,7 @@ export default function OrderCreationLandingPage({
                     <p
                       className="m-0 absolute left-[15px] right-[15px] top-[90px] h-[60px] w-auto min-w-0"
                       style={{
-                        fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                        fontFamily: "'TT Firs Neue', system-ui, sans-serif",
                         fontStyle: 'normal',
                         fontWeight: 400,
                         fontSize: 16,
@@ -1017,7 +1017,7 @@ export default function OrderCreationLandingPage({
                           <p
                             className="m-0"
                             style={{
-                              fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                              fontFamily: "'TT Firs Neue', system-ui, sans-serif",
                               fontStyle: 'normal',
                               fontWeight: 400,
                               fontSize: 16,
@@ -1030,7 +1030,7 @@ export default function OrderCreationLandingPage({
                           <p
                             className="m-0 mt-[10px]"
                             style={{
-                              fontFamily: "'TT Firs Neue', var(--font-involve), system-ui, sans-serif",
+                              fontFamily: "'TT Firs Neue', system-ui, sans-serif",
                               fontStyle: 'normal',
                               fontWeight: 400,
                               fontSize: 16,

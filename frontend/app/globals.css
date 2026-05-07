@@ -9,7 +9,7 @@
   /* Канвас и chrome Safari: единый тёмный тон у края экрана */
   --background: #000000;
   --foreground: #f5f5f5;
-  /* --font-involve задаётся в layout.js через next/font/local (Involve.woff2) */
+  /* Базовый UI-шрифт проекта: TT Firs Neue (задаётся в layout.js). */
   /* Как в next/frontend/src/app/globals.css — макет Frame1 */
   --sat: env(safe-area-inset-top, 0px);
   --sar: env(safe-area-inset-right, 0px);
@@ -65,7 +65,7 @@ body {
   min-height: 100dvh;
   color: var(--foreground);
   background: transparent;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'TT Firs Neue', system-ui, sans-serif;
   overscroll-behavior-y: none;
   -ms-overflow-style: none;
   scrollbar-width: none;

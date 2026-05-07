@@ -6,7 +6,7 @@ export const HINT_TOP = '10px';
 const hintStyle = {
   width: '240px',
   minHeight: '40px',
-  fontFamily: 'var(--font-involve), system-ui, sans-serif',
+  fontFamily: "'TT Firs Neue', system-ui, sans-serif",
   fontStyle: 'normal',
   fontWeight: 500,
   fontSize: '14px',

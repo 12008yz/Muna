@@ -84,7 +84,7 @@ const glassSheet = {
   borderRadius: 20,
 };
 
-const involve = { fontFamily: 'var(--font-involve), system-ui, sans-serif' };
+const involve = { fontFamily: "'TT Firs Neue', system-ui, sans-serif" };
 const subtitleTextStyle = {
   ...involve,
   fontWeight: 400,

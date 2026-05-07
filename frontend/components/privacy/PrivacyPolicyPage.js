@@ -61,7 +61,7 @@ export default function PrivacyPolicyPage({ onCollapse, embedded = false }) {
             <h1
               className="mb-[15px] text-[18px] font-normal leading-[110%] text-[#101010]"
               style={{
-                fontFamily: 'var(--font-involve), system-ui, sans-serif',
+                fontFamily: "'TT Firs Neue', system-ui, sans-serif",
                 fontStyle: 'normal',
                 fontWeight: 500,
                 letterSpacing: 'normal',
@@ -75,7 +75,7 @@ export default function PrivacyPolicyPage({ onCollapse, embedded = false }) {
                 embedded ? 'scrollbar-hide min-h-0 flex-1 overflow-y-auto pb-6' : 'pb-[245px]'
               }`}
               style={{
-                fontFamily: 'var(--font-involve), system-ui, sans-serif',
+                fontFamily: "'TT Firs Neue', system-ui, sans-serif",
                 fontStyle: 'normal',
                 fontWeight: 500,
                 fontSize: '14px',

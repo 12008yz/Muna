@@ -4,7 +4,7 @@ import Link from 'next/link';
 import CloseIcon from '@/components/common/CloseIcon';
 
 const involve = {
-  fontFamily: 'var(--font-involve), system-ui, sans-serif',
+  fontFamily: "'TT Firs Neue', system-ui, sans-serif",
   fontStyle: 'normal',
   fontWeight: 500,
   fontSynthesis: 'none',
