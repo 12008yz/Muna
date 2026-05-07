@@ -382,15 +382,6 @@ export default function ConsultationFlow({
     }, 3000);
   }, [displayedStep]);
 
-  const revealPhoneFirstNextButtonNow = useCallback(() => {
-    if (displayedStep !== 'phone-first') return;
-    if (phoneFirstNextButtonTimerRef.current) {
-      window.clearTimeout(phoneFirstNextButtonTimerRef.current);
-      phoneFirstNextButtonTimerRef.current = null;
-    }
-    setShowPhoneFirstNextButton(true);
-  }, [displayedStep]);
-
   const handleCloseAnimated = useCallback(
     (afterClose) => {
       if (closeAnimationTimerRef.current) {
@@ -956,7 +947,6 @@ export default function ConsultationFlow({
   const renderPhoneFirst = () => (
     <div
       className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#050505]"
-      onClick={revealPhoneFirstNextButtonNow}
       style={{ background: modalLayerColor }}
     >
       <div className="relative flex-shrink-0" style={{ minHeight: '105px' }}>

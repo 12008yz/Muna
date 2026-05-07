@@ -19,19 +19,6 @@ export default function HomeClient() {
   const mainRef = useRef(null);
 
   useEffect(() => {
-    if (searchParams.get('consultation') === '1') {
-      isCompleteRef.current = true;
-      setLoadingProgress(100);
-      setIsLoading(false);
-      setHasPassedIntro(true);
-    }
-  }, [searchParams]);
-
-  useEffect(() => {
-    if (searchParams.get('consultation') === '1') {
-      return;
-    }
-
     const LOADING_MIN_MS = 1500;
     const loadingStartedAt = Date.now();
     let completedSteps = 0;
@@ -148,8 +135,8 @@ export default function HomeClient() {
     };
   }, [searchParams]);
 
-  const showAppLoading = searchParams.get('consultation') !== '1' && isLoading;
-  const showPostLoadIntro = searchParams.get('consultation') !== '1' && !isLoading && !hasPassedIntro;
+  const showAppLoading = isLoading;
+  const showPostLoadIntro = !isLoading && !hasPassedIntro;
   const mainHiddenBehindGate = showAppLoading || showPostLoadIntro;
 
   useEffect(() => {
