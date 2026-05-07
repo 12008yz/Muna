@@ -65,7 +65,7 @@ body {
   min-height: 100dvh;
   color: var(--foreground);
   background: transparent;
-  font-family: 'TT Firs Neue', system-ui, sans-serif;
+  font-family: var(--font-tt-firs-neue), system-ui, sans-serif;
   overscroll-behavior-y: none;
   -ms-overflow-style: none;
   scrollbar-width: none;
