@@ -68,24 +68,10 @@ function getCarouselScrollPaddingRight(el) {
   return Number.isFinite(n) ? n : 0;
 }
 
-/**
- * Целевой scrollLeft для выравнивания карточки под scroll-snap + scroll-padding.
- * Для последнего слайда (cardIndex === totalCards - 1) — выравнивание по end + scroll-padding-right, иначе справа нет поля 20px.
- * Сырой card.offsetLeft без вычитания padding даёт сдвиг; mandatory snap на следующем кадре «дотягивает» — визуальный прыжок.
- */
+/** Целевой scrollLeft для выравнивания карточки под scroll-snap + scroll-padding (всегда по start). */
 function getCarouselSnapScrollLeftForCard(carousel, card, cardIndex, totalCards) {
   if (!carousel || !card) return 0;
   const max = Math.max(0, carousel.scrollWidth - carousel.clientWidth);
-  const useEndSnap =
-    typeof cardIndex === 'number' &&
-    typeof totalCards === 'number' &&
-    totalCards >= 2 &&
-    cardIndex === totalCards - 1;
-  if (useEndSnap) {
-    const padR = getCarouselScrollPaddingRight(carousel);
-    const raw = card.offsetLeft + card.offsetWidth - carousel.clientWidth + padR;
-    return Math.max(0, Math.min(raw, max));
-  }
   const padL = getCarouselScrollPaddingLeft(carousel);
   const raw = card.offsetLeft - padL;
   return Math.max(0, Math.min(raw, max));
@@ -288,11 +274,12 @@ function ManaGlassMarketingCarouselCard({
       className={`carousel-card relative flex shrink-0 flex-col overflow-hidden${stackCarouselLast ? ' carousel-card--stacked-last' : ''}`}
       style={{
         height: 'auto',
-        width: 360,
+        width: 'calc(100% - 40px)',
+        minWidth: 'calc(100% - 40px)',
         alignSelf: 'flex-end',
-        scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
+        scrollSnapAlign: 'start',
         boxSizing: 'border-box',
-        maxWidth: '100%',
+        maxWidth: 360,
         transform: leavingDown || baseEntering ? 'translateY(24px)' : 'translateY(0)',
         opacity: leavingDown || baseEntering ? 0 : 1,
         transition: 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1), opacity 460ms cubic-bezier(0.22, 1, 0.36, 1)',
@@ -434,9 +421,11 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
       className={`carousel-card box-border min-h-[473px] w-[360px] shrink-0${stackCarouselLast ? ' carousel-card--stacked-last' : ''}`}
       data-vertical-scroll-handle=""
       style={{
+        width: 'calc(100% - 40px)',
+        minWidth: 'calc(100% - 40px)',
         alignSelf: 'flex-end',
-        scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
-        maxWidth: '100%',
+        scrollSnapAlign: 'start',
+        maxWidth: 360,
         ...containerStyle,
       }}
       aria-hidden
@@ -609,11 +598,12 @@ function ManaGlassMarketingCarouselCardTwo({
       style={{
         minHeight: 473,
         height: 'auto',
-        width: 360,
+        width: 'calc(100% - 40px)',
+        minWidth: 'calc(100% - 40px)',
         alignSelf: 'flex-end',
-        scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
+        scrollSnapAlign: 'start',
         boxSizing: 'border-box',
-        maxWidth: '100%',
+        maxWidth: 360,
         ...containerStyle,
       }}
     >
@@ -1210,13 +1200,13 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   className="carousel-container carousel-learning scrollbar-hide box-border flex w-full max-h-full min-h-0 flex-nowrap items-end overflow-x-auto overflow-y-hidden"
                   style={{
                     height: 'auto',
-                    gap: 10,
+                    gap: 5,
                     /* Покарточный скролл (как секции по вертикали). Срыв на соседний слайд при «Информирование» гасится restore по индексу. */
                     scrollSnapType: 'x mandatory',
                     /* auto: иначе при mandatory snap после смены высоты карточки ряд «подползает» вбок. Кнопка «далее» сама передаёт behavior: 'smooth'. */
                     scrollBehavior: 'auto',
                     scrollSnapStop: 'always',
-                    scrollPaddingLeft: 'var(--main-block-margin)',
+                    scrollPaddingLeft: '20px',
                     scrollPaddingRight: '20px',
                     overflowAnchor: 'none',
                     /* touch: убираем momentum-узел iOS — иначе жест «липнет» к горизонтали и ломает плавный вертикальный скролл родителя (snap-y). */
@@ -1269,7 +1259,6 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                 <ManaGlassMarketingCarouselCard
                   initialVariant="site"
                   allowInformSwitch
-                  stackCarouselLast
                   overrideTitle="Формирование имиджа"
                   overrideDescription="Наличие интересного медиа служит важным маркетинговым инструментом малого и среднего предпринимательства"
                   overridePrice="около 35 тыс. р."

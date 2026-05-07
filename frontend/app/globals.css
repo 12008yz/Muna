@@ -136,8 +136,12 @@ body::-webkit-scrollbar {
 
 @container tariff-carousel (min-width: 0px) {
   .carousel-container:not(.carousel-container--single-card) > .carousel-card {
-    width: calc(100cqi - (2 * var(--main-block-margin) - 1px)) !important;
-    min-width: calc(100cqi - (2 * var(--main-block-margin) - 1px)) !important;
+    width: calc(100cqi - (2 * var(--main-block-margin))) !important;
+    min-width: calc(100cqi - (2 * var(--main-block-margin))) !important;
+  }
+  .carousel-container.carousel-learning:not(.carousel-container--single-card) > .carousel-card {
+    width: calc(100cqi - 40px) !important;
+    min-width: calc(100cqi - 40px) !important;
   }
 }
 
@@ -155,8 +159,8 @@ body::-webkit-scrollbar {
 /* MANA stacked: левый спейсер только для поля, не snap-цель — иначе mandatory + stop даёт лишний «блок» пустоты в начале. */
 .carousel-container.carousel-learning:not(.carousel-container--single-card) > .carousel-spacer-left {
   scroll-snap-align: none;
-  min-width: var(--main-block-margin) !important;
-  width: var(--main-block-margin) !important;
+  min-width: 0 !important;
+  width: 0 !important;
 }
 
 /* MANA stacked: поле справа как у остального лендинга + safe-area (viewport-fit: cover на телефоне). */
@@ -169,8 +173,8 @@ body::-webkit-scrollbar {
   width: 20px !important;
 }
 .carousel-container.carousel-learning:not(.carousel-container--single-card) > .carousel-spacer-right {
-  min-width: 0 !important;
-  width: 0 !important;
+  min-width: 20px !important;
+  width: 20px !important;
 }
 
 /* Последний слайд MANA: конец карточки к правому краю с учётом scroll-padding-right (20px поле). */
