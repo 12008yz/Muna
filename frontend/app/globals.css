@@ -159,11 +159,11 @@ body::-webkit-scrollbar {
 
 /* MANA stacked: поле справа как у остального лендинга + safe-area (viewport-fit: cover на телефоне). */
 .carousel-container.carousel-learning {
-  scroll-padding-right: calc(var(--main-block-margin) + env(safe-area-inset-right, 0px));
+  scroll-padding-right: 20px;
 }
 .carousel-container.carousel-learning:not(.carousel-container--single-card) > .carousel-spacer-right {
-  min-width: calc(var(--main-block-margin) + env(safe-area-inset-right, 0px)) !important;
-  width: calc(var(--main-block-margin) + env(safe-area-inset-right, 0px)) !important;
+  min-width: 0 !important;
+  width: 0 !important;
 }
 
 /* Последний слайд MANA: конец карточки к правому краю с учётом scroll-padding-right (20px поле). */
@@ -172,9 +172,9 @@ body::-webkit-scrollbar {
 }
 
 .carousel-container:not(.carousel-container--single-card) > .carousel-spacer-right {
-  /* Как у шапки: поле справа + safe area на вырезе. */
-  min-width: calc(var(--main-block-margin) + env(safe-area-inset-right, 0px)) !important;
-  width: calc(var(--main-block-margin) + env(safe-area-inset-right, 0px)) !important;
+  /* Фиксированный правый отступ карусели. */
+  min-width: 20px !important;
+  width: 20px !important;
   /* Иначе при snap-x mandatory последний «снимок» — только start карточки, без поля справа от экрана. */
   scroll-snap-align: end;
 }

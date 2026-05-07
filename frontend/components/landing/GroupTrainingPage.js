@@ -206,7 +206,9 @@ const manaGlassCardStyle = {
 function ManaGlassMarketingCarouselCard({
   onNavigateToOrder,
   onTransitionStart,
-  onGiftOpenChange,
+  isExpanded = false,
+  onExpandedChange,
+  onExpandedCollapseStart,
   initialVariant = 'content',
   allowInformSwitch = true,
   overrideTitle,
@@ -223,14 +225,9 @@ function ManaGlassMarketingCarouselCard({
   stackCarouselLast = false,
 }) {
   const isSiteVariant = initialVariant === 'site';
-  const [showInformScreen, setShowInformScreen] = useState(false);
-  const [showGiftScreen, setShowGiftScreen] = useState(false);
   const [leavingDown, setLeavingDown] = useState(false);
   const [baseEntering, setBaseEntering] = useState(false);
-  const [expandedEntering, setExpandedEntering] = useState(false);
   const [expandedLeaving, setExpandedLeaving] = useState(false);
-  const [giftEntering, setGiftEntering] = useState(false);
-  const [giftLeaving, setGiftLeaving] = useState(false);
   const defaultTitle = isSiteVariant ? 'Формирование сайта' : 'Формирование медиа';
   const defaultDescription = 'Наличие интересного медиа служит важным маркетинговым инструментом малого и среднего предпринимательства';
   const defaultPrice = isSiteVariant ? 'около 35 тыс. р.' : 'около 45 тыс. р.';
@@ -242,84 +239,32 @@ function ManaGlassMarketingCarouselCard({
   const expandedVariantResolved = expandedVariant || (isSiteVariant ? 'site' : 'content');
 
   const handleInformClick = () => {
-    if (!allowInformSwitch || leavingDown || showInformScreen) return;
+    if (!allowInformSwitch || leavingDown || isExpanded) return;
     onTransitionStart?.();
     setLeavingDown(true);
     window.setTimeout(() => {
-      setShowInformScreen(true);
-      setExpandedEntering(true);
+      onExpandedChange?.(true);
       setLeavingDown(false);
-      window.requestAnimationFrame(() => setExpandedEntering(false));
-    }, 320);
+    }, 420);
   };
 
   const handleExpandedInformClick = () => {
-    if (expandedLeaving || !showInformScreen) return;
+    if (!isExpanded || expandedLeaving) return;
     onTransitionStart?.();
+    onExpandedCollapseStart?.();
     setExpandedLeaving(true);
     window.setTimeout(() => {
-      setShowInformScreen(false);
-      setLeavingDown(false);
+      onExpandedChange?.(false);
       setExpandedLeaving(false);
       setBaseEntering(true);
       window.requestAnimationFrame(() => setBaseEntering(false));
-    }, 320);
+    }, 420);
   };
-
-  const handleExpandedGiftClick = () => {
-    if (expandedLeaving || showGiftScreen || !showInformScreen) return;
-    onTransitionStart?.();
-    setExpandedLeaving(true);
-    window.setTimeout(() => {
-      setShowInformScreen(false);
-      setShowGiftScreen(true);
-      setExpandedLeaving(false);
-      setGiftEntering(true);
-      window.requestAnimationFrame(() => setGiftEntering(false));
-    }, 320);
-  };
-
-  const handleGiftBackClick = () => {
-    if (giftLeaving || !showGiftScreen) return;
-    onTransitionStart?.();
-    setGiftLeaving(true);
-    window.setTimeout(() => {
-      setShowGiftScreen(false);
-      setGiftLeaving(false);
-      setShowInformScreen(true);
-      setExpandedEntering(true);
-      window.requestAnimationFrame(() => setExpandedEntering(false));
-    }, 320);
-  };
-
-  useEffect(() => {
-    if (typeof onGiftOpenChange === 'function') {
-      onGiftOpenChange(showGiftScreen);
-    }
-    return () => {
-      if (typeof onGiftOpenChange === 'function') onGiftOpenChange(false);
-    };
-  }, [showGiftScreen, onGiftOpenChange]);
-
-  if (showGiftScreen) {
-    return (
-      <ManaGiftFlowCard
-        stackCarouselLast={stackCarouselLast}
-        onBack={handleGiftBackClick}
-        containerStyle={{
-          transform: giftEntering || giftLeaving ? 'translateY(120%)' : 'translateY(0)',
-          opacity: giftEntering || giftLeaving ? 0 : 1,
-          transition: 'transform 320ms ease, opacity 320ms ease',
-        }}
-      />
-    );
-  }
-
-  if (showInformScreen) {
+  if (isExpanded) {
     return (
       <ManaGlassMarketingCarouselCardTwo
         stackCarouselLast={stackCarouselLast}
-        onGiftClick={handleExpandedGiftClick}
+        hideGiftButton
         onNavigateToOrder={onNavigateToOrder}
         onInformClick={handleExpandedInformClick}
         variant={expandedVariantResolved}
@@ -328,9 +273,9 @@ function ManaGlassMarketingCarouselCard({
         overrideButtonLabel={expandedButtonLabelOverride}
         forceActionEnabled={expandedForceActionEnabled}
         containerStyle={{
-          transform: expandedEntering || expandedLeaving ? 'translateY(120%)' : 'translateY(0)',
-          opacity: expandedEntering || expandedLeaving ? 0 : 1,
-          transition: 'transform 320ms ease, opacity 320ms ease',
+          transform: expandedLeaving ? 'translateY(24px)' : 'translateY(0)',
+          opacity: expandedLeaving ? 0 : 1,
+          transition: 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1), opacity 460ms cubic-bezier(0.22, 1, 0.36, 1)',
         }}
       />
     );
@@ -348,9 +293,9 @@ function ManaGlassMarketingCarouselCard({
         scrollSnapAlign: stackCarouselLast ? 'end' : 'start',
         boxSizing: 'border-box',
         maxWidth: '100%',
-        transform: leavingDown || baseEntering ? 'translateY(120%)' : 'translateY(0)',
+        transform: leavingDown || baseEntering ? 'translateY(24px)' : 'translateY(0)',
         opacity: leavingDown || baseEntering ? 0 : 1,
-        transition: 'transform 320ms ease, opacity 320ms ease',
+        transition: 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1), opacity 460ms cubic-bezier(0.22, 1, 0.36, 1)',
       }}
     >
       <div className="mb-3 flex w-full items-center justify-end">
@@ -470,7 +415,7 @@ function ManaGlassMarketingCarouselCard({
   );
 }
 
-function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false }) {
+function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, renderPlaceholder = true }) {
   const [portalReady, setPortalReady] = useState(false);
   const [email, setEmail] = useState('');
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
@@ -484,7 +429,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false })
     setPortalReady(true);
   }, []);
 
-  const carouselPlaceholder = (
+  const carouselPlaceholder = renderPlaceholder ? (
     <div
       className={`carousel-card box-border min-h-[473px] w-[360px] shrink-0${stackCarouselLast ? ' carousel-card--stacked-last' : ''}`}
       data-vertical-scroll-handle=""
@@ -496,7 +441,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false })
       }}
       aria-hidden
     />
-  );
+  ) : null;
 
   if (!portalReady) return carouselPlaceholder;
 
@@ -629,7 +574,6 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false })
  * Второй слайд карусели (MANA): тёмное стекло, Frame 2, «Информирование», плашки «Подарок» и стрелка.
  */
 function ManaGlassMarketingCarouselCardTwo({
-  onGiftClick,
   onNavigateToOrder,
   onInformClick,
   variant = 'content',
@@ -639,6 +583,7 @@ function ManaGlassMarketingCarouselCardTwo({
   forceActionEnabled,
   containerStyle,
   stackCarouselLast = false,
+  hideGiftButton = false,
 }) {
   const isSiteVariant = variant === 'site';
   const expandedTitle = overrideTitle || (isSiteVariant ? 'Формирование сайта' : 'Формирование медиа');
@@ -673,15 +618,18 @@ function ManaGlassMarketingCarouselCardTwo({
       }}
     >
       <div className={topRowClass}>
-        <button
-          type="button"
-          onClick={onGiftClick}
-          className={giftButtonClass}
-          style={{ ...involveMana, fontSize: 14, lineHeight: '145%', color: '#FFFFFF' }}
-        >
-          <ManaGiftHeartIcon />
-          Подарок
-        </button>
+        {!hideGiftButton ? (
+          <button
+            type="button"
+            className={giftButtonClass}
+            style={{ ...involveMana, fontSize: 14, lineHeight: '145%', color: '#FFFFFF' }}
+          >
+            <ManaGiftHeartIcon />
+            Подарок
+          </button>
+        ) : (
+          <div className="h-10 w-[115px]" aria-hidden />
+        )}
         <div className="h-10 w-10" aria-hidden />
       </div>
 
@@ -825,6 +773,9 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
   const stackedCarouselFrameRef = useRef(null);
   const stackedCarouselRef = useRef(null);
   const [consultationFlowOpen, setConsultationFlowOpen] = useState(false);
+  const [expandAllCards, setExpandAllCards] = useState(false);
+  const [showSingleGiftCta, setShowSingleGiftCta] = useState(false);
+  const [isGlobalGiftOpen, setIsGlobalGiftOpen] = useState(false);
 
   useEffect(() => {
     if (typeof exposeOpenConsultation !== 'function') return;
@@ -861,17 +812,8 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
     const cards = Array.from(carousel.querySelectorAll('.carousel-card'));
     if (!cards.length) return;
 
-    let activeCard = cards[0];
-    let smallestDelta = Number.POSITIVE_INFINITY;
-    const n = cards.length;
-    cards.forEach((card, idx) => {
-      const ideal = getCarouselSnapScrollLeftForCard(carousel, card, idx, n);
-      const delta = Math.abs(carousel.scrollLeft - ideal);
-      if (delta < smallestDelta) {
-        smallestDelta = delta;
-        activeCard = card;
-      }
-    });
+    const safeIndex = Math.max(0, Math.min(stackedActiveIndex, cards.length - 1));
+    const activeCard = cards[safeIndex] || cards[0];
 
     const ARROW_SIZE = 40;
     const GAP_ABOVE_CARD = 10;
@@ -879,7 +821,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
     const blockTop = cardMainBlock ? activeCard.offsetTop + cardMainBlock.offsetTop : activeCard.offsetTop;
     const nextTop = Math.max(0, blockTop - ARROW_SIZE - GAP_ABOVE_CARD);
     setStackedArrowTop((prevTop) => (Math.abs(prevTop - nextTop) > 0.5 ? nextTop : prevTop));
-  }, []);
+  }, [stackedActiveIndex]);
 
   const updateStackedCarouselMeta = useCallback(() => {
     const carousel = stackedCarouselRef.current;
@@ -1100,6 +1042,22 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
   );
 
   const isLastStackedCard = stackedCardsCount > 0 && stackedActiveIndex === stackedCardsCount - 1;
+  const handleExpandedCollapseStart = useCallback(() => {
+    setShowSingleGiftCta(false);
+    setIsGlobalGiftOpen(false);
+    setIsGiftOpenInStacked(false);
+  }, []);
+
+  useEffect(() => {
+    if (!expandAllCards) {
+      setShowSingleGiftCta(false);
+      setIsGlobalGiftOpen(false);
+      setIsGiftOpenInStacked(false);
+      return;
+    }
+    const id = window.setTimeout(() => setShowSingleGiftCta(true), 520);
+    return () => window.clearTimeout(id);
+  }, [expandAllCards]);
 
   return (
     <>
@@ -1137,6 +1095,28 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
             >
               {/* Ряд без h-full: иначе cross-size строки = высота вьюпорта и карточка «растягивается» с пустотой под контентом */}
               <div ref={stackedCarouselFrameRef} className="relative">
+                  <div
+                    className="pointer-events-none absolute left-5 z-[3]"
+                    style={{
+                      top: 0,
+                      opacity: showSingleGiftCta && !isGlobalGiftOpen ? 1 : 0,
+                      transform: showSingleGiftCta && !isGlobalGiftOpen ? 'translateY(0)' : 'translateY(8px)',
+                      transition: 'opacity 260ms cubic-bezier(0.22, 1, 0.36, 1), transform 260ms cubic-bezier(0.22, 1, 0.36, 1)',
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsGlobalGiftOpen(true);
+                        setIsGiftOpenInStacked(true);
+                      }}
+                      className="pointer-events-auto flex h-10 items-center gap-2 rounded-full border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] pl-[10px] pr-[12px] backdrop-blur-[5px]"
+                      style={{ ...involveMana, fontSize: 14, lineHeight: '145%', color: '#FFFFFF' }}
+                    >
+                      <ManaGiftHeartIcon />
+                      Подарок
+                    </button>
+                  </div>
                   <div className="pointer-events-none absolute right-5 z-[3]" style={{ top: stackedArrowTop, transition: 'top 180ms ease' }}>
                     <button
                       type="button"
@@ -1148,7 +1128,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                       style={{
                         opacity: hideStackedArrow || isGiftOpenInStacked ? 0 : 1,
                         pointerEvents: hideStackedArrow || isGiftOpenInStacked ? 'none' : 'auto',
-                        transition: 'opacity 160ms ease',
+                        transition: 'opacity 260ms cubic-bezier(0.22, 1, 0.36, 1)',
                       }}
                     >
                       <svg
@@ -1184,8 +1164,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                     scrollBehavior: 'auto',
                     scrollSnapStop: 'always',
                     scrollPaddingLeft: 'var(--main-block-margin)',
-                    scrollPaddingRight:
-                      'calc(var(--main-block-margin) + env(safe-area-inset-right, 0px))',
+                    scrollPaddingRight: '20px',
                     overflowAnchor: 'none',
                     /* touch: убираем momentum-узел iOS — иначе жест «липнет» к горизонтали и ломает плавный вертикальный скролл родителя (snap-y). */
                     WebkitOverflowScrolling: 'auto',
@@ -1217,7 +1196,9 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   overrideButtonLabel="Консультирование"
                   forceActionEnabled
                   onTransitionStart={() => hideStackedArrowDuringCardTransition(0)}
-                  onGiftOpenChange={handleGiftOpenChange}
+                  isExpanded={expandAllCards}
+                  onExpandedChange={setExpandAllCards}
+                  onExpandedCollapseStart={handleExpandedCollapseStart}
                   onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
                 />
 
@@ -1226,7 +1207,9 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   allowInformSwitch
                   overrideButtonLabel="Консультирование"
                   onTransitionStart={() => hideStackedArrowDuringCardTransition(1)}
-                  onGiftOpenChange={handleGiftOpenChange}
+                  isExpanded={expandAllCards}
+                  onExpandedChange={setExpandAllCards}
+                  onExpandedCollapseStart={handleExpandedCollapseStart}
                   onNavigateToOrder={() => scrollNavigate?.toOrder?.()}
                 />
 
@@ -1240,7 +1223,9 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   overrideButtonLabel="Уточнение"
                   forceActionEnabled
                   onTransitionStart={() => hideStackedArrowDuringCardTransition(2)}
-                  onGiftOpenChange={handleGiftOpenChange}
+                  isExpanded={expandAllCards}
+                  onExpandedChange={setExpandAllCards}
+                  onExpandedCollapseStart={handleExpandedCollapseStart}
                   expandedVariant="content"
                   expandedTitleOverride="Формирование имиджа"
                   expandedPriceOverride="около 35 тыс. р."
@@ -1255,6 +1240,20 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
             </div>
           </div>
         </div>
+      {isGlobalGiftOpen ? (
+        <ManaGiftFlowCard
+          renderPlaceholder={false}
+          onBack={() => {
+            setIsGlobalGiftOpen(false);
+            setIsGiftOpenInStacked(false);
+          }}
+          containerStyle={{
+            transform: 'translateY(0)',
+            opacity: 1,
+            transition: 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1), opacity 460ms cubic-bezier(0.22, 1, 0.36, 1)',
+          }}
+        />
+      ) : null}
 
       {consultationFlowOpen ? (
         <ConsultationFlow
