@@ -97,6 +97,7 @@ const subtitleTextStyle = {
 
 export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialStep = 'contact-method', onPhoneCallbackBack }) {
   const SAVED_PHONE_KEY = 'leadPhone';
+  const modalRootRef = useRef(null);
   const [step, setStep] = useState(initialStep);
   const [displayedStep, setDisplayedStep] = useState(initialStep);
   const [stepVisualState, setStepVisualState] = useState('in');
@@ -116,6 +117,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
   const [callbackFormAttempted, setCallbackFormAttempted] = useState(false);
   const [flowToast, setFlowToast] = useState(null);
   const successSubmitTimerRef = useRef(null);
+  const closeAnimationTimerRef = useRef(null);
   const [showPhoneFirstNextButton, setShowPhoneFirstNextButton] = useState(false);
   const stepTransitionTimerRef = useRef(null);
   const stepEnterRafRef = useRef(null);
@@ -189,6 +191,40 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
   }, []);
 
   useEffect(() => {
+    if (typeof document === 'undefined') return undefined;
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
+    const lockedAncestors = [];
+    html.style.overflow = 'hidden';
+    body.style.overflow = 'hidden';
+
+    // В ряде экранов основной скролл сидит не в body, а в fixed/overflow-y-auto контейнере.
+    let node = modalRootRef.current?.parentElement ?? null;
+    while (node) {
+      const styles = window.getComputedStyle(node);
+      const overflowY = styles.overflowY;
+      const isScrollable = (overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay') && node.scrollHeight > node.clientHeight + 1;
+      if (isScrollable) {
+        lockedAncestors.push({ node, prevOverflow: node.style.overflow, prevOverflowY: node.style.overflowY });
+        node.style.overflow = 'hidden';
+        node.style.overflowY = 'hidden';
+      }
+      node = node.parentElement;
+    }
+
+    return () => {
+      html.style.overflow = prevHtmlOverflow;
+      body.style.overflow = prevBodyOverflow;
+      lockedAncestors.forEach(({ node: lockedNode, prevOverflow, prevOverflowY }) => {
+        lockedNode.style.overflow = prevOverflow;
+        lockedNode.style.overflowY = prevOverflowY;
+      });
+    };
+  }, []);
+
+  useEffect(() => {
     setStep(initialStep);
     setDisplayedStep(initialStep);
     setStepVisualState('in');
@@ -219,6 +255,22 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
     }
     setShowPhoneFirstNextButton(true);
   }, [displayedStep]);
+
+  const handleCloseAnimated = useCallback(
+    (afterClose) => {
+      setIsAnimating(false);
+      if (closeAnimationTimerRef.current) window.clearTimeout(closeAnimationTimerRef.current);
+      closeAnimationTimerRef.current = window.setTimeout(() => {
+        closeAnimationTimerRef.current = null;
+        if (typeof afterClose === 'function') afterClose();
+        else {
+          setShouldRender(false);
+          onClose();
+        }
+      }, 300);
+    },
+    [onClose]
+  );
 
   const formatPhoneNumber = useCallback((value) => {
     const digits = value.replace(/\D/g, '').slice(0, 11);
@@ -265,7 +317,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
   const handleBack = useCallback(() => {
     if (step === 'phone-callback-form') {
       if (typeof onPhoneCallbackBack === 'function') {
-        onPhoneCallbackBack();
+        handleCloseAnimated(onPhoneCallbackBack);
         return;
       }
       switchStepAnimated('contact-method');
@@ -279,8 +331,8 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
       }
       return;
     }
-    else onClose();
-  }, [step, onClose, onPhoneCallbackBack, switchStepAnimated]);
+    else handleCloseAnimated();
+  }, [step, onPhoneCallbackBack, switchStepAnimated, handleCloseAnimated]);
 
   const handleCallbackFormSubmit = useCallback(() => {
     setPrivacyConsentTouched(true);
@@ -318,6 +370,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
       if (successSubmitTimerRef.current) window.clearTimeout(successSubmitTimerRef.current);
       clearStepTransitionHandles();
       if (phoneFirstNextButtonTimerRef.current) window.clearTimeout(phoneFirstNextButtonTimerRef.current);
+      if (closeAnimationTimerRef.current) window.clearTimeout(closeAnimationTimerRef.current);
     },
     [clearStepTransitionHandles]
   );
@@ -340,9 +393,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
         >
           <button
             type="button"
-            onClick={() => {
-              onClose();
-            }}
+            onClick={handleCloseAnimated}
             className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
             aria-label="Свернуть окно"
           >
@@ -536,9 +587,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
           >
             <button
               type="button"
-              onClick={() => {
-                onClose();
-              }}
+              onClick={handleCloseAnimated}
               className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
               aria-label="Свернуть окно"
             >
@@ -768,9 +817,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
         >
           <button
             type="button"
-            onClick={() => {
-              onClose();
-            }}
+            onClick={handleCloseAnimated}
             className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
             aria-label="Свернуть окно"
           >
@@ -854,11 +901,13 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
 
   return (
     <div
+      ref={modalRootRef}
       data-fluid-cursor-block
       className="fixed inset-0 z-[10050] flex w-full min-w-0 cursor-pointer flex-col items-stretch overflow-hidden bg-[#050505]"
       style={{
         opacity: isAnimating ? 1 : 0,
-        transition: 'opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        transform: isAnimating ? 'translateY(0)' : 'translateY(12px)',
+        transition: 'opacity 460ms cubic-bezier(0.22, 1, 0.36, 1), transform 460ms cubic-bezier(0.22, 1, 0.36, 1)',
         paddingTop: 'var(--sat, 0px)',
         paddingBottom: 'calc(var(--main-block-margin) + var(--sab, 0px))',
         height: '100dvh',
@@ -869,12 +918,12 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
       <div
         className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#050505]"
         style={{
-          transform: isAnimating ? 'scale(1)' : 'scale(0.95)',
-          transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+          transform: isAnimating ? 'scale(1)' : 'scale(0.985)',
+          transition: 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1)',
           boxSizing: 'border-box',
         }}
       >
-        <div className="absolute bottom-0 left-0 right-[0.06%] top-0 bg-[#050505]" aria-hidden />
+        <div className="absolute inset-0 bg-[#050505]" aria-hidden />
         <div
           className="h-full min-h-0 w-full min-w-0"
           style={{

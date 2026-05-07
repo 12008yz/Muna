@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import CloseIcon from '@/components/common/CloseIcon';
 
 const involve = {
   fontFamily: "'TT Firs Neue', system-ui, sans-serif",
@@ -60,7 +59,6 @@ const manaDarkLinkStyle = {
 
 export default function CookieBanner({
   countdown,
-  onClose,
   privacyHref,
   /** На главной: открыть полный текст политики без перехода по маршруту */
   onPrivacyLinkClick,
@@ -70,8 +68,6 @@ export default function CookieBanner({
   /** Стеклянный тёмный вариант для первого экрана MANA */
   manaDark = false,
 }) {
-  const isCookieConsentNotification = !compact && !children;
-
   if (manaDark && stacked && !compact) {
     /** Figma Group 7476 / Rectangle 67: 360×115; тексты left 35 − left(rect 20) = 15px inset */
     return (
@@ -113,17 +109,6 @@ export default function CookieBanner({
         >
           Автоматически закроется через {countdown}
         </span>
-        {!isCookieConsentNotification ? (
-          <button
-            type="button"
-            onClick={onClose}
-            className="absolute z-[1] flex h-6 w-6 cursor-pointer items-center justify-center border-0 bg-transparent p-0 outline-none"
-            style={{ top: 12, right: 15 }}
-            aria-label="Закрыть"
-          >
-            <CloseIcon width={16} height={16} variant="dark" />
-          </button>
-        ) : null}
         <div
           className="absolute box-border min-w-0 overflow-hidden"
           style={{
@@ -213,15 +198,6 @@ export default function CookieBanner({
         >
           Автоматически закроется через {countdown}
         </span>
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute z-[1] flex h-6 w-6 cursor-pointer items-center justify-center border-0 bg-transparent p-0 outline-none"
-          style={{ top: 12, right: 15 }}
-          aria-label="Закрыть"
-        >
-          <CloseIcon width={16} height={16} variant="dark" />
-        </button>
         <p
           className="absolute m-0 box-border min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
           style={{
@@ -288,14 +264,6 @@ export default function CookieBanner({
           >
             Автоматически закроется через {countdown}
           </span>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-6 w-6 flex-shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 outline-none"
-            aria-label="Закрыть"
-          >
-            <CloseIcon width={16} height={16} />
-          </button>
         </div>
         <p style={compactMessageStyle}>{children}</p>
       </div>
@@ -331,16 +299,6 @@ export default function CookieBanner({
         >
           Автоматически закроется через {countdown}
         </span>
-        {!isCookieConsentNotification ? (
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-6 w-6 flex-shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 outline-none"
-            aria-label="Закрыть"
-          >
-            <CloseIcon width={16} height={16} />
-          </button>
-        ) : null}
       </div>
       <div
         className="min-w-0"

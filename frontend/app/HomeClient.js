@@ -14,6 +14,7 @@ export default function HomeClient() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasPassedIntro, setHasPassedIntro] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [mainRevealVisible, setMainRevealVisible] = useState(false);
   const isCompleteRef = useRef(false);
   const mainRef = useRef(null);
 
@@ -147,6 +148,15 @@ export default function HomeClient() {
   const showPostLoadIntro = searchParams.get('consultation') !== '1' && !isLoading && !hasPassedIntro;
   const mainHiddenBehindGate = showAppLoading || showPostLoadIntro;
 
+  useEffect(() => {
+    if (mainHiddenBehindGate) {
+      setMainRevealVisible(false);
+      return;
+    }
+    const raf = window.requestAnimationFrame(() => setMainRevealVisible(true));
+    return () => window.cancelAnimationFrame(raf);
+  }, [mainHiddenBehindGate]);
+
   return (
     <div ref={mainRef}>
       <CursorFluidEffect
@@ -159,6 +169,9 @@ export default function HomeClient() {
         style={{
           visibility: mainHiddenBehindGate ? 'hidden' : 'visible',
           position: mainHiddenBehindGate ? 'absolute' : undefined,
+          opacity: mainHiddenBehindGate ? 0 : mainRevealVisible ? 1 : 0,
+          transform: mainHiddenBehindGate ? 'translateY(8px)' : mainRevealVisible ? 'translateY(0)' : 'translateY(8px)',
+          transition: 'opacity 680ms cubic-bezier(0.22, 1, 0.36, 1), transform 680ms cubic-bezier(0.22, 1, 0.36, 1)',
         }}
       >
         <HomePage

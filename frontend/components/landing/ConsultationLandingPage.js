@@ -609,7 +609,7 @@ export default function ConsultationLandingPage({
                     height: 50,
                     minHeight: 50,
                     background: submitButtonSolid ? '#FFFFFF' : 'transparent',
-                    borderColor: submitButtonSolid ? '#FFFFFF' : 'rgba(255, 255, 255, 0.35)',
+                    borderColor: submitButtonSolid ? '#FFFFFF' : 'transparent',
                     borderRadius: 10,
                     fontSize: 16,
                     lineHeight: '315%',
