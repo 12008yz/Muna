@@ -248,8 +248,8 @@ const DURATION_OPTIONS = [
   { id: '9m', label: 'на 9 мес. · скидка «17 проц.»', disabled: true },
 ];
 
-const STEP_DISSOLVE_OUT_MS = 220;
-const STEP_DISSOLVE_IN_MS = 300;
+const STEP_DISSOLVE_OUT_MS = 460;
+const STEP_DISSOLVE_IN_MS = 460;
 
 /** Предметы — мультивыбор */
 const SUBJECT_OPTIONS = [
@@ -544,12 +544,11 @@ export default function OrderCreationLandingPage({
 
   const wizardDissolveStyle = {
     opacity: stepVisualState === 'in' ? 1 : 0,
-    filter: stepVisualState === 'in' ? 'blur(0px)' : 'blur(5px)',
-    transform: stepVisualState === 'in' ? 'translateY(0px) scale(1)' : 'translateY(10px) scale(0.99)',
+    transform: stepVisualState === 'in' ? 'translateY(0px)' : 'translateY(24px)',
     transition:
       stepVisualState === 'out'
-        ? `opacity ${STEP_DISSOLVE_OUT_MS}ms cubic-bezier(0.4, 0, 1, 1), filter ${STEP_DISSOLVE_OUT_MS}ms cubic-bezier(0.4, 0, 1, 1), transform ${STEP_DISSOLVE_OUT_MS}ms cubic-bezier(0.4, 0, 1, 1)`
-        : `opacity ${STEP_DISSOLVE_IN_MS}ms cubic-bezier(0.22, 1, 0.36, 1), filter ${STEP_DISSOLVE_IN_MS}ms cubic-bezier(0.22, 1, 0.36, 1), transform ${STEP_DISSOLVE_IN_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`,
+        ? `opacity ${STEP_DISSOLVE_OUT_MS}ms cubic-bezier(0.22, 1, 0.36, 1), transform ${STEP_DISSOLVE_OUT_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`
+        : `opacity ${STEP_DISSOLVE_IN_MS}ms cubic-bezier(0.22, 1, 0.36, 1), transform ${STEP_DISSOLVE_IN_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`,
     willChange: 'opacity, transform',
   };
 

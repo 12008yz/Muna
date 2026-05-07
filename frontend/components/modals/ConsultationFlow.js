@@ -98,6 +98,8 @@ const subtitleTextStyle = {
 export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialStep = 'contact-method', onPhoneCallbackBack }) {
   const SAVED_PHONE_KEY = 'leadPhone';
   const [step, setStep] = useState(initialStep);
+  const [displayedStep, setDisplayedStep] = useState(initialStep);
+  const [stepVisualState, setStepVisualState] = useState('in');
   const [phoneNumber, setPhoneNumber] = useState('+7 ');
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [contactMethodAttempted, setContactMethodAttempted] = useState(false);
@@ -114,6 +116,40 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
   const [callbackFormAttempted, setCallbackFormAttempted] = useState(false);
   const [flowToast, setFlowToast] = useState(null);
   const successSubmitTimerRef = useRef(null);
+  const stepTransitionTimerRef = useRef(null);
+  const stepEnterRafRef = useRef(null);
+
+  const clearStepTransitionHandles = useCallback(() => {
+    if (stepTransitionTimerRef.current) {
+      window.clearTimeout(stepTransitionTimerRef.current);
+      stepTransitionTimerRef.current = null;
+    }
+    if (stepEnterRafRef.current) {
+      window.cancelAnimationFrame(stepEnterRafRef.current);
+      stepEnterRafRef.current = null;
+    }
+  }, []);
+
+  const switchStepAnimated = useCallback(
+    (nextStep) => {
+      if (!nextStep || nextStep === displayedStep) return;
+      clearStepTransitionHandles();
+      setStepVisualState('out');
+      stepTransitionTimerRef.current = window.setTimeout(() => {
+        setStep(nextStep);
+        setDisplayedStep(nextStep);
+        setStepVisualState('enter');
+        stepEnterRafRef.current = window.requestAnimationFrame(() => {
+          stepEnterRafRef.current = window.requestAnimationFrame(() => {
+            setStepVisualState('in');
+            stepEnterRafRef.current = null;
+          });
+        });
+        stepTransitionTimerRef.current = null;
+      }, 220);
+    },
+    [clearStepTransitionHandles, displayedStep]
+  );
 
   /* Таймер тоста привязан к toastKey нового показа, не к каждому тику countdown */
   useEffect(() => {
@@ -150,6 +186,13 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
     }
   }, []);
 
+  useEffect(() => {
+    setStep(initialStep);
+    setDisplayedStep(initialStep);
+    setStepVisualState('in');
+    clearStepTransitionHandles();
+  }, [initialStep, clearStepTransitionHandles]);
+
   const formatPhoneNumber = useCallback((value) => {
     const digits = value.replace(/\D/g, '').slice(0, 11);
     if (digits.length === 0) return '';
@@ -185,7 +228,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
       setContactMethodAttempted(false);
       setCallbackFormAttempted(false);
       setPrivacyConsentTouched(false);
-      setStep('phone-callback-form');
+      switchStepAnimated('phone-callback-form');
     } else if (selectedMethod) {
       setContactMethodAttempted(false);
       onSubmit({ phone: phoneNumber, method: selectedMethod });
@@ -198,7 +241,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
         onPhoneCallbackBack();
         return;
       }
-      setStep('contact-method');
+      switchStepAnimated('contact-method');
       setCallbackFormAttempted(false);
       setCallbackName('');
       setPrivacyAccepted(false);
@@ -210,7 +253,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
       return;
     }
     else onClose();
-  }, [step, onClose, onPhoneCallbackBack]);
+  }, [step, onClose, onPhoneCallbackBack, switchStepAnimated]);
 
   const handleCallbackFormSubmit = useCallback(() => {
     setPrivacyConsentTouched(true);
@@ -246,8 +289,9 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
   useEffect(
     () => () => {
       if (successSubmitTimerRef.current) window.clearTimeout(successSubmitTimerRef.current);
+      clearStepTransitionHandles();
     },
-    []
+    [clearStepTransitionHandles]
   );
 
   const handleBackgroundClick = useCallback(() => {
@@ -751,7 +795,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
           onClick={() => {
             if (!isPhoneValid) return;
             setSelectedMethod('phone');
-            setStep('contact-method');
+            switchStepAnimated('contact-method');
           }}
           disabled={!isPhoneValid}
           className="w-full cursor-pointer rounded-[10px] outline-none disabled:cursor-not-allowed"
@@ -797,9 +841,18 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
         }}
       >
         <div className="absolute bottom-0 left-0 right-[0.06%] top-0 bg-[#050505]" aria-hidden />
-        {step === 'contact-method' && renderContactMethod()}
-        {step === 'phone-callback-form' && renderPhoneCallbackForm()}
-        {step === 'phone-first' && renderPhoneFirst()}
+        <div
+          className="h-full min-h-0 w-full min-w-0"
+          style={{
+            transform: stepVisualState === 'in' ? 'translateY(0)' : 'translateY(24px)',
+            opacity: stepVisualState === 'in' ? 1 : 0,
+            transition: 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1), opacity 460ms cubic-bezier(0.22, 1, 0.36, 1)',
+          }}
+        >
+          {displayedStep === 'contact-method' && renderContactMethod()}
+          {displayedStep === 'phone-callback-form' && renderPhoneCallbackForm()}
+          {displayedStep === 'phone-first' && renderPhoneFirst()}
+        </div>
       </div>
       {flowToast ? (
         <div
