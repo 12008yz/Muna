@@ -95,7 +95,14 @@ const subtitleTextStyle = {
   height: 30,
 };
 
-export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialStep = 'contact-method', onPhoneCallbackBack }) {
+export default function ConsultationFlow({
+  onClose,
+  onSubmit,
+  onSkip,
+  initialStep = 'contact-method',
+  onPhoneCallbackBack,
+  overlayZIndex = 20050,
+}) {
   const SAVED_PHONE_KEY = 'leadPhone';
   const modalRootRef = useRef(null);
   const [step, setStep] = useState(initialStep);
@@ -898,10 +905,10 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
   return (
     <div
       ref={modalRootRef}
-      data-fluid-cursor-block
       data-vertical-scroll-handle=""
-      className="fixed inset-0 z-[10050] flex w-full min-w-0 cursor-default flex-col items-stretch overflow-hidden bg-[#050505]"
+      className="fixed inset-0 flex w-full min-w-0 cursor-default flex-col items-stretch overflow-hidden bg-[#050505]"
       style={{
+        zIndex: overlayZIndex,
         opacity: isAnimating ? 1 : 0,
         transform: isAnimating ? 'translateY(0)' : 'translateY(12px)',
         transition: 'opacity 460ms cubic-bezier(0.22, 1, 0.36, 1), transform 460ms cubic-bezier(0.22, 1, 0.36, 1)',

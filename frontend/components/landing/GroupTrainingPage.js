@@ -1353,20 +1353,24 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
         />
       ) : null}
 
-      {consultationFlowOpen ? (
-        <ConsultationFlow
-          onClose={() => setConsultationFlowOpen(false)}
-          onSkip={() => setConsultationFlowOpen(false)}
-          onSubmit={() => {
-            setConsultationFlowOpen(false);
-          }}
-          onPhoneCallbackBack={() => {
-            setConsultationFlowOpen(false);
-            setConsultationInitialStep('contact-method');
-          }}
-          initialStep={consultationInitialStep}
-        />
-      ) : null}
+      {consultationFlowOpen && typeof document !== 'undefined'
+        ? createPortal(
+            <ConsultationFlow
+              overlayZIndex={40000}
+              onClose={() => setConsultationFlowOpen(false)}
+              onSkip={() => setConsultationFlowOpen(false)}
+              onSubmit={() => {
+                setConsultationFlowOpen(false);
+              }}
+              onPhoneCallbackBack={() => {
+                setConsultationFlowOpen(false);
+                setConsultationInitialStep('contact-method');
+              }}
+              initialStep={consultationInitialStep}
+            />,
+            document.body
+          )
+        : null}
     </>
   );
 }
