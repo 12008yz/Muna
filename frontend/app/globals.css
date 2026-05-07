@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'TT Firs Neue';
+  src: url('/FONTS/fonts/TTFirsNeue-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT Firs Neue';
+  src: url('/FONTS/fonts/TTFirsNeue-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT Firs Neue';
+  src: url('/FONTS/fonts/TTFirsNeue-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Один и тот же фон у html и у full-viewport fixed-оболочки (HomePage): иначе Safari сэмплирует
      плоский #F5 с fixed-слоя, а не градиент документа — «стекло» и полосы хрома расходятся с другими сайтами. */
@@ -65,7 +89,7 @@ body {
   min-height: 100dvh;
   color: var(--foreground);
   background: transparent;
-  font-family: var(--font-tt-firs-neue), system-ui, sans-serif;
+  font-family: 'TT Firs Neue', system-ui, sans-serif;
   overscroll-behavior-y: none;
   -ms-overflow-style: none;
   scrollbar-width: none;

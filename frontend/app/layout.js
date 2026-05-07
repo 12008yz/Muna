@@ -1,16 +1,5 @@
 import "./globals.css";
 import NavigateToOrderLandingBridge from "@/components/navigation/NavigateToOrderLandingBridge";
-import localFont from "next/font/local";
-
-const ttFirsNeue = localFont({
-  src: [
-    { path: "../public/FONTS/fonts/TTFirsNeue-Regular.woff2", weight: "400", style: "normal" },
-    { path: "../public/FONTS/fonts/TTFirsNeue-Medium.woff2", weight: "500", style: "normal" },
-    { path: "../public/FONTS/fonts/TTFirsNeue-Bold.woff2", weight: "700", style: "normal" },
-  ],
-  variable: "--font-tt-firs-neue",
-  display: "swap",
-});
 
 export const metadata = {
   title: "MANA",
@@ -38,9 +27,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ru">
       <body
-        className={`${ttFirsNeue.variable} subpixel-antialiased`}
+        className="subpixel-antialiased"
         style={{
-          fontFamily: "var(--font-tt-firs-neue), system-ui, sans-serif",
+          fontFamily: "'TT Firs Neue', system-ui, sans-serif",
           fontSynthesis: "none",
         }}
       >
