@@ -924,7 +924,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
   const [isGiftOpenInStacked, setIsGiftOpenInStacked] = useState(false);
   const [stackedActiveIndex, setStackedActiveIndex] = useState(0);
   const [stackedCardsCount, setStackedCardsCount] = useState(0);
-  const [stackedArrowTop, setStackedArrowTop] = useState(0);
+  const [stackedArrowTop, setStackedArrowTop] = useState(null);
   const stackedArrowTimerRef = useRef(null);
   const giftOriginScrollLeftRef = useRef(0);
   /** Индекс карточки для восстановления горизонтального скролла после «Информирование» (точнее, чем сырой scrollLeft). */
@@ -953,6 +953,9 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
   }, []);
 
   const updateStackedArrowPosition = useCallback(() => {
+    // Фиксируем позицию стрелки после первого расчёта:
+    // при переключении карточек больше не двигаем её вверх/вниз.
+    if (stackedArrowTop != null) return;
     const frame = stackedCarouselFrameRef.current;
     const carousel = stackedCarouselRef.current;
     if (!frame || !carousel) return;
@@ -968,8 +971,8 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
     const cardMainBlock = activeCard.querySelector('article');
     const blockTop = cardMainBlock ? activeCard.offsetTop + cardMainBlock.offsetTop : activeCard.offsetTop;
     const nextTop = Math.max(0, blockTop - ARROW_SIZE - GAP_ABOVE_CARD);
-    setStackedArrowTop((prevTop) => (Math.abs(prevTop - nextTop) > 0.5 ? nextTop : prevTop));
-  }, [stackedActiveIndex]);
+    setStackedArrowTop(nextTop);
+  }, [stackedActiveIndex, stackedArrowTop]);
 
   const updateStackedCarouselMeta = useCallback(() => {
     const carousel = stackedCarouselRef.current;
@@ -1323,7 +1326,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                       Подарок
                     </button>
                   </div>
-                  <div className="pointer-events-none absolute right-5 z-[3]" style={{ top: stackedArrowTop, transition: 'top 180ms ease' }}>
+                  <div className="pointer-events-none absolute right-5 z-[3]" style={{ top: stackedArrowTop ?? 0, transition: 'top 180ms ease' }}>
                     <button
                       type="button"
                       data-fluid-cursor-block

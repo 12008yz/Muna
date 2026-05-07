@@ -814,7 +814,7 @@ class FluidCursor {
             const touches = e.targetTouches;
             for (let i = 0; i < touches.length; i++) {
                 let pointer = this.pointers[i + 1];
-                if (!pointer.down) continue;
+                if (!pointer || !pointer.down) continue;
                 if (this.isFluidCursorBlocked(touches[i].clientX, touches[i].clientY)) continue;
                 let posX = this.scaleByPixelRatio(touches[i].clientX);
                 let posY = this.scaleByPixelRatio(touches[i].clientY);
