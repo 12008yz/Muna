@@ -596,7 +596,17 @@ export default function OrderCreationLandingPage({
     >
       <h1
         className="m-0 w-full min-w-0 flex-shrink-0 whitespace-pre"
-        style={{ ...involve, fontSize: 18, lineHeight: '125%', letterSpacing: '-0.01em', color: '#FFFFFF' }}
+        style={{
+          fontFamily: "'TT Firs Neue', system-ui, sans-serif",
+          fontStyle: 'normal',
+          fontWeight: 400,
+          width: 330,
+          minWidth: 330,
+          minHeight: 100,
+          fontSize: 20,
+          lineHeight: '125%',
+          color: '#FFFFFF',
+        }}
       >
         {'Маркетинговое прогнозирование\nпотенциала для захвата рынка\nпри помощи медиа и сайта,\nмалого и среднего дела'}
       </h1>
