@@ -92,9 +92,14 @@ export default function OrdersPanelPage({ embedded = false } = {}) {
       style={embedded ? undefined : { paddingTop: 'calc(24px + var(--sat, 0px))' }}
     >
       <div
-        className={`mx-auto w-full max-w-[1200px] rounded-[20px] border border-[rgba(16,16,16,0.08)] bg-white p-5 shadow-[0_1px_2px_rgba(16,16,16,0.06)] ${
+        className={`mx-auto w-full max-w-[1200px] rounded-[20px] border border-[rgba(255,255,255,0.5)] p-5 shadow-[0_1px_2px_rgba(16,16,16,0.06)] ${
           embedded ? 'flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden' : ''
         }`}
+        style={{
+          background: 'rgba(255, 255, 255, 0.85)',
+          backdropFilter: 'blur(7.5px)',
+          WebkitBackdropFilter: 'blur(7.5px)',
+        }}
       >
         <h1 className="m-0 mb-2 text-[24px] font-semibold text-[#101010]">Заявки</h1>
         <p className="m-0 mb-4 text-[14px] text-[rgba(16,16,16,0.55)]">
@@ -110,6 +115,11 @@ export default function OrdersPanelPage({ embedded = false } = {}) {
             className={`scrollbar-hide overflow-auto rounded-[12px] border border-[rgba(16,16,16,0.16)] bg-white ${
               embedded ? 'min-h-0 min-w-0 flex-1' : ''
             }`}
+            style={{
+              background: 'rgba(255, 255, 255, 0.85)',
+              backdropFilter: 'blur(7.5px)',
+              WebkitBackdropFilter: 'blur(7.5px)',
+            }}
           >
             <table className="w-full min-w-[980px] border-collapse text-left text-[14px] text-[#101010]">
               <thead>

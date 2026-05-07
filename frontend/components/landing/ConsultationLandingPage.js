@@ -389,7 +389,7 @@ export default function ConsultationLandingPage({
     <>
       {isStacked ? (
         <div
-          className="relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-black"
+          className="relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-transparent"
           style={{
             height: '100%',
             minHeight: 0,
@@ -397,7 +397,7 @@ export default function ConsultationLandingPage({
             paddingBottom: 'calc(var(--main-block-margin) + env(safe-area-inset-bottom, 0px))',
           }}
         >
-          <div className="relative mx-auto box-border flex h-full min-h-0 w-full max-w-full min-w-0 flex-col bg-black" style={{ boxSizing: 'border-box' }}>
+          <div className="relative mx-auto box-border flex h-full min-h-0 w-full max-w-full min-w-0 flex-col bg-transparent" style={{ boxSizing: 'border-box' }}>
             {stackedNotificationsPortal}
             <div className="relative min-h-0 w-full flex-1 shrink">
               <div
@@ -638,7 +638,7 @@ export default function ConsultationLandingPage({
             {notificationsEnabled ? notificationsNode : null}
 
             <div
-              className="absolute box-border bg-white"
+              className="absolute box-border"
               style={{
                 left: 'var(--main-block-margin)',
                 right: 'var(--main-block-margin)',
@@ -654,6 +654,10 @@ export default function ConsultationLandingPage({
                 boxSizing: 'border-box',
                 gap: 5,
                 overflow: 'hidden',
+                background: 'rgba(255, 255, 255, 0.85)',
+                border: '1px solid rgba(255, 255, 255, 0.5)',
+                backdropFilter: 'blur(7.5px)',
+                WebkitBackdropFilter: 'blur(7.5px)',
               }}
             >
               <h1

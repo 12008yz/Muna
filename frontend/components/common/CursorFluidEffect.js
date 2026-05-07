@@ -41,19 +41,8 @@ const hidePackageCanvas = () => {
  * WebGL «жидкий» курсор (скрипт из /public/vendor/fluid-cursor.js).
  * Без кастомной палитры — цвета из встроенного generateColor() при пустой палитре.
  */
-/**
- * На узком экране блоки лендинга непрозрачные на всю ширину — канвас «под» контентом не виден.
- * Тогда вешаем на body (как оверлей); на широком — слой #muna-fluid-cursor-mount между фоном и UI.
- */
 function shouldUseBodyFluidOverlay() {
-  if (typeof window === 'undefined') return true;
-  try {
-    if (window.matchMedia('(pointer: coarse)').matches) return true;
-  } catch (e) {
-    /* ignore */
-  }
-  if (window.innerWidth <= 768) return true;
-  if (navigator.maxTouchPoints > 0 && Math.min(window.innerWidth, window.innerHeight) < 900) return true;
+  if (typeof window === 'undefined') return false;
   return false;
 }
 

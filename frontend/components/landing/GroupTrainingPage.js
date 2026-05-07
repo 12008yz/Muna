@@ -1160,7 +1160,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
   return (
     <>
         <div
-          className="relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-background"
+          className="relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-transparent"
           style={{
             height: '100%',
             minHeight: 0,
@@ -1169,7 +1169,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
           }}
         >
           <div
-            className="relative min-h-0 min-w-0 shrink-0 overflow-hidden bg-background"
+            className="relative min-h-0 min-w-0 shrink-0 overflow-hidden bg-transparent"
             style={{
               width: '100%',
               maxWidth: '425px',
@@ -1188,7 +1188,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                 top: carouselTop,
                 bottom: 0,
                 zIndex: 1,
-                background: 'var(--background)',
+                background: 'transparent',
               }}
             >
               {/* Ряд без h-full: иначе cross-size строки = высота вьюпорта и карточка «растягивается» с пустотой под контентом */}

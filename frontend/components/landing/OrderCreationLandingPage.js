@@ -652,7 +652,7 @@ export default function OrderCreationLandingPage({
       <div
         className={
           isStacked
-            ? 'relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-background'
+            ? 'relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col items-stretch overflow-hidden bg-transparent'
             : 'fixed inset-0 z-[9999] flex w-full min-w-0 flex-col items-stretch overflow-hidden bg-background'
         }
         style={
@@ -672,7 +672,7 @@ export default function OrderCreationLandingPage({
         }
       >
         <div
-          className="relative box-border flex h-full min-h-0 w-full min-w-0 flex-col bg-background"
+          className={`relative box-border flex h-full min-h-0 w-full min-w-0 flex-col ${isStacked ? 'bg-transparent' : 'bg-background'}`}
           style={{
             boxSizing: 'border-box',
           }}
@@ -691,7 +691,7 @@ export default function OrderCreationLandingPage({
 
         {(orderStep === 1 || orderStep === 2 || orderStep === 3 || orderStep === 4) && (
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden" style={{ boxSizing: 'border-box' }}>
-            <div className="relative flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden bg-background">
+            <div className={`relative flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden ${isStacked ? 'bg-transparent' : 'bg-background'}`}>
               {!isStacked ? (
                 <div className="relative flex-shrink-0 cursor-pointer" style={{ minHeight: '105px' }}>
                   <div
