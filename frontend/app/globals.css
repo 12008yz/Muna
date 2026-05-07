@@ -155,6 +155,8 @@ body::-webkit-scrollbar {
 /* MANA stacked: левый спейсер только для поля, не snap-цель — иначе mandatory + stop даёт лишний «блок» пустоты в начале. */
 .carousel-container.carousel-learning:not(.carousel-container--single-card) > .carousel-spacer-left {
   scroll-snap-align: none;
+  min-width: 0 !important;
+  width: 0 !important;
 }
 
 /* MANA stacked: поле справа как у остального лендинга + safe-area (viewport-fit: cover на телефоне). */
