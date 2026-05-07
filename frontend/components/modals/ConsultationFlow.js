@@ -102,6 +102,8 @@ export default function ConsultationFlow({
   initialStep = 'contact-method',
   onPhoneCallbackBack,
   overlayZIndex = 20050,
+  fluidBackdrop = false,
+  fluidOnTop = false,
 }) {
   const SAVED_PHONE_KEY = 'leadPhone';
   const modalRootRef = useRef(null);
@@ -230,6 +232,72 @@ export default function ConsultationFlow({
       });
     };
   }, []);
+
+  useEffect(() => {
+    if (!fluidBackdrop || typeof window === 'undefined') return undefined;
+    const canvas = window.__fluidCursorInstance?.canvas;
+    if (!canvas) return undefined;
+    const prev = {
+      opacity: canvas.style.opacity,
+      filter: canvas.style.filter,
+      mixBlendMode: canvas.style.mixBlendMode,
+    };
+    canvas.style.opacity = '1';
+    canvas.style.filter = 'blur(0px) saturate(1.38) brightness(1.18)';
+    canvas.style.mixBlendMode = 'normal';
+    return () => {
+      canvas.style.opacity = prev.opacity;
+      canvas.style.filter = prev.filter;
+      canvas.style.mixBlendMode = prev.mixBlendMode;
+    };
+  }, [fluidBackdrop]);
+
+  useEffect(() => {
+    if (!fluidOnTop || typeof window === 'undefined') return undefined;
+
+    let cancelled = false;
+    let prev = null;
+    let retryTimer = null;
+
+    const applyFluidOnTopStyles = () => {
+      if (cancelled) return;
+      const canvas = window.__fluidCursorInstance?.canvas;
+      if (!canvas) {
+        retryTimer = window.setTimeout(applyFluidOnTopStyles, 120);
+        return;
+      }
+
+      if (!prev) {
+        prev = {
+          zIndex: canvas.style.zIndex,
+          opacity: canvas.style.opacity,
+          filter: canvas.style.filter,
+          mixBlendMode: canvas.style.mixBlendMode,
+          display: canvas.style.display,
+        };
+      }
+
+      canvas.style.zIndex = String(overlayZIndex + 5);
+      canvas.style.display = 'block';
+      canvas.style.opacity = '1';
+      canvas.style.filter = 'blur(0px) saturate(1.38) brightness(1.18)';
+      canvas.style.mixBlendMode = 'normal';
+    };
+
+    applyFluidOnTopStyles();
+
+    return () => {
+      cancelled = true;
+      if (retryTimer) window.clearTimeout(retryTimer);
+      const canvas = window.__fluidCursorInstance?.canvas;
+      if (!canvas || !prev) return;
+      canvas.style.zIndex = prev.zIndex;
+      canvas.style.opacity = prev.opacity;
+      canvas.style.filter = prev.filter;
+      canvas.style.mixBlendMode = prev.mixBlendMode;
+      canvas.style.display = prev.display;
+    };
+  }, [fluidOnTop, overlayZIndex]);
 
   useEffect(() => {
     setStep(initialStep);
@@ -387,6 +455,9 @@ export default function ConsultationFlow({
     e.stopPropagation();
   }, []);
 
+  const modalBackdropColor = fluidBackdrop ? 'rgba(5, 5, 5, 0.36)' : '#050505';
+  const modalLayerColor = fluidBackdrop ? 'rgba(5, 5, 5, 0.2)' : '#050505';
+
   const renderContactMethod = () => (
     <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#050505]">
       <div className="relative flex-shrink-0" style={{ minHeight: '105px' }}>
@@ -405,6 +476,7 @@ export default function ConsultationFlow({
         </div>
       </div>
       <div
+        data-fluid-cursor-block
         className="mx-auto flex w-full min-w-0 flex-col"
         style={{
           ...glassSheet,
@@ -582,7 +654,7 @@ export default function ConsultationFlow({
     const callbackNextSolid = !callbackFormAttempted || formCanSubmit;
 
     return (
-      <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#050505]">
+      <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden" style={{ background: modalLayerColor }}>
         <div className="relative flex-shrink-0" style={{ minHeight: '105px' }}>
           <div
             className="absolute left-0 right-0"
@@ -599,6 +671,7 @@ export default function ConsultationFlow({
           </div>
         </div>
         <div
+          data-fluid-cursor-block
           className="mx-auto flex w-full min-w-0 flex-col"
           style={{
             ...glassSheet,
@@ -812,6 +885,7 @@ export default function ConsultationFlow({
     <div
       className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#050505]"
       onClick={revealPhoneFirstNextButtonNow}
+      style={{ background: modalLayerColor }}
     >
       <div className="relative flex-shrink-0" style={{ minHeight: '105px' }}>
         <div
@@ -829,6 +903,7 @@ export default function ConsultationFlow({
         </div>
       </div>
       <div
+        data-fluid-cursor-block
         className="mx-auto flex w-full min-w-0 flex-col"
         style={{
           ...glassSheet,
@@ -906,7 +981,7 @@ export default function ConsultationFlow({
     <div
       ref={modalRootRef}
       data-vertical-scroll-handle=""
-      className="fixed inset-0 flex w-full min-w-0 cursor-default flex-col items-stretch overflow-hidden bg-[#050505]"
+      className="fixed inset-0 flex w-full min-w-0 cursor-default flex-col items-stretch overflow-hidden"
       style={{
         zIndex: overlayZIndex,
         opacity: isAnimating ? 1 : 0,
@@ -916,18 +991,22 @@ export default function ConsultationFlow({
         paddingBottom: 'calc(var(--main-block-margin) + var(--sab, 0px))',
         height: '100dvh',
         boxSizing: 'border-box',
+        background: modalBackdropColor,
+        backdropFilter: 'none',
+        WebkitBackdropFilter: 'none',
       }}
       onClick={handleBackgroundClick}
     >
       <div
-        className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#050505]"
+        className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden"
         style={{
           transform: isAnimating ? 'scale(1)' : 'scale(0.985)',
           transition: 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1)',
           boxSizing: 'border-box',
+          background: modalLayerColor,
         }}
       >
-        <div className="absolute inset-0 bg-[#050505]" aria-hidden />
+        <div className="absolute inset-0" style={{ background: modalLayerColor }} aria-hidden />
         <div
           className="h-full min-h-0 w-full min-w-0"
           style={{
@@ -943,6 +1022,7 @@ export default function ConsultationFlow({
       </div>
       {flowToast ? (
         <div
+          data-fluid-cursor-block
           role="status"
           className="fixed z-[10051] box-border"
           style={{

@@ -455,7 +455,12 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
       {createPortal(
         <div
           data-fluid-cursor-block
-          className="fixed inset-0 z-[20000] flex items-end justify-center bg-[#050505] px-[var(--main-block-margin)] pb-[20px] pt-[80px]"
+          className="fixed inset-0 z-[20000] flex items-end justify-center px-[var(--main-block-margin)] pb-[20px] pt-[80px]"
+          style={{
+            background: 'rgba(5, 5, 5, 0.36)',
+            backdropFilter: 'none',
+            WebkitBackdropFilter: 'none',
+          }}
         >
           <button
             type="button"
@@ -1357,6 +1362,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
         ? createPortal(
             <ConsultationFlow
               overlayZIndex={40000}
+              fluidOnTop
               onClose={() => setConsultationFlowOpen(false)}
               onSkip={() => setConsultationFlowOpen(false)}
               onSubmit={() => {
