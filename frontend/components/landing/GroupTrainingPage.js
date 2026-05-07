@@ -422,6 +422,9 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
   const [email, setEmail] = useState('');
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [newsAccepted, setNewsAccepted] = useState(false);
+  const overlayRootRef = useRef(null);
+  const closeTimerRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
   const normalizedEmail = email.trim();
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail);
 
@@ -430,6 +433,105 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
   useEffect(() => {
     setPortalReady(true);
   }, []);
+
+  useEffect(() => {
+    const showTimer = window.setTimeout(() => setIsVisible(true), 24);
+    return () => window.clearTimeout(showTimer);
+  }, []);
+
+  useEffect(
+    () => () => {
+      if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current);
+    },
+    []
+  );
+
+  const handleBackAnimated = useCallback(() => {
+    setIsVisible(false);
+    if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = window.setTimeout(() => {
+      closeTimerRef.current = null;
+      if (typeof onBack === 'function') onBack();
+    }, 320);
+  }, [onBack]);
+
+  useEffect(() => {
+    if (!portalReady || typeof window === 'undefined') return undefined;
+
+    let cancelled = false;
+    let retryTimer = null;
+    let prev = null;
+    let previousParent = null;
+    let previousNextSibling = null;
+
+    const mountCanvasInsideGiftOverlay = () => {
+      if (cancelled) return;
+      const canvas = window.__fluidCursorInstance?.canvas;
+      const host = overlayRootRef.current;
+      if (!canvas || !host) {
+        retryTimer = window.setTimeout(mountCanvasInsideGiftOverlay, 120);
+        return;
+      }
+
+      if (!prev) {
+        prev = {
+          position: canvas.style.position,
+          inset: canvas.style.inset,
+          width: canvas.style.width,
+          height: canvas.style.height,
+          zIndex: canvas.style.zIndex,
+          display: canvas.style.display,
+          opacity: canvas.style.opacity,
+          filter: canvas.style.filter,
+          mixBlendMode: canvas.style.mixBlendMode,
+          pointerEvents: canvas.style.pointerEvents,
+        };
+        previousParent = canvas.parentElement;
+        previousNextSibling = canvas.nextSibling;
+      }
+
+      if (canvas.parentElement !== host) {
+        host.appendChild(canvas);
+      }
+
+      canvas.style.position = 'absolute';
+      canvas.style.inset = '0';
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      canvas.style.zIndex = '1';
+      canvas.style.display = 'block';
+      canvas.style.opacity = '1';
+      canvas.style.filter = 'blur(0px) saturate(1.38) brightness(1.18)';
+      canvas.style.mixBlendMode = 'normal';
+      canvas.style.pointerEvents = 'none';
+    };
+
+    mountCanvasInsideGiftOverlay();
+
+    return () => {
+      cancelled = true;
+      if (retryTimer) window.clearTimeout(retryTimer);
+      const canvas = window.__fluidCursorInstance?.canvas;
+      if (!canvas || !prev) return;
+      canvas.style.position = prev.position;
+      canvas.style.inset = prev.inset;
+      canvas.style.width = prev.width;
+      canvas.style.height = prev.height;
+      canvas.style.zIndex = prev.zIndex;
+      canvas.style.display = prev.display;
+      canvas.style.opacity = prev.opacity;
+      canvas.style.filter = prev.filter;
+      canvas.style.mixBlendMode = prev.mixBlendMode;
+      canvas.style.pointerEvents = prev.pointerEvents;
+      if (previousParent && previousParent.isConnected) {
+        if (previousNextSibling && previousNextSibling.parentNode === previousParent) {
+          previousParent.insertBefore(canvas, previousNextSibling);
+        } else {
+          previousParent.appendChild(canvas);
+        }
+      }
+    };
+  }, [portalReady]);
 
   const carouselPlaceholder = renderPlaceholder ? (
     <div
@@ -454,18 +556,22 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
       {carouselPlaceholder}
       {createPortal(
         <div
-          data-fluid-cursor-block
+          ref={overlayRootRef}
           className="fixed inset-0 z-[20000] flex items-end justify-center px-[var(--main-block-margin)] pb-[20px] pt-[80px]"
           style={{
-            background: 'rgba(5, 5, 5, 0.36)',
+            background: '#050505',
             backdropFilter: 'none',
             WebkitBackdropFilter: 'none',
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(12px)',
+            transition: 'opacity 520ms cubic-bezier(0.22, 1, 0.36, 1), transform 520ms cubic-bezier(0.22, 1, 0.36, 1)',
           }}
         >
           <button
             type="button"
-            onClick={onBack}
-            className="absolute left-[20px] top-[calc(var(--sat,0px)+10px)] z-[1] flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[5px]"
+            data-fluid-cursor-block
+            onClick={handleBackAnimated}
+            className="absolute left-[20px] top-[calc(var(--sat,0px)+10px)] z-[3] flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[5px]"
             aria-label="Назад"
           >
             <svg
@@ -488,8 +594,15 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
           <div
             data-fluid-cursor-block
             data-vertical-scroll-handle=""
-            className="relative flex w-full shrink-0 flex-col overflow-hidden"
-            style={{ height: 335, boxSizing: 'border-box', ...containerStyle }}
+            className="relative z-[3] flex w-full shrink-0 flex-col overflow-hidden"
+            style={{
+              height: 335,
+              boxSizing: 'border-box',
+              ...containerStyle,
+              transform: isVisible ? 'translateY(0)' : 'translateY(12px)',
+              opacity: isVisible ? 1 : 0,
+              transition: 'opacity 520ms cubic-bezier(0.22, 1, 0.36, 1), transform 520ms cubic-bezier(0.22, 1, 0.36, 1)',
+            }}
           >
             <article className="box-border h-[335px] w-full max-w-full px-[15px] pb-[15px] pt-[15px]" style={manaGlassCardStyle}>
           <p className="m-0" style={{ ...involveMana, fontSize: 18, lineHeight: '110%', color: '#FFFFFF' }}>
@@ -1198,6 +1311,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   >
                     <button
                       type="button"
+                      data-fluid-cursor-block
                       onClick={() => {
                         setIsGlobalGiftOpen(true);
                         setIsGiftOpenInStacked(true);
