@@ -110,7 +110,7 @@ export default function ConsultationFlow({
   const [step, setStep] = useState(initialStep);
   const [displayedStep, setDisplayedStep] = useState(initialStep);
   const [stepVisualState, setStepVisualState] = useState('in');
-  const [phoneNumber, setPhoneNumber] = useState('+7 ');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [contactMethodAttempted, setContactMethodAttempted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -192,7 +192,7 @@ export default function ConsultationFlow({
         if (rest.length > 3) formatted += ` ${rest.slice(3, 6)}`;
         if (rest.length > 6) formatted += ` ${rest.slice(6, 8)}`;
         if (rest.length > 8) formatted += ` ${rest.slice(8, 10)}`;
-        setPhoneNumber(formatted || '+7 ');
+        setPhoneNumber(formatted);
       }
     } catch {
       // ignore
@@ -362,11 +362,18 @@ export default function ConsultationFlow({
 
   const handlePhoneChange = useCallback(
     (e) => {
-      const formatted = formatPhoneNumber(e.target.value) || '+7 ';
+      const formatted = formatPhoneNumber(e.target.value);
       setPhoneNumber(formatted);
     },
     [formatPhoneNumber]
   );
+
+  const handlePhoneFocus = useCallback(() => {
+    setPhoneNumber((prev) => {
+      const digits = prev.replace(/\D/g, '');
+      return digits.length === 0 || digits === '7' ? '+7 ' : prev;
+    });
+  }, []);
 
   const isPhoneValid = useMemo(() => {
     const phoneDigits = phoneNumber.replace(/\D/g, '');
@@ -752,6 +759,7 @@ export default function ConsultationFlow({
                 inputMode="tel"
                 autoComplete="tel"
                 value={phoneNumber}
+                onFocus={handlePhoneFocus}
                 onChange={handlePhoneChange}
                 placeholder="Номер сотового телефона"
                 className="box-border w-full rounded-[10px] border border-solid bg-transparent px-[15px] outline-none placeholder:text-[rgba(255,255,255,0.25)]"
@@ -934,6 +942,7 @@ export default function ConsultationFlow({
           <input
             type="tel"
             value={phoneNumber}
+            onFocus={handlePhoneFocus}
             onChange={handlePhoneChange}
             placeholder="Номер сотового телефона"
             className="h-full w-full rounded-[10px] bg-transparent px-[15px] outline-none placeholder:text-[rgba(255,255,255,0.25)]"
