@@ -316,7 +316,7 @@ export default function HomePage({
         >
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 z-0 bg-black/88 backdrop-blur-[14px]"
+            className="pointer-events-none absolute inset-x-0 top-0 z-0 bg-black/88"
             style={{
               height:
                 'calc(var(--sat) + var(--header-top) + var(--header-height) + 8px + 160px)',
