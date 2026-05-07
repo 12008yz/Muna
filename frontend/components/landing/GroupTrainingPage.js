@@ -714,10 +714,6 @@ function ManaGlassMarketingCarouselCardTwo({
           </div>
         </div>
 
-        <div className={dividerGap}>
-          <ManaGlassDivider />
-        </div>
-
         <div className="mt-[10px] flex h-[130px] w-full max-w-[330px] flex-col gap-[5px]">
           {expandedRows.map((row, idx) => (
             <div key={`mana-ph-${idx}`} className="relative h-10 w-[330px]">

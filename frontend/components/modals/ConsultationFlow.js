@@ -286,10 +286,16 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
           ...glassSheet,
           marginLeft: 'var(--main-block-margin)',
           marginRight: 'var(--main-block-margin)',
-          width: 'calc(100% - 2 * var(--main-block-margin))',
+          width: 360,
+          minWidth: 360,
+          maxWidth: 360,
+          height: 335,
+          minHeight: 335,
+          maxHeight: 335,
           marginTop: 'auto',
           marginBottom: 0,
           padding: '15px',
+          overflow: 'hidden',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -305,13 +311,13 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
         >
           Взаимодействие
         </div>
-        <div style={{ ...subtitleTextStyle, marginBottom: '20px' }}>
+        <div style={{ ...subtitleTextStyle, marginBottom: '15px' }}>
           Навязывание ненужного отсутствует.
           <br />
           Рекламирование ненужного тоже отсутствует.
         </div>
 
-        <div className="flex flex-col gap-[5px]" style={{ marginBottom: '20px' }}>
+        <div className="flex flex-col gap-[5px]" style={{ marginBottom: '15px' }}>
           <div
             className="flex items-center justify-between rounded-[10px] px-[15px]"
             style={{ height: '50px', border: '1px solid rgba(255, 255, 255, 0.25)', opacity: 0.25 }}
@@ -391,7 +397,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
           </div>
         </div>
 
-        <div className="flex items-center gap-[5px]">
+        <div className="mt-auto flex items-center gap-[5px]">
           <button
             type="button"
             onClick={handleBack}
@@ -478,10 +484,16 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
             ...glassSheet,
             marginLeft: 'var(--main-block-margin)',
             marginRight: 'var(--main-block-margin)',
-            width: 'calc(100% - 2 * var(--main-block-margin))',
+            width: 360,
+            minWidth: 360,
+          maxWidth: 360,
+            height: 335,
+            minHeight: 335,
+            maxHeight: 335,
             marginTop: 'auto',
             marginBottom: 0,
             padding: '15px',
+            overflow: 'hidden',
           }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -574,7 +586,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
             </div>
           </div>
 
-          <div className="mb-[15px] mt-[5px] w-full min-w-0 shrink-0">
+          <div className="mb-[15px] mt-0 w-full min-w-0 shrink-0">
             <button
               type="button"
               className="relative box-border flex w-full min-w-0 cursor-pointer items-center rounded-[10px] border border-solid bg-transparent text-left outline-none focus:outline-none"
@@ -592,10 +604,11 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
               }}
             >
               <span
-                className="mr-2 flex flex-shrink-0 items-center justify-center rounded-full border border-solid box-border"
+                className="flex flex-shrink-0 items-center justify-center rounded-full border border-solid box-border"
                 style={{
                   width: 16,
                   height: 16,
+                  marginRight: 5,
                   borderColor: privacyAccepted ? 'transparent' : privacyShowStrongBorder ? stackStrong : 'rgba(255, 255, 255, 0.5)',
                   background: privacyAccepted ? '#FFFFFF' : 'transparent',
                 }}
@@ -617,7 +630,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
             </button>
           </div>
 
-          <div className="flex items-center gap-[5px]">
+          <div className="mt-auto flex items-center gap-[5px]">
             <button
               type="button"
               onClick={handleBack}
