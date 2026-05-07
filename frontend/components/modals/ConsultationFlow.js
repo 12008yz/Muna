@@ -116,8 +116,10 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
   const [callbackFormAttempted, setCallbackFormAttempted] = useState(false);
   const [flowToast, setFlowToast] = useState(null);
   const successSubmitTimerRef = useRef(null);
+  const [showPhoneFirstNextButton, setShowPhoneFirstNextButton] = useState(false);
   const stepTransitionTimerRef = useRef(null);
   const stepEnterRafRef = useRef(null);
+  const phoneFirstNextButtonTimerRef = useRef(null);
 
   const clearStepTransitionHandles = useCallback(() => {
     if (stepTransitionTimerRef.current) {
@@ -192,6 +194,31 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
     setStepVisualState('in');
     clearStepTransitionHandles();
   }, [initialStep, clearStepTransitionHandles]);
+
+  useEffect(() => {
+    if (phoneFirstNextButtonTimerRef.current) {
+      window.clearTimeout(phoneFirstNextButtonTimerRef.current);
+      phoneFirstNextButtonTimerRef.current = null;
+    }
+    if (displayedStep !== 'phone-first') {
+      setShowPhoneFirstNextButton(false);
+      return;
+    }
+    setShowPhoneFirstNextButton(false);
+    phoneFirstNextButtonTimerRef.current = window.setTimeout(() => {
+      setShowPhoneFirstNextButton(true);
+      phoneFirstNextButtonTimerRef.current = null;
+    }, 3000);
+  }, [displayedStep]);
+
+  const revealPhoneFirstNextButtonNow = useCallback(() => {
+    if (displayedStep !== 'phone-first') return;
+    if (phoneFirstNextButtonTimerRef.current) {
+      window.clearTimeout(phoneFirstNextButtonTimerRef.current);
+      phoneFirstNextButtonTimerRef.current = null;
+    }
+    setShowPhoneFirstNextButton(true);
+  }, [displayedStep]);
 
   const formatPhoneNumber = useCallback((value) => {
     const digits = value.replace(/\D/g, '').slice(0, 11);
@@ -290,6 +317,7 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
     () => () => {
       if (successSubmitTimerRef.current) window.clearTimeout(successSubmitTimerRef.current);
       clearStepTransitionHandles();
+      if (phoneFirstNextButtonTimerRef.current) window.clearTimeout(phoneFirstNextButtonTimerRef.current);
     },
     [clearStepTransitionHandles]
   );
@@ -729,7 +757,10 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
   };
 
   const renderPhoneFirst = () => (
-    <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#050505]">
+    <div
+      className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#050505]"
+      onClick={revealPhoneFirstNextButtonNow}
+    >
       <div className="relative flex-shrink-0" style={{ minHeight: '105px' }}>
         <div
           className="absolute left-0 right-0"
@@ -807,7 +838,10 @@ export default function ConsultationFlow({ onClose, onSubmit, onSkip, initialSte
             border: isPhoneValid ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
             background: isPhoneValid ? '#FFFFFF' : 'transparent',
             color: isPhoneValid ? '#050505' : '#FFFFFF',
-            opacity: isPhoneValid ? 1 : 0.25,
+            opacity: showPhoneFirstNextButton ? (isPhoneValid ? 1 : 0.25) : 0,
+            transform: showPhoneFirstNextButton ? 'translateY(0)' : 'translateY(8px)',
+            pointerEvents: showPhoneFirstNextButton ? 'auto' : 'none',
+            transition: 'opacity 1040ms cubic-bezier(0.22, 1, 0.36, 1), transform 1040ms cubic-bezier(0.22, 1, 0.36, 1)',
           }}
         >
           Далее

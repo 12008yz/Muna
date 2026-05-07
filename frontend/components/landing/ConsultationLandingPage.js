@@ -469,9 +469,9 @@ export default function ConsultationLandingPage({
               <div
                 className="box-border flex min-w-0 shrink-0 items-center gap-[4px] self-start rounded-[100px] border border-solid border-[rgba(255,255,255,0.1)] px-[4px]"
                 style={{
-                  width: 292,
-                  minWidth: 292,
-                  maxWidth: 292,
+                  width: 294,
+                  minWidth: 294,
+                  maxWidth: 294,
                   height: 25,
                   minHeight: 25,
                   maxHeight: 25,
@@ -677,9 +677,9 @@ export default function ConsultationLandingPage({
               <div
                 className="box-border flex min-w-0 shrink-0 items-center gap-[4px] self-start rounded-[100px] bg-[#ebebeb] px-[4px]"
                 style={{
-                  width: 292,
-                  minWidth: 292,
-                  maxWidth: 292,
+                  width: 294,
+                  minWidth: 294,
+                  maxWidth: 294,
                   height: 25,
                   minHeight: 25,
                   maxHeight: 25,
