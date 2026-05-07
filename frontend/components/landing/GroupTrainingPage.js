@@ -1354,7 +1354,6 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
         ? createPortal(
             <ConsultationFlow
               overlayZIndex={40000}
-              fluidOnTop
               onClose={() => setConsultationFlowOpen(false)}
               onSkip={() => setConsultationFlowOpen(false)}
               onSubmit={() => {

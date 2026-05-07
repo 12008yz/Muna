@@ -234,23 +234,83 @@ export default function ConsultationFlow({
   }, []);
 
   useEffect(() => {
-    if (!fluidBackdrop || typeof window === 'undefined') return undefined;
-    const canvas = window.__fluidCursorInstance?.canvas;
-    if (!canvas) return undefined;
-    const prev = {
-      opacity: canvas.style.opacity,
-      filter: canvas.style.filter,
-      mixBlendMode: canvas.style.mixBlendMode,
+    if (typeof window === 'undefined') return undefined;
+
+    let cancelled = false;
+    let retryTimer = null;
+    let prev = null;
+    let previousParent = null;
+    let previousNextSibling = null;
+
+    const mountCanvasInsideFlow = () => {
+      if (cancelled) return;
+      const canvas = window.__fluidCursorInstance?.canvas;
+      const host = modalRootRef.current;
+      if (!canvas || !host) {
+        retryTimer = window.setTimeout(mountCanvasInsideFlow, 120);
+        return;
+      }
+
+      if (!prev) {
+        prev = {
+          position: canvas.style.position,
+          inset: canvas.style.inset,
+          width: canvas.style.width,
+          height: canvas.style.height,
+          zIndex: canvas.style.zIndex,
+          display: canvas.style.display,
+          opacity: canvas.style.opacity,
+          filter: canvas.style.filter,
+          mixBlendMode: canvas.style.mixBlendMode,
+          pointerEvents: canvas.style.pointerEvents,
+        };
+        previousParent = canvas.parentElement;
+        previousNextSibling = canvas.nextSibling;
+      }
+
+      if (canvas.parentElement !== host) {
+        host.appendChild(canvas);
+      }
+
+      // Keep effect inside this screen, above opaque background, below content.
+      canvas.style.position = 'absolute';
+      canvas.style.inset = '0';
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      canvas.style.zIndex = '1';
+      canvas.style.display = 'block';
+      canvas.style.opacity = '1';
+      canvas.style.filter = 'blur(0px) saturate(1.38) brightness(1.18)';
+      canvas.style.mixBlendMode = 'normal';
+      canvas.style.pointerEvents = 'none';
     };
-    canvas.style.opacity = '1';
-    canvas.style.filter = 'blur(0px) saturate(1.38) brightness(1.18)';
-    canvas.style.mixBlendMode = 'normal';
+
+    mountCanvasInsideFlow();
+
     return () => {
+      cancelled = true;
+      if (retryTimer) window.clearTimeout(retryTimer);
+      const canvas = window.__fluidCursorInstance?.canvas;
+      if (!canvas || !prev) return;
+      canvas.style.position = prev.position;
+      canvas.style.inset = prev.inset;
+      canvas.style.width = prev.width;
+      canvas.style.height = prev.height;
+      canvas.style.zIndex = prev.zIndex;
+      canvas.style.display = prev.display;
       canvas.style.opacity = prev.opacity;
       canvas.style.filter = prev.filter;
       canvas.style.mixBlendMode = prev.mixBlendMode;
+      canvas.style.pointerEvents = prev.pointerEvents;
+      if (previousParent && previousParent.isConnected) {
+        if (previousNextSibling && previousNextSibling.parentNode === previousParent) {
+          previousParent.insertBefore(canvas, previousNextSibling);
+        } else {
+          previousParent.appendChild(canvas);
+        }
+      }
     };
-  }, [fluidBackdrop]);
+  }, []);
 
   useEffect(() => {
     if (!fluidOnTop || typeof window === 'undefined') return undefined;
@@ -462,191 +522,184 @@ export default function ConsultationFlow({
     e.stopPropagation();
   }, []);
 
-  const modalBackdropColor = fluidBackdrop ? 'rgba(5, 5, 5, 0.36)' : '#050505';
-  const modalLayerColor = fluidBackdrop ? 'rgba(5, 5, 5, 0.2)' : '#050505';
+  // Opaque screen to hide page + transparent inner layer so fluid canvas stays visible.
+  const modalBackdropColor = '#050505';
+  const modalLayerColor = 'transparent';
 
-  const renderContactMethod = () => (
-    <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-[#050505]">
-      <div className="relative flex-shrink-0" style={{ minHeight: '105px' }}>
-        <div
-          className="absolute left-0 right-0"
-          style={{ top: HINT_TOP, left: 'var(--main-block-margin)', right: 'var(--main-block-margin)' }}
-        >
-          <button
-            type="button"
-            onClick={handleCloseAnimated}
-            className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
-            aria-label="Свернуть окно"
+  const renderContactMethod = () => {
+    const showRequired = contactMethodAttempted && !selectedMethod;
+    const optionBase = {
+      height: '50px',
+      borderRadius: '10px',
+      paddingLeft: '15px',
+      paddingRight: '15px',
+    };
+
+    return (
+      <div className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden" style={{ background: modalLayerColor }}>
+        <div className="relative flex-shrink-0" style={{ minHeight: '105px' }}>
+          <div
+            className="absolute left-0 right-0"
+            style={{ top: HINT_TOP, left: 'var(--main-block-margin)', right: 'var(--main-block-margin)' }}
           >
-            <CollapseIcon />
-          </button>
+            <button
+              type="button"
+              onClick={handleCloseAnimated}
+              className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
+              aria-label="Свернуть окно"
+            >
+              <CollapseIcon />
+            </button>
+          </div>
         </div>
-      </div>
-      <div
-        data-fluid-cursor-block
-        className="mx-auto flex w-full min-w-0 flex-col"
-        style={{
-          ...glassSheet,
-          marginLeft: 'var(--main-block-margin)',
-          marginRight: 'var(--main-block-margin)',
-          width: 'calc(100% - 2 * var(--main-block-margin))',
-          minWidth: 0,
-          maxWidth: 390,
-          height: 335,
-          minHeight: 335,
-          marginTop: 'auto',
-          marginBottom: 0,
-          padding: '15px',
-          overflow: 'hidden',
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
+
         <div
+          data-fluid-cursor-block
+          className="mx-auto flex w-full min-w-0 flex-col"
           style={{
-            ...involve,
-            fontWeight: 400,
-            fontSize: '18px',
-            lineHeight: '110%',
-            color: '#FFFFFF',
-            marginBottom: '10px',
+            ...glassSheet,
+            marginLeft: 'var(--main-block-margin)',
+            marginRight: 'var(--main-block-margin)',
+            width: 'calc(100% - 2 * var(--main-block-margin))',
+            minWidth: 0,
+            maxWidth: 390,
+            height: 335,
+            minHeight: 335,
+            marginTop: 'auto',
+            marginBottom: 0,
+            padding: '15px',
+            overflow: 'hidden',
           }}
+          onClick={(e) => e.stopPropagation()}
         >
-          Взаимодействие
-        </div>
-        <div style={{ ...subtitleTextStyle, marginBottom: '20px' }}>
-          Навязывание ненужного отсутствует.
-          <br />
-          Рекламирование ненужного тоже отсутствует.
-        </div>
-
-        <div className="flex flex-col gap-[5px]" style={{ marginBottom: '15px' }}>
           <div
-            className="flex items-center justify-between rounded-[10px] px-[15px]"
-            style={{ height: '50px', border: '1px solid rgba(255, 255, 255, 0.25)', opacity: 0.25 }}
-          >
-            <span
-              className="whitespace-nowrap"
-              style={{ ...involve, fontWeight: 400, fontSize: '16px', lineHeight: '125%', color: '#FFFFFF' }}
-            >
-              Написать нам в «Макс»
-            </span>
-            <div className="flex h-4 w-4 flex-shrink-0 items-center justify-center">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                <path
-                  d="M10.8424 5.82274L8.6651 8L10.8424 10.1773C10.8886 10.2203 10.9257 10.2723 10.9514 10.33C10.9771 10.3877 10.9909 10.4501 10.9921 10.5132C10.9932 10.5764 10.9816 10.6392 10.9579 10.6978C10.9342 10.7564 10.899 10.8096 10.8543 10.8543C10.8096 10.899 10.7564 10.9342 10.6978 10.9579C10.6392 10.9815 10.5764 10.9932 10.5132 10.9921C10.4501 10.9909 10.3877 10.9771 10.33 10.9514C10.2723 10.9257 10.2203 10.8886 10.1773 10.8424L8 8.6651L5.82275 10.8424C5.73354 10.9255 5.61555 10.9707 5.49364 10.9686C5.37172 10.9664 5.2554 10.917 5.16918 10.8308C5.08296 10.7446 5.03357 10.6283 5.03142 10.5064C5.02927 10.3844 5.07452 10.2665 5.15765 10.1773L7.3349 8L5.15765 5.82274C5.07452 5.73354 5.02927 5.61555 5.03142 5.49363C5.03357 5.37172 5.08296 5.2554 5.16918 5.16918C5.2554 5.08296 5.37172 5.03357 5.49364 5.03142C5.61555 5.02927 5.73354 5.07452 5.82275 5.15765L8 7.3349L10.1773 5.15765C10.2665 5.07452 10.3845 5.02927 10.5064 5.03142C10.6283 5.03357 10.7446 5.08296 10.8308 5.16918C10.917 5.2554 10.9664 5.37172 10.9686 5.49363C10.9707 5.61555 10.9255 5.73354 10.8424 5.82274ZM16 8C16 9.58225 15.5308 11.129 14.6518 12.4446C13.7727 13.7602 12.5233 14.7855 11.0615 15.391C9.59966 15.9965 7.99113 16.155 6.43928 15.8463C4.88743 15.5376 3.46197 14.7757 2.34315 13.6569C1.22433 12.538 0.462403 11.1126 0.153721 9.56072C-0.15496 8.00887 0.00346614 6.40034 0.608967 4.93853C1.21447 3.47672 2.23985 2.22729 3.55544 1.34824C4.87103 0.469192 6.41775 0 8 0C10.121 0.00249086 12.1544 0.846145 13.6541 2.3459C15.1539 3.84565 15.9975 5.87903 16 8ZM15.0588 8C15.0588 6.6039 14.6448 5.23914 13.8692 4.07833C13.0936 2.91751 11.9911 2.01276 10.7013 1.4785C9.41146 0.944232 7.99217 0.804443 6.62289 1.07681C5.25362 1.34918 3.99585 2.02146 3.00866 3.00866C2.02147 3.99585 1.34918 5.25361 1.07681 6.62289C0.804447 7.99217 0.944235 9.41146 1.4785 10.7013C2.01277 11.9911 2.91751 13.0936 4.07833 13.8692C5.23915 14.6448 6.6039 15.0588 8 15.0588C9.87148 15.0567 11.6657 14.3124 12.989 12.989C14.3124 11.6657 15.0567 9.87148 15.0588 8Z"
-                  fill="#FFFFFF"
-                />
-              </svg>
-            </div>
-          </div>
-
-          <div
-            className="flex cursor-pointer items-center justify-between rounded-[10px] px-[15px]"
-            style={{
-              height: '50px',
-              border:
-                selectedMethod === 'telegram' ? '1px solid rgba(255, 255, 255, 0.5)' : '1px solid rgba(255, 255, 255, 0.25)',
-            }}
-            onClick={() => {
-              setSelectedMethod('telegram');
-              setContactMethodAttempted(false);
-            }}
-          >
-            <span
-              className="whitespace-nowrap"
-              style={{
-                ...involve,
-                fontWeight: 400,
-                fontSize: '16px',
-                lineHeight: '125%',
-                color: selectedMethod === 'telegram' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.5)',
-              }}
-            >
-              Написать нам в «Телеграм»
-            </span>
-            <div className="flex h-4 w-4 flex-shrink-0 items-center justify-center">
-              {selectedMethod === 'telegram' ? <SelectedArrowIcon /> : <UnselectedArrowIcon />}
-            </div>
-          </div>
-
-          <div
-            className="flex cursor-pointer items-center justify-between rounded-[10px] px-[15px]"
-            style={{
-              height: '50px',
-              border:
-                selectedMethod === 'phone' ? '1px solid rgba(255, 255, 255, 0.5)' : '1px solid rgba(255, 255, 255, 0.25)',
-            }}
-            onClick={() => {
-              setSelectedMethod('phone');
-              setContactMethodAttempted(false);
-            }}
-          >
-            <span
-              className="whitespace-nowrap"
-              style={{
-                ...involve,
-                fontWeight: 400,
-                fontSize: '16px',
-                lineHeight: '125%',
-                color: selectedMethod === 'phone' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.5)',
-              }}
-            >
-              Перезвонить на номер телефона
-            </span>
-            <div className="flex h-4 w-4 flex-shrink-0 items-center justify-center">
-              {selectedMethod === 'phone' ? <SelectedArrowIcon /> : <UnselectedArrowIcon />}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-[5px]">
-          <button
-            type="button"
-            onClick={handleBack}
-            onMouseDown={() => setIsBackBtnPressed(true)}
-            onMouseUp={() => setIsBackBtnPressed(false)}
-            onMouseLeave={() => setIsBackBtnPressed(false)}
-            onTouchStart={() => setIsBackBtnPressed(true)}
-            onTouchEnd={() => setIsBackBtnPressed(false)}
-            className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none"
-            style={{
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              background: 'transparent',
-              transform: isBackBtnPressed ? 'scale(0.92)' : 'scale(1)',
-              transition: 'transform 0.15s ease-out',
-            }}
-          >
-            <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }}>
-              <path d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z" fill="#FFFFFF" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            onClick={handleNextFromMethod}
-            onMouseDown={() => setIsNextBtnPressed(true)}
-            onMouseUp={() => setIsNextBtnPressed(false)}
-            onMouseLeave={() => setIsNextBtnPressed(false)}
-            onTouchStart={() => setIsNextBtnPressed(true)}
-            onTouchEnd={() => setIsNextBtnPressed(false)}
-            className="h-[50px] flex-1 cursor-pointer rounded-[10px] outline-none disabled:cursor-not-allowed"
             style={{
               ...involve,
-              fontSize: '16px',
-              lineHeight: '315%',
-              border: !contactMethodAttempted || selectedMethod ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
-              background: !contactMethodAttempted || selectedMethod ? '#FFFFFF' : 'transparent',
-              color: !contactMethodAttempted || selectedMethod ? '#050505' : '#FFFFFF',
-              opacity: !contactMethodAttempted || selectedMethod ? 1 : 0.25,
-              transform: isNextBtnPressed && (!contactMethodAttempted || selectedMethod) ? 'scale(0.97)' : 'scale(1)',
-              transition: 'transform 0.15s ease-out',
+              fontWeight: 400,
+              fontSize: '18px',
+              lineHeight: '110%',
+              color: '#FFFFFF',
+              marginBottom: '10px',
             }}
           >
-            Далее
-          </button>
+            Взаимодействие
+          </div>
+          <div style={{ ...subtitleTextStyle, marginBottom: '20px' }}>
+            Навязывание ненужного отсутствует.
+            <br />
+            Рекламирование ненужного тоже отсутствует.
+          </div>
+
+          <div className="flex flex-col gap-[5px]" style={{ marginBottom: '15px' }}>
+            <div
+              className="flex items-center justify-between"
+              style={{
+                ...optionBase,
+                border: showRequired ? '1px solid rgba(255,255,255,0.5)' : '1px solid rgba(255,255,255,0.25)',
+                opacity: 0.25,
+              }}
+            >
+              <span style={{ ...involve, fontWeight: 400, fontSize: '16px', lineHeight: '125%', color: '#FFFFFF' }}>Написать нам в «Макс»</span>
+              <div className="flex h-4 w-4 items-center justify-center">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                  <path
+                    d="M10.8424 5.82274L8.6651 8L10.8424 10.1773C10.8886 10.2203 10.9257 10.2723 10.9514 10.33C10.9771 10.3877 10.9909 10.4501 10.9921 10.5132C10.9932 10.5764 10.9816 10.6392 10.9579 10.6978C10.9342 10.7564 10.899 10.8096 10.8543 10.8543C10.8096 10.899 10.7564 10.9342 10.6978 10.9579C10.6392 10.9815 10.5764 10.9932 10.5132 10.9921C10.4501 10.9909 10.3877 10.9771 10.33 10.9514C10.2723 10.9257 10.2203 10.8886 10.1773 10.8424L8 8.6651L5.82275 10.8424C5.73354 10.9255 5.61555 10.9707 5.49364 10.9686C5.37172 10.9664 5.2554 10.917 5.16918 10.8308C5.08296 10.7446 5.03357 10.6283 5.03142 10.5064C5.02927 10.3844 5.07452 10.2665 5.15765 10.1773L7.3349 8L5.15765 5.82274C5.07452 5.73354 5.02927 5.61555 5.03142 5.49363C5.03357 5.37172 5.08296 5.2554 5.16918 5.16918C5.2554 5.08296 5.37172 5.03357 5.49364 5.03142C5.61555 5.02927 5.73354 5.07452 5.82275 5.15765L8 7.3349L10.1773 5.15765C10.2665 5.07452 10.3845 5.02927 10.5064 5.03142C10.6283 5.03357 10.7446 5.08296 10.8308 5.16918C10.917 5.2554 10.9664 5.37172 10.9686 5.49363C10.9707 5.61555 10.9255 5.73354 10.8424 5.82274ZM16 8C16 9.58225 15.5308 11.129 14.6518 12.4446C13.7727 13.7602 12.5233 14.7855 11.0615 15.391C9.59966 15.9965 7.99113 16.155 6.43928 15.8463C4.88743 15.5376 3.46197 14.7757 2.34315 13.6569C1.22433 12.538 0.462403 11.1126 0.153721 9.56072C-0.15496 8.00887 0.00346614 6.40034 0.608967 4.93853C1.21447 3.47672 2.23985 2.22729 3.55544 1.34824C4.87103 0.469192 6.41775 0 8 0C10.121 0.00249086 12.1544 0.846145 13.6541 2.3459C15.1539 3.84565 15.9975 5.87903 16 8ZM15.0588 8C15.0588 6.6039 14.6448 5.23914 13.8692 4.07833C13.0936 2.91751 11.9911 2.01276 10.7013 1.4785C9.41146 0.944232 7.99217 0.804443 6.62289 1.07681C5.25362 1.34918 3.99585 2.02146 3.00866 3.00866C2.02147 3.99585 1.34918 5.25361 1.07681 6.62289C0.804447 7.99217 0.944235 9.41146 1.4785 10.7013C2.01277 11.9911 2.91751 13.0936 4.07833 13.8692C5.23915 14.6448 6.6039 15.0588 8 15.0588C9.87148 15.0567 11.6657 14.3124 12.989 12.989C14.3124 11.6657 15.0567 9.87148 15.0588 8Z"
+                    fill="#FFFFFF"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="flex items-center justify-between cursor-pointer"
+              style={{
+                ...optionBase,
+                border: selectedMethod === 'telegram' || showRequired ? '1px solid rgba(255,255,255,0.5)' : '1px solid rgba(255,255,255,0.25)',
+              }}
+              onClick={() => {
+                setSelectedMethod('telegram');
+                setContactMethodAttempted(false);
+              }}
+            >
+              <span style={{ ...involve, fontWeight: 400, fontSize: '16px', lineHeight: '125%', color: selectedMethod === 'telegram' ? '#FFFFFF' : 'rgba(255,255,255,0.5)' }}>
+                Написать нам в «Телеграм»
+              </span>
+              <div className="flex h-4 w-4 items-center justify-center">
+                {selectedMethod === 'telegram' ? <SelectedArrowIcon /> : <UnselectedArrowIcon />}
+              </div>
+            </button>
+
+            <button
+              type="button"
+              className="flex items-center justify-between cursor-pointer"
+              style={{
+                ...optionBase,
+                border: selectedMethod === 'phone' || showRequired ? '1px solid rgba(255,255,255,0.5)' : '1px solid rgba(255,255,255,0.25)',
+              }}
+              onClick={() => {
+                setSelectedMethod('phone');
+                setContactMethodAttempted(false);
+              }}
+            >
+              <span style={{ ...involve, fontWeight: 400, fontSize: '16px', lineHeight: '125%', color: selectedMethod === 'phone' ? '#FFFFFF' : 'rgba(255,255,255,0.5)' }}>
+                Перезвонить на номер телефона
+              </span>
+              <div className="flex h-4 w-4 items-center justify-center">
+                {selectedMethod === 'phone' ? <SelectedArrowIcon /> : <UnselectedArrowIcon />}
+              </div>
+            </button>
+          </div>
+
+          <div className="flex items-center gap-[5px]">
+            <button
+              type="button"
+              onClick={handleBack}
+              onMouseDown={() => setIsBackBtnPressed(true)}
+              onMouseUp={() => setIsBackBtnPressed(false)}
+              onMouseLeave={() => setIsBackBtnPressed(false)}
+              onTouchStart={() => setIsBackBtnPressed(true)}
+              onTouchEnd={() => setIsBackBtnPressed(false)}
+              className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none"
+              style={{
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: 'transparent',
+                transform: isBackBtnPressed ? 'scale(0.92)' : 'scale(1)',
+                transition: 'transform 0.15s ease-out',
+              }}
+            >
+              <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }}>
+                <path d="M0.112544 5.34082L5.70367 0.114631C5.7823 0.0412287 5.88888 -5.34251e-07 6 -5.24537e-07C6.11112 -5.14822e-07 6.2177 0.0412287 6.29633 0.114631L11.8875 5.34082C11.9615 5.41513 12.0019 5.5134 11.9999 5.61495C11.998 5.7165 11.954 5.81338 11.8772 5.8852C11.8004 5.95701 11.6967 5.99815 11.5881 5.99994C11.4794 6.00173 11.3743 5.96404 11.2948 5.8948L6 0.946249L0.705204 5.8948C0.625711 5.96404 0.520573 6.00173 0.411936 5.99994C0.3033 5.99815 0.199649 5.95701 0.12282 5.88519C0.04599 5.81338 0.00198176 5.71649 6.48835e-05 5.61495C-0.00185199 5.5134 0.0384722 5.41513 0.112544 5.34082Z" fill="#FFFFFF" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={handleNextFromMethod}
+              onMouseDown={() => setIsNextBtnPressed(true)}
+              onMouseUp={() => setIsNextBtnPressed(false)}
+              onMouseLeave={() => setIsNextBtnPressed(false)}
+              onTouchStart={() => setIsNextBtnPressed(true)}
+              onTouchEnd={() => setIsNextBtnPressed(false)}
+              className="h-[50px] flex-1 cursor-pointer rounded-[10px] outline-none disabled:cursor-not-allowed"
+              style={{
+                ...involve,
+                fontSize: '16px',
+                lineHeight: '315%',
+                border: !contactMethodAttempted || selectedMethod ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
+                background: !contactMethodAttempted || selectedMethod ? '#FFFFFF' : 'transparent',
+                color: !contactMethodAttempted || selectedMethod ? '#050505' : '#FFFFFF',
+                opacity: !contactMethodAttempted || selectedMethod ? 1 : 0.25,
+                transform: isNextBtnPressed && (!contactMethodAttempted || selectedMethod) ? 'scale(0.97)' : 'scale(1)',
+                transition: 'transform 0.15s ease-out',
+              }}
+            >
+              Далее
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderPhoneCallbackForm = () => {
     const nameOk = callbackName.trim().length > 0;
@@ -1009,6 +1062,7 @@ export default function ConsultationFlow({
       <div
         className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden"
         style={{
+          zIndex: 3,
           transform: isAnimating ? 'scale(1)' : 'scale(0.985)',
           transition: 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1)',
           boxSizing: 'border-box',
