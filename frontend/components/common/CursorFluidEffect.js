@@ -121,6 +121,7 @@ export default function CursorFluidEffect({ active }) {
       IDLE_FRAME_SKIP: isMobile ? 1 : 4,
       TRANSPARENT: true,
       SHADING: false,
+      COLOR_PALETTE: ['#2525FF', '#5050FF', '#50FF50'],
     };
 
     let cancelled = false;
