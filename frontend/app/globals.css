@@ -263,7 +263,7 @@ body::-webkit-scrollbar {
 }
 
 .loading-logo-blink {
-  animation: mana-logo-blink 1.4s ease-in-out infinite alternate;
+  animation: mana-logo-blink 1.1s ease-in-out infinite alternate;
   will-change: opacity;
 }
 
@@ -272,6 +272,6 @@ body::-webkit-scrollbar {
     opacity: 1;
   }
   100% {
-    opacity: 0.62;
+    opacity: 0.35;
   }
 }
