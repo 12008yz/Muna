@@ -207,6 +207,7 @@ function ManaGlassMarketingCarouselCard({
   expandedPriceOverride,
   expandedButtonLabelOverride,
   expandedForceActionEnabled,
+  parallelPhase = 'idle',
   /** Последний слайд в stacked MANA: snap end + поле 20px справа у края экрана. */
   stackCarouselLast = false,
 }) {
@@ -223,6 +224,7 @@ function ManaGlassMarketingCarouselCard({
   const isActionEnabled = typeof forceActionEnabled === 'boolean' ? forceActionEnabled : isSiteVariant;
   const actionLabel = overrideButtonLabel || (isSiteVariant ? 'Уточнение' : 'Недоступно');
   const expandedVariantResolved = expandedVariant || (isSiteVariant ? 'site' : 'content');
+  const isParallelAnimating = parallelPhase !== 'idle';
 
   const handleInformClick = () => {
     if (!allowInformSwitch || leavingDown || isExpanded) return;
@@ -259,8 +261,8 @@ function ManaGlassMarketingCarouselCard({
         overrideButtonLabel={expandedButtonLabelOverride}
         forceActionEnabled={expandedForceActionEnabled}
         containerStyle={{
-          transform: expandedLeaving ? 'translateY(24px)' : 'translateY(0)',
-          opacity: expandedLeaving ? 0 : 1,
+          transform: expandedLeaving || isParallelAnimating ? 'translateY(24px)' : 'translateY(0)',
+          opacity: expandedLeaving || isParallelAnimating ? 0 : 1,
           transition: 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1), opacity 460ms cubic-bezier(0.22, 1, 0.36, 1)',
         }}
       />
@@ -280,8 +282,8 @@ function ManaGlassMarketingCarouselCard({
         scrollSnapAlign: 'start',
         boxSizing: 'border-box',
         maxWidth: 360,
-        transform: leavingDown || baseEntering ? 'translateY(24px)' : 'translateY(0)',
-        opacity: leavingDown || baseEntering ? 0 : 1,
+        transform: leavingDown || baseEntering || isParallelAnimating ? 'translateY(24px)' : 'translateY(0)',
+        opacity: leavingDown || baseEntering || isParallelAnimating ? 0 : 1,
         transition: 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1), opacity 460ms cubic-bezier(0.22, 1, 0.36, 1)',
       }}
     >
@@ -788,6 +790,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
   const mainColumnHeight = '100%';
   const [hideStackedArrow, setHideStackedArrow] = useState(false);
   const [isGiftOpenInStacked, setIsGiftOpenInStacked] = useState(false);
+  const [stackedCardsParallelPhase, setStackedCardsParallelPhase] = useState('idle');
   const [stackedActiveIndex, setStackedActiveIndex] = useState(0);
   const [stackedCardsCount, setStackedCardsCount] = useState(0);
   const [stackedArrowTop, setStackedArrowTop] = useState(0);
@@ -801,6 +804,22 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
   const stackedCarouselScrollLockLeftRef = useRef(null);
   /** Каждый кадр подтягиваем scrollLeft — часть движков меняет позицию без события scroll. */
   const carouselScrollLockRafRef = useRef(0);
+  const stackedCardsParallelPhaseRef = useRef({ enterId: null, resetId: null });
+
+  const startStackedCardsParallelAnimation = useCallback(() => {
+    const refs = stackedCardsParallelPhaseRef.current;
+    if (refs.enterId) window.clearTimeout(refs.enterId);
+    if (refs.resetId) window.clearTimeout(refs.resetId);
+    setStackedCardsParallelPhase('leaving');
+    refs.enterId = window.setTimeout(() => {
+      setStackedCardsParallelPhase('entering');
+      refs.enterId = null;
+    }, 420);
+    refs.resetId = window.setTimeout(() => {
+      setStackedCardsParallelPhase('idle');
+      refs.resetId = null;
+    }, 520);
+  }, []);
 
   const updateStackedArrowPosition = useCallback(() => {
     const frame = stackedCarouselFrameRef.current;
@@ -957,6 +976,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
   }, [updateStackedArrowPosition, updateStackedCarouselMeta]);
 
   const hideStackedArrowDuringCardTransition = (lockedCardIndex) => {
+    startStackedCardsParallelAnimation();
     const carousel = stackedCarouselRef.current;
     let prevSnapType = '';
     let prevOverflowX = '';
@@ -1046,6 +1066,15 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
       stackedArrowTimerRef.current = null;
     }, 500);
   };
+
+  useEffect(
+    () => () => {
+      const refs = stackedCardsParallelPhaseRef.current;
+      if (refs.enterId) window.clearTimeout(refs.enterId);
+      if (refs.resetId) window.clearTimeout(refs.resetId);
+    },
+    []
+  );
 
   const scrollStackedCarouselToNext = () => {
     const el = stackedCarouselRef.current;
@@ -1248,6 +1277,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   forceActionEnabled
                   expandedButtonLabelOverride="Уточнение"
                   expandedForceActionEnabled
+                  parallelPhase={stackedCardsParallelPhase}
                   onTransitionStart={() => hideStackedArrowDuringCardTransition(0)}
                   isExpanded={expandAllCards}
                   onExpandedChange={setExpandAllCards}
@@ -1259,6 +1289,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   initialVariant="site"
                   allowInformSwitch
                   overrideButtonLabel="Консультирование"
+                  parallelPhase={stackedCardsParallelPhase}
                   onTransitionStart={() => hideStackedArrowDuringCardTransition(1)}
                   isExpanded={expandAllCards}
                   onExpandedChange={setExpandAllCards}
@@ -1283,6 +1314,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   expandedPriceOverride="около 35 тыс. р."
                   expandedButtonLabelOverride="Уточнение"
                   expandedForceActionEnabled
+                  parallelPhase={stackedCardsParallelPhase}
                   onNavigateToOrder={openConsultationCallbackForm}
                 />
 
