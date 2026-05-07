@@ -788,6 +788,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
   const [expandAllCards, setExpandAllCards] = useState(false);
   const [showSingleGiftCta, setShowSingleGiftCta] = useState(false);
   const [isGlobalGiftOpen, setIsGlobalGiftOpen] = useState(false);
+  const [stackedCardsParallelPhase, setStackedCardsParallelPhase] = useState('idle');
 
   useEffect(() => {
     if (typeof exposeOpenConsultation !== 'function') return;
@@ -808,7 +809,6 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
   const mainColumnHeight = '100%';
   const [hideStackedArrow, setHideStackedArrow] = useState(false);
   const [isGiftOpenInStacked, setIsGiftOpenInStacked] = useState(false);
-  const [stackedCardsParallelPhase, setStackedCardsParallelPhase] = useState('idle');
   const [stackedActiveIndex, setStackedActiveIndex] = useState(0);
   const [stackedCardsCount, setStackedCardsCount] = useState(0);
   const [stackedArrowTop, setStackedArrowTop] = useState(0);
@@ -889,6 +889,9 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
         cancelAnimationFrame(carouselScrollLockRafRef.current);
         carouselScrollLockRafRef.current = 0;
       }
+      const refs = stackedCardsParallelPhaseRef.current;
+      if (refs.enterId) window.clearTimeout(refs.enterId);
+      if (refs.resetId) window.clearTimeout(refs.resetId);
     };
   }, []);
 
@@ -1085,15 +1088,6 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
     }, 500);
   };
 
-  useEffect(
-    () => () => {
-      const refs = stackedCardsParallelPhaseRef.current;
-      if (refs.enterId) window.clearTimeout(refs.enterId);
-      if (refs.resetId) window.clearTimeout(refs.resetId);
-    },
-    []
-  );
-
   const scrollStackedCarouselToNext = () => {
     const el = stackedCarouselRef.current;
     if (!el) return;
@@ -1261,6 +1255,8 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                     /* auto: иначе при mandatory snap после смены высоты карточки ряд «подползает» вбок. Кнопка «далее» сама передаёт behavior: 'smooth'. */
                     scrollBehavior: 'auto',
                     scrollSnapStop: 'always',
+                    paddingLeft: '20px',
+                    paddingRight: '20px',
                     scrollPaddingLeft: '20px',
                     scrollPaddingRight: '20px',
                     overflowAnchor: 'none',
@@ -1288,8 +1284,6 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   }}
                   onWheel={redirectVerticalWheelFromCarousel}
                 >
-                <div className="carousel-spacer-left shrink-0" aria-hidden />
-
                 <ManaGlassMarketingCarouselCard
                   overrideButtonLabel="Консультирование"
                   forceActionEnabled
@@ -1336,8 +1330,6 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   parallelPhase={stackedCardsParallelPhase}
                   onNavigateToOrder={openConsultationCallbackForm}
                 />
-
-                  <div className="carousel-spacer-right shrink-0" aria-hidden />
                 </div>
               </div>
             </div>
