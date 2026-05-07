@@ -168,10 +168,10 @@ export default function HomeClient() {
         className="min-h-[100dvh] w-full overflow-x-hidden"
         style={{
           visibility: mainHiddenBehindGate ? 'hidden' : 'visible',
-          position: mainHiddenBehindGate ? 'absolute' : undefined,
+          position: 'relative',
           opacity: mainHiddenBehindGate ? 0 : mainRevealVisible ? 1 : 0,
-          transform: mainHiddenBehindGate ? 'translateY(8px)' : mainRevealVisible ? 'translateY(0)' : 'translateY(8px)',
-          transition: 'opacity 680ms cubic-bezier(0.22, 1, 0.36, 1), transform 680ms cubic-bezier(0.22, 1, 0.36, 1)',
+          transform: 'translateY(0)',
+          transition: 'opacity 680ms cubic-bezier(0.22, 1, 0.36, 1)',
         }}
       >
         <HomePage

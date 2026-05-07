@@ -5,7 +5,7 @@ import LoadingBrandLogo from '@/components/LoadingBrandLogo';
 export default function LoadingScreen() {
   return (
     <div
-      className="fixed inset-0 z-[9998] flex flex-col items-center justify-center overflow-hidden bg-black"
+      className="fixed inset-0 z-[10010] flex flex-col items-center justify-center overflow-hidden bg-black"
       style={{
         paddingTop: 'var(--sat, 0px)',
         paddingBottom: 'var(--sab, 0px)',
@@ -17,10 +17,10 @@ export default function LoadingScreen() {
           className="loading-logo-blink shrink-0"
           style={{
             width: 'min(152px, 85vw)',
-            height: 'calc(min(152px, 85vw) * 32 / 152)',
+            aspectRatio: '152 / 32',
           }}
         >
-          <LoadingBrandLogo className="block h-full w-full max-w-none" />
+          <LoadingBrandLogo className="block h-auto w-full max-w-none" />
         </div>
       </div>
     </div>
