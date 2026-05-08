@@ -327,11 +327,11 @@ function ManaGlassMarketingCarouselCard({
           >
             {cardTitle}
           </h2>
-          <div className="mt-2">
+          <div className="mt-[10px]">
             <ManaGlassDivider />
           </div>
           <p
-            className="m-0 mt-2 w-full max-w-[330px]"
+            className="m-0 mt-[10px] w-full max-w-[330px]"
             style={{
               ...involveMana,
               width: 330,
@@ -608,7 +608,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
           <p className="m-0" style={{ ...involveMana, fontSize: 18, lineHeight: '110%', color: '#FFFFFF' }}>
             Подарок, как маркетинговая карта
           </p>
-          <p className="m-0 mt-[10px]" style={{ ...involveMana, fontSize: 14, lineHeight: '110%', color: 'rgba(255,255,255,0.25)' }}>
+          <p className="m-0 mt-[5px]" style={{ ...involveMana, fontSize: 14, lineHeight: '110%', color: 'rgba(255,255,255,0.25)' }}>
             Рассылка неполезного отсутствует.
             <br />
             Рассылка неинтересного тоже отсутствует
@@ -657,7 +657,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
           <button
             type="button"
             onClick={() => setNewsAccepted((v) => !v)}
-            className="mt-[8px] flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] pl-[15px] pr-[10px] text-left"
+            className="mt-[5px] flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] pl-[15px] pr-[10px] text-left"
           >
             <span className="h-4 w-4 shrink-0" aria-hidden>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -678,7 +678,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
           <button
             type="button"
             disabled={!canSubmit}
-            className={`mt-[10px] h-[50px] w-full rounded-[10px] border border-white ${canSubmit ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+            className={`mt-[20px] h-[50px] w-full rounded-[10px] border border-white ${canSubmit ? 'cursor-pointer' : 'cursor-not-allowed'}`}
             style={{ ...involveMana, fontSize: 16, lineHeight: '315%', color: '#050505', background: '#FFFFFF', opacity: 1 }}
           >
             Подтверждение
@@ -780,7 +780,7 @@ function ManaGlassMarketingCarouselCardTwo({
           >
             {expandedTitle}
           </h2>
-          <div className="mt-2">
+          <div className="mt-[10px]">
             <ManaGlassDivider />
           </div>
         </div>

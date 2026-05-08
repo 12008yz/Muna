@@ -581,7 +581,7 @@ export default function ConsultationFlow({
               fontSize: '18px',
               lineHeight: '110%',
               color: '#FFFFFF',
-              marginBottom: '10px',
+              marginBottom: '5px',
             }}
           >
             Взаимодействие
