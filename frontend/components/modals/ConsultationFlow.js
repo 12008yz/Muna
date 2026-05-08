@@ -84,11 +84,22 @@ const glassSheet = {
 };
 
 const involve = { fontFamily: "'TT Firs Neue', system-ui, sans-serif" };
+const headingTextStyle = {
+  ...involve,
+  fontWeight: 400,
+  fontStyle: 'normal',
+  fontSize: '18px',
+  lineHeight: '140%',
+  letterSpacing: '0%',
+  verticalAlign: 'middle',
+};
 const subtitleTextStyle = {
   ...involve,
   fontWeight: 400,
-  fontSize: '14px',
-  lineHeight: '110%',
+  fontStyle: 'normal',
+  fontSize: '16px',
+  lineHeight: '125%',
+  letterSpacing: '0%',
   color: 'rgba(255, 255, 255, 0.25)',
   width: 330,
   maxWidth: 330,
@@ -576,10 +587,7 @@ export default function ConsultationFlow({
         >
           <div
             style={{
-              ...involve,
-              fontWeight: 400,
-              fontSize: '18px',
-              lineHeight: '110%',
+              ...headingTextStyle,
               color: '#FFFFFF',
               marginBottom: '10px',
             }}
@@ -753,10 +761,7 @@ export default function ConsultationFlow({
         >
           <div
             style={{
-              ...involve,
-              fontWeight: 400,
-              fontSize: '18px',
-              lineHeight: '110%',
+              ...headingTextStyle,
               color: '#FFFFFF',
               marginBottom: '10px',
             }}
@@ -875,7 +880,9 @@ export default function ConsultationFlow({
                   ...involve,
                   flex: 1,
                   minWidth: 0,
-                  lineHeight: '110%',
+                  fontSize: '16px',
+                  lineHeight: '125%',
+                  letterSpacing: '0%',
                   display: 'block',
                   paddingTop: 1,
                 }}
@@ -982,7 +989,7 @@ export default function ConsultationFlow({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div style={{ ...involve, fontWeight: 400, fontSize: '20px', lineHeight: '125%', color: '#FFFFFF', marginBottom: '15px' }}>Консультация</div>
+        <div style={{ ...headingTextStyle, color: '#FFFFFF', marginBottom: '15px' }}>Консультация</div>
         <div style={{ ...subtitleTextStyle, marginBottom: '20px' }}>
           Напишите номер вашего сотового телефона. Пожалуйста, проверьте правильность
         </div>
@@ -1120,8 +1127,9 @@ export default function ConsultationFlow({
             style={{
               ...involve,
               fontWeight: 400,
-              fontSize: 14,
-              lineHeight: '110%',
+              fontSize: 16,
+              lineHeight: '125%',
+              letterSpacing: '0%',
               color: '#FFFFFF',
             }}
           >

@@ -384,7 +384,7 @@ function ManaGlassMarketingCarouselCard({
 
         <div className="relative mt-[10px] flex max-w-[330px] items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <p className="m-0" style={{ ...involveMana, fontSize: 20, lineHeight: '125%', color: '#FFFFFF' }}>
+            <p className="m-0" style={{ ...involveMana, fontSize: 18, lineHeight: '140%', color: '#FFFFFF', letterSpacing: '0%', verticalAlign: 'middle' }}>
               {cardPrice}
             </p>
             <p className="m-0 mt-1" style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: 'rgba(255, 255, 255, 0.5)' }}>
@@ -605,10 +605,10 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
             }}
           >
             <article className="box-border h-[335px] w-full max-w-full px-[15px] pb-[15px] pt-[15px]" style={manaGlassCardStyle}>
-          <p className="m-0" style={{ ...involveMana, fontSize: 18, lineHeight: '110%', color: '#FFFFFF' }}>
+          <p className="m-0" style={{ ...involveMana, fontSize: 18, lineHeight: '140%', color: '#FFFFFF', letterSpacing: '0%', verticalAlign: 'middle' }}>
             Подарок, как маркетинговая карта
           </p>
-          <p className="m-0 mt-[10px]" style={{ ...involveMana, fontSize: 14, lineHeight: '110%', color: 'rgba(255,255,255,0.25)' }}>
+          <p className="m-0 mt-[10px]" style={{ ...involveMana, fontSize: 16, lineHeight: '125%', color: 'rgba(255,255,255,0.25)', letterSpacing: '0%' }}>
             Рассылка неполезного отсутствует.
             <br />
             Рассылка неинтересного тоже отсутствует
@@ -856,7 +856,7 @@ function ManaGlassMarketingCarouselCardTwo({
 
         <div className={`${priceGap} relative flex max-w-[330px] items-start justify-between gap-3`}>
           <div className="min-w-0 flex-1">
-            <p className="m-0" style={{ ...involveMana, fontSize: 20, lineHeight: '125%', color: '#FFFFFF' }}>
+            <p className="m-0" style={{ ...involveMana, fontSize: 18, lineHeight: '140%', color: '#FFFFFF', letterSpacing: '0%', verticalAlign: 'middle' }}>
               {expandedPrice}
             </p>
             <p className="m-0 mt-1" style={{ ...involveMana, fontSize: 14, lineHeight: '105%', color: 'rgba(255, 255, 255, 0.5)' }}>
