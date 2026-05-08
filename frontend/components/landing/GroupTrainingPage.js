@@ -963,16 +963,18 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
     const cards = Array.from(carousel.querySelectorAll('.carousel-card'));
     if (!cards.length) return;
 
-    const safeIndex = Math.max(0, Math.min(stackedActiveIndex, cards.length - 1));
-    const activeCard = cards[safeIndex] || cards[0];
+    // Жёстко якорим стрелку по первой карточке, чтобы она не "прыгала"
+    // при смене активной карточки и её анимациях/перестроениях.
+    const anchorCard = cards[0];
+    if (!anchorCard) return;
 
     const ARROW_SIZE = 40;
     const GAP_ABOVE_CARD = 10;
-    const cardMainBlock = activeCard.querySelector('article');
-    const blockTop = cardMainBlock ? activeCard.offsetTop + cardMainBlock.offsetTop : activeCard.offsetTop;
+    const cardMainBlock = anchorCard.querySelector('article');
+    const blockTop = cardMainBlock ? anchorCard.offsetTop + cardMainBlock.offsetTop : anchorCard.offsetTop;
     const nextTop = Math.max(0, blockTop - ARROW_SIZE - GAP_ABOVE_CARD);
     setStackedArrowTop(nextTop);
-  }, [stackedActiveIndex, stackedArrowTop]);
+  }, [stackedArrowTop]);
 
   const updateStackedCarouselMeta = useCallback(() => {
     const carousel = stackedCarouselRef.current;
@@ -1326,7 +1328,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                       Подарок
                     </button>
                   </div>
-                  <div className="pointer-events-none absolute right-5 z-[3]" style={{ top: stackedArrowTop ?? 0, transition: 'top 180ms ease' }}>
+                  <div className="pointer-events-none absolute right-5 z-[3]" style={{ top: stackedArrowTop ?? 0 }}>
                     <button
                       type="button"
                       data-fluid-cursor-block
@@ -1342,16 +1344,19 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                     >
                       <svg
                         className="block"
-                        width="17"
+                        width="16"
                         height="16"
-                        viewBox="0 0 17 17"
+                        viewBox="0 0 16 16"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                         aria-hidden
                         style={{
-                          transform: `${isLastStackedCard ? 'rotate(180deg) translateY(0px)' : 'rotate(0deg) translateY(1px)'}`,
-                          transformOrigin: '50% 50%',
+                          transform: `${isLastStackedCard ? 'rotate(180deg)' : 'rotate(0deg)'}`,
+                          transformOrigin: 'center center',
+                          transformBox: 'view-box',
                           transition: 'transform 160ms ease',
+                          willChange: 'transform',
+                          backfaceVisibility: 'hidden',
                         }}
                       >
                         <path
