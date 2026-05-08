@@ -608,7 +608,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
           <p className="m-0" style={{ ...involveMana, fontSize: 18, lineHeight: '110%', color: '#FFFFFF' }}>
             Подарок, как маркетинговая карта
           </p>
-          <p className="m-0 mt-[10px]" style={{ ...involveMana, fontSize: 14, lineHeight: '110%', color: 'rgba(255,255,255,0.25)' }}>
+          <p className="m-0 mt-[5px]" style={{ ...involveMana, fontSize: 14, lineHeight: '110%', color: 'rgba(255,255,255,0.25)' }}>
             Рассылка неполезного отсутствует.
             <br />
             Рассылка неинтересного тоже отсутствует
@@ -636,7 +636,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
           <button
             type="button"
             onClick={() => setPrivacyAccepted((v) => !v)}
-            className="mt-[10px] flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] pl-[15px] pr-[10px] text-left"
+            className="mt-[5px] flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] pl-[15px] pr-[10px] text-left"
           >
             <span className="h-4 w-4 shrink-0" aria-hidden>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -657,7 +657,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
           <button
             type="button"
             onClick={() => setNewsAccepted((v) => !v)}
-            className="mt-[10px] flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] pl-[15px] pr-[10px] text-left"
+            className="mt-[5px] flex h-[50px] w-full items-center gap-[10px] rounded-[10px] border border-[rgba(255,255,255,0.1)] pl-[15px] pr-[10px] text-left"
           >
             <span className="h-4 w-4 shrink-0" aria-hidden>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
