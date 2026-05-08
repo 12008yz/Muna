@@ -192,7 +192,7 @@ function ManaGlassPriceFab({ onClick, className = '' }) {
 
 const manaGlassCardStyle = {
   boxSizing: 'border-box',
-  background: 'rgba(5, 5, 5, 0.75)',
+  background: 'rgba(5, 5, 5, 0.7)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
   backdropFilter: 'blur(7.5px)',
   WebkitBackdropFilter: 'blur(7.5px)',
@@ -560,8 +560,8 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
           className="fixed inset-0 z-[20000] flex items-end justify-center px-[var(--main-block-margin)] pb-[20px] pt-[80px]"
           style={{
             background: '#050505',
-            backdropFilter: 'none',
-            WebkitBackdropFilter: 'none',
+            backdropFilter: 'blur(7.5px)',
+            WebkitBackdropFilter: 'blur(7.5px)',
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? 'translateY(0)' : 'translateY(12px)',
             transition: 'opacity 520ms cubic-bezier(0.22, 1, 0.36, 1), transform 520ms cubic-bezier(0.22, 1, 0.36, 1)',
@@ -571,7 +571,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
             type="button"
             data-fluid-cursor-block
             onClick={handleBackAnimated}
-            className="absolute left-[20px] top-[calc(var(--sat,0px)+10px)] z-[3] flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[5px]"
+            className="absolute left-[20px] top-[calc(var(--sat,0px)+10px)] z-[3] flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.7)] backdrop-blur-[5px]"
             aria-label="Назад"
           >
             <svg
@@ -1319,7 +1319,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                         setIsGlobalGiftOpen(true);
                         setIsGiftOpenInStacked(true);
                       }}
-                      className="pointer-events-auto flex h-10 items-center gap-2 rounded-full border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] pl-[10px] pr-[12px] backdrop-blur-[5px]"
+                      className="pointer-events-auto flex h-10 items-center gap-2 rounded-full border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.7)] pl-[10px] pr-[12px] backdrop-blur-[5px]"
                       style={{ ...involveMana, fontSize: 14, lineHeight: '145%', color: '#FFFFFF' }}
                     >
                       <ManaGiftHeartIcon />
@@ -1332,7 +1332,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                       data-fluid-cursor-block
                       data-vertical-scroll-handle=""
                       onClick={scrollStackedCarouselToNext}
-                      className="pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.75)] backdrop-blur-[5px]"
+                      className="pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.7)] backdrop-blur-[5px]"
                       aria-label="Следующая карточка"
                       style={{
                         opacity: hideStackedArrow || isGiftOpenInStacked ? 0 : 1,
