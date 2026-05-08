@@ -408,7 +408,7 @@ export default function ConsultationLandingPage({
                 width: 'auto',
                 minWidth: 0,
                 top: 'auto',
-                bottom: 'calc(20px - var(--main-block-margin))',
+                bottom: 0,
                 minHeight: 330,
                 height: 330,
                 borderRadius: 20,
@@ -585,7 +585,7 @@ export default function ConsultationLandingPage({
                   style={{
                     ...involve,
                     width: '100%',
-                    marginTop: 14,
+                    marginTop: 13,
                     marginBottom: 0,
                     height: 50,
                     minHeight: 50,
@@ -809,7 +809,7 @@ export default function ConsultationLandingPage({
                   style={{
                     ...involve,
                     width: '100%',
-                    marginTop: 14,
+                    marginTop: 13,
                     marginBottom: 0,
                     height: 50,
                     minHeight: 50,
