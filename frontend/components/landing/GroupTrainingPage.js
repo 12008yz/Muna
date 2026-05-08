@@ -317,7 +317,7 @@ function ManaGlassMarketingCarouselCard({
             Маркетинговое сопровождение
           </p>
           <h2
-            className="m-0 mt-1"
+            className="m-0"
             style={{
               ...involveMana,
               fontSize: 18,
@@ -342,17 +342,7 @@ function ManaGlassMarketingCarouselCard({
               overflow: 'hidden',
             }}
           >
-            {cardDescription === defaultDescription ? (
-              <>
-                <span style={{ display: 'block' }}>Наличие интересного медиа служит</span>
-                <span style={{ display: 'block' }}>важным маркетинговым инструментом</span>
-                <span style={{ display: 'block', whiteSpace: 'nowrap', letterSpacing: '-0.020em' }}>
-                  малого и среднего{'\u00A0'}предпринимательства
-                </span>
-              </>
-            ) : (
-              cardDescription
-            )}
+            {cardDescription}
           </p>
         </div>
 
