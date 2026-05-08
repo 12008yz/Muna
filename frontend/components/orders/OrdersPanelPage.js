@@ -101,7 +101,7 @@ export default function OrdersPanelPage({ embedded = false } = {}) {
           WebkitBackdropFilter: 'blur(7.5px)',
         }}
       >
-        <h1 className="m-0 mb-2 text-[24px] font-semibold text-[#101010]">Заявки</h1>
+        <h1 className="m-0 mb-2 text-[24px] font-normal text-[#101010]">Заявки</h1>
         <p className="m-0 mb-4 text-[14px] text-[rgba(16,16,16,0.55)]">
           Телефоны, способы связи и источник обращений из формы консультации.
         </p>
@@ -124,15 +124,15 @@ export default function OrdersPanelPage({ embedded = false } = {}) {
             <table className="w-full min-w-[980px] border-collapse text-left text-[14px] text-[#101010]">
               <thead>
                 <tr className="bg-[rgba(16,16,16,0.08)] text-[#101010]">
-                  <th className="px-3 py-2 font-semibold">ID</th>
-                  <th className="px-3 py-2 font-semibold">Дата</th>
-                  <th className="px-3 py-2 font-semibold">Телефон</th>
-                  <th className="px-3 py-2 font-semibold">Имя</th>
-                  <th className="px-3 py-2 font-semibold">Канал</th>
-                  <th className="px-3 py-2 font-semibold">Источник</th>
-                  <th className="px-3 py-2 font-semibold">Формат</th>
-                  <th className="px-3 py-2 font-semibold">Этап</th>
-                  <th className="px-3 py-2 font-semibold">Детали</th>
+                  <th className="px-3 py-2 font-normal">ID</th>
+                  <th className="px-3 py-2 font-normal">Дата</th>
+                  <th className="px-3 py-2 font-normal">Телефон</th>
+                  <th className="px-3 py-2 font-normal">Имя</th>
+                  <th className="px-3 py-2 font-normal">Канал</th>
+                  <th className="px-3 py-2 font-normal">Источник</th>
+                  <th className="px-3 py-2 font-normal">Формат</th>
+                  <th className="px-3 py-2 font-normal">Этап</th>
+                  <th className="px-3 py-2 font-normal">Детали</th>
                 </tr>
               </thead>
               <tbody>

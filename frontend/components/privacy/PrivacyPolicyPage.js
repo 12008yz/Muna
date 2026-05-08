@@ -63,7 +63,7 @@ export default function PrivacyPolicyPage({ onCollapse, embedded = false }) {
               style={{
                 fontFamily: "'TT Firs Neue', system-ui, sans-serif",
                 fontStyle: 'normal',
-                fontWeight: 500,
+                fontWeight: 400,
                 letterSpacing: 'normal',
                 fontSynthesis: 'none',
               }}
@@ -77,7 +77,7 @@ export default function PrivacyPolicyPage({ onCollapse, embedded = false }) {
               style={{
                 fontFamily: "'TT Firs Neue', system-ui, sans-serif",
                 fontStyle: 'normal',
-                fontWeight: 500,
+                fontWeight: 400,
                 fontSize: '14px',
                 lineHeight: '110%',
                 letterSpacing: 'normal',

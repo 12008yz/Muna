@@ -5,7 +5,7 @@ import Link from 'next/link';
 const involve = {
   fontFamily: "'TT Firs Neue', system-ui, sans-serif",
   fontStyle: 'normal',
-  fontWeight: 500,
+  fontWeight: 400,
   fontSynthesis: 'none',
 };
 

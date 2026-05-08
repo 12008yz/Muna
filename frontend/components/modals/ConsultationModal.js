@@ -7,7 +7,7 @@ import { dispatchNavigateToOrderLanding } from '@/lib/navigateToOrderLanding';
 const involve = {
   fontFamily: "'TT Firs Neue', system-ui, sans-serif",
   fontStyle: 'normal',
-  fontWeight: 500,
+  fontWeight: 400,
   fontSynthesis: 'none',
 };
 const SAVED_PHONE_KEY = 'leadPhone';
@@ -55,7 +55,7 @@ function CollapseIcon() {
 function FieldErrorIcon() {
   return (
     <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[rgba(16,16,16,0.35)]" aria-hidden>
-      <span className="text-[10px] font-bold leading-none text-white" style={involve}>
+      <span className="text-[10px] font-normal leading-none text-white" style={involve}>
         !
       </span>
     </span>

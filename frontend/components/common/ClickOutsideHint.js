@@ -8,7 +8,7 @@ const hintStyle = {
   minHeight: '40px',
   fontFamily: "'TT Firs Neue', system-ui, sans-serif",
   fontStyle: 'normal',
-  fontWeight: 500,
+  fontWeight: 400,
   fontSize: '14px',
   lineHeight: '105%',
   display: 'flex',

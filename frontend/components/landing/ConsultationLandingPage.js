@@ -12,7 +12,7 @@ import ManaMarketingHeader from '@/components/landing/ManaMarketingHeader';
 const involve = {
   fontFamily: "'TT Firs Neue', system-ui, sans-serif",
   fontStyle: 'normal',
-  fontWeight: 500,
+  fontWeight: 400,
   fontSynthesis: 'none',
 };
 
@@ -581,7 +581,7 @@ export default function ConsultationLandingPage({
                       {privacyAccepted ? <ConsentCheckDarkIcon /> : null}
                     </span>
                     <span
-                      className="text-[14px] font-medium leading-[105%] text-white"
+                      className="text-[14px] font-normal leading-[105%] text-white"
                       style={{ ...involve, flex: 1, minWidth: 0 }}
                     >
                       Я, полностью соглашаюсь с условиями{' '}
@@ -704,7 +704,7 @@ export default function ConsultationLandingPage({
                   <BadgeCheckIcon />
                 </span>
                 <span
-                  className="flex min-h-0 min-w-0 flex-1 items-center overflow-hidden text-ellipsis whitespace-nowrap text-[12px] font-medium leading-[25px] text-[rgba(16,16,16,0.75)]"
+                  className="flex min-h-0 min-w-0 flex-1 items-center overflow-hidden text-ellipsis whitespace-nowrap text-[12px] font-normal leading-[25px] text-[rgba(16,16,16,0.75)]"
                   style={involve}
                 >
                   свыше 8+ лет в продвижении и организации
@@ -803,7 +803,7 @@ export default function ConsultationLandingPage({
                       {privacyAccepted ? <ConsentCheckIcon /> : null}
                     </span>
                     <span
-                      className="text-[14px] font-medium leading-[105%] text-[#101010]"
+                      className="text-[14px] font-normal leading-[105%] text-[#101010]"
                       style={{ ...involve, flex: 1, minWidth: 0 }}
                     >
                       Я, полностью соглашаюсь с условиями
