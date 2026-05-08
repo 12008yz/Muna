@@ -280,7 +280,7 @@ export default function ConsultationFlow({
       canvas.style.zIndex = '1';
       canvas.style.display = 'block';
       canvas.style.opacity = '1';
-      canvas.style.filter = 'blur(0px) saturate(1.38) brightness(1.18)';
+      canvas.style.filter = 'blur(0px) saturate(1.7) brightness(1.25) contrast(1.08)';
       canvas.style.mixBlendMode = 'normal';
       canvas.style.pointerEvents = 'none';
     };
@@ -340,7 +340,7 @@ export default function ConsultationFlow({
       canvas.style.zIndex = String(overlayZIndex + 5);
       canvas.style.display = 'block';
       canvas.style.opacity = '1';
-      canvas.style.filter = 'blur(0px) saturate(1.38) brightness(1.18)';
+      canvas.style.filter = 'blur(0px) saturate(1.7) brightness(1.25) contrast(1.08)';
       canvas.style.mixBlendMode = 'normal';
     };
 
