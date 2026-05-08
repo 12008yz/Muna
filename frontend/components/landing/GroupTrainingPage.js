@@ -1371,7 +1371,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   className="carousel-container carousel-learning scrollbar-hide box-border flex w-full max-h-full min-h-0 flex-nowrap items-end overflow-x-auto overflow-y-hidden"
                   style={{
                     height: 'auto',
-                    gap: 5,
+                    gap: 10,
                     /* Покарточный скролл (как секции по вертикали). Срыв на соседний слайд при «Информирование» гасится restore по индексу. */
                     scrollSnapType: 'x mandatory',
                     /* auto: иначе при mandatory snap после смены высоты карточки ряд «подползает» вбок. Кнопка «далее» сама передаёт behavior: 'smooth'. */
