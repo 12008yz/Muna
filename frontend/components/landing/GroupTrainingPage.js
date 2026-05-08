@@ -1402,8 +1402,9 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   onWheel={redirectVerticalWheelFromCarousel}
                 >
                 <ManaGlassMarketingCarouselCard
-                  overrideButtonLabel="Консультирование"
+                  overrideButtonLabel="Уточнение"
                   forceActionEnabled
+                  expandedTitleOverride="Формирование контента"
                   expandedButtonLabelOverride="Уточнение"
                   expandedForceActionEnabled
                   parallelPhase={stackedCardsParallelPhase}
@@ -1417,7 +1418,8 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                 <ManaGlassMarketingCarouselCard
                   initialVariant="site"
                   allowInformSwitch
-                  overrideButtonLabel="Консультирование"
+                  overrideDescription="Наличие комфортного сайта служит важным маркетинговым инструментом малого и среднего предпринимательства"
+                  overrideButtonLabel="Уточнение"
                   parallelPhase={stackedCardsParallelPhase}
                   onTransitionStart={() => hideStackedArrowDuringCardTransition(1)}
                   isExpanded={expandAllCards}
@@ -1431,7 +1433,7 @@ export default function GroupTrainingPage({ exposeOpenConsultation, scrollNaviga
                   allowInformSwitch
                   stackCarouselLast
                   overrideTitle="Формирование имиджа"
-                  overrideDescription="Наличие интересного медиа служит важным маркетинговым инструментом малого и среднего предпринимательства"
+                  overrideDescription="Наличие достойного имиджа служит важным маркетинговым инструментом малого и среднего предпринимательства"
                   overridePrice="около 35 тыс. р."
                   overrideButtonLabel="Уточнение"
                   forceActionEnabled
