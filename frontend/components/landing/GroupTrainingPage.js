@@ -604,7 +604,7 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
             Рассылка неинтересного тоже отсутствует
           </p>
 
-          <div className="relative mt-[15px]">
+          <div className="relative mt-[20px]">
             <input
               type="email"
               value={email}
