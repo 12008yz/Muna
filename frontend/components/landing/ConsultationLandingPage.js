@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
@@ -399,25 +398,6 @@ export default function ConsultationLandingPage({
         >
           <div className="relative mx-auto box-border flex h-full min-h-0 w-full max-w-full min-w-0 flex-col bg-transparent" style={{ boxSizing: 'border-box' }}>
             {stackedNotificationsPortal}
-            <div className="relative min-h-0 w-full flex-1 shrink">
-              <div
-                data-fluid-cursor-block
-                data-vertical-scroll-handle=""
-                className="pointer-events-auto absolute left-0 right-0 z-[2] overflow-hidden"
-                style={{ top: 135, height: 380 }}
-              >
-                <div className="pointer-events-none relative mx-auto h-[380px] w-full min-w-0 max-w-[380px]">
-                  <Image
-                    src="/mana-marketing-hero.png"
-                    alt="MANA — маркетинговое сопровождение"
-                    fill
-                    className="pointer-events-none object-contain object-center"
-                    priority
-                    sizes="100vw"
-                  />
-                </div>
-              </div>
-            </div>
             <div
               data-fluid-cursor-block
               data-vertical-scroll-handle=""
@@ -483,7 +463,7 @@ export default function ConsultationLandingPage({
                 </span>
                 <span
                   className="flex min-h-0 min-w-0 flex-1 items-center overflow-hidden text-ellipsis whitespace-nowrap text-[12px] leading-[25px] text-white"
-                  style={{ ...involve, fontWeight: 400 }}
+                  style={{ ...involve, fontWeight: 400, paddingRight: 10 }}
                 >
                   свыше 8+ лет в продвижении и организации
                 </span>
@@ -705,7 +685,7 @@ export default function ConsultationLandingPage({
                 </span>
                 <span
                   className="flex min-h-0 min-w-0 flex-1 items-center overflow-hidden text-ellipsis whitespace-nowrap text-[12px] font-normal leading-[25px] text-[rgba(16,16,16,0.75)]"
-                  style={involve}
+                  style={{ ...involve, paddingRight: 10 }}
                 >
                   свыше 8+ лет в продвижении и организации
                 </span>
