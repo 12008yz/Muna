@@ -781,7 +781,7 @@ export default function OrderCreationLandingPage({
                       <span className="block whitespace-nowrap">Кликните на очень похожее мнение</span>
                     </p>
 
-                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]" style={{ marginBottom: 19 }}>
                       {[
                         { id: 'low-known', label: 'Компания малоизвестна в сети' },
                         { id: 'high-known', label: 'Компания известна в сети' },
@@ -1140,7 +1140,7 @@ export default function OrderCreationLandingPage({
                             Категорически важно ведение маркетингового и медиа, и сайта
                           </p>
                           <p
-                            className="m-0 mt-[10px]"
+                            className="m-0 mt-[15px]"
                             style={{
                               fontFamily: "'TT Firs Neue', system-ui, sans-serif",
                               fontStyle: 'normal',

@@ -592,7 +592,7 @@ export default function ConsultationFlow({
             Рекламирование ненужного тоже отсутствует.
           </div>
 
-          <div className="flex flex-col gap-[5px]" style={{ marginBottom: '15px' }}>
+          <div className="flex flex-col gap-[5px]" style={{ marginBottom: '20px' }}>
             <div
               className="flex items-center justify-between"
               style={{
