@@ -15,16 +15,6 @@ const involve = {
   fontSynthesis: 'none',
 };
 
-const headingTextStyle = {
-  ...involve,
-  fontWeight: 400,
-  fontStyle: 'normal',
-  fontSize: 18,
-  lineHeight: '140%',
-  letterSpacing: '0%',
-  verticalAlign: 'middle',
-};
-
 const PRIVACY_HREF = '/privacy-policy';
 const RAW_API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3040';
 const API_BASE = /^https?:\/\//i.test(RAW_API_BASE) ? RAW_API_BASE : `https://${RAW_API_BASE}`;
@@ -440,7 +430,10 @@ export default function ConsultationLandingPage({
               <h1
                 className="m-0 w-full min-w-0 self-start flex-shrink-0"
                 style={{
-                  ...headingTextStyle,
+                  ...involve,
+                  fontWeight: 400,
+                  fontSize: 20,
+                  lineHeight: '125%',
                   color: '#FFFFFF',
                   paddingTop: 0,
                   paddingBottom: 15,
@@ -660,7 +653,9 @@ export default function ConsultationLandingPage({
               <h1
                 className="m-0 flex-shrink-0"
                 style={{
-                  ...headingTextStyle,
+                  ...involve,
+                  fontSize: 20,
+                  lineHeight: '125%',
                   color: '#101010',
                   paddingTop: 0,
                   paddingBottom: 15,
