@@ -51,8 +51,10 @@ const privacyLinkStyle = {
 
 /** Тёмный стеклянный баннер (MANA hero, Figma Rectangle 67) */
 const manaDarkLinkStyle = {
-  color: '#FFFFFF',
+  color: 'rgba(255, 255, 255, 0.85)',
   textDecoration: 'underline',
+  textDecorationLine: 'underline',
+  textDecorationColor: 'rgba(255, 255, 255, 0.85)',
   textDecorationSkipInk: 'none',
   textUnderlineOffset: '3px',
 };
@@ -115,7 +117,7 @@ export default function CookieBanner({
             left: 15,
             top: 40,
             width: 330,
-            height: 60,
+            height: 66,
             fontFamily: involve.fontFamily,
             fontStyle: 'normal',
             fontWeight: 400,
@@ -127,7 +129,7 @@ export default function CookieBanner({
         >
           {children || (
             <>
-              Если продолжаете использовать этот сайт,
+              Если вы продолжаете использовать этот сайт,
               <br />
               вы выражаете своё согласие на использование файлов куки, в
               соответствии с условиями{' '}
@@ -142,12 +144,21 @@ export default function CookieBanner({
                     fontSize: 14,
                     lineHeight: '110%',
                     fontWeight: 400,
+                    textDecorationThickness: '1px',
+                    textUnderlineOffset: '2px',
                   }}
                 >
                   политики конфиденциальности
                 </button>
               ) : (
-                <Link href={privacyHref || '/privacy-policy'} style={manaDarkLinkStyle}>
+                <Link
+                  href={privacyHref || '/privacy-policy'}
+                  style={{
+                    ...manaDarkLinkStyle,
+                    textDecorationThickness: '1px',
+                    textUnderlineOffset: '2px',
+                  }}
+                >
                   политики конфиденциальности
                 </Link>
               )}{' '}
