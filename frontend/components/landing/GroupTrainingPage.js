@@ -760,7 +760,7 @@ function ManaGlassMarketingCarouselCardTwo({
             Маркетинговое сопровождение
           </p>
           <h2
-            className="m-0 mt-1"
+            className="m-0"
             style={{
               ...involveMana,
               fontSize: 18,
