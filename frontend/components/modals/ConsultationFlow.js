@@ -581,7 +581,7 @@ export default function ConsultationFlow({
               fontSize: '18px',
               lineHeight: '110%',
               color: '#FFFFFF',
-              marginBottom: '5px',
+              marginBottom: '10px',
             }}
           >
             Взаимодействие
@@ -769,7 +769,7 @@ export default function ConsultationFlow({
             Рекламирование ненужного тоже отсутствует.
           </div>
 
-          <div className="flex flex-col gap-[5px]" style={{ marginBottom: '5px' }}>
+          <div className="flex flex-col gap-[5px]" style={{ marginBottom: '10px' }}>
             <label className="sr-only" htmlFor="consult-callback-name">
               Имя
             </label>
