@@ -376,6 +376,10 @@ export default function OrderCreationLandingPage({
       ...involve,
       fontSize: 16,
       lineHeight: '315%',
+      width: 'min(330px, calc(100% - 55px))',
+      height: 50,
+      minHeight: 50,
+      borderRadius: 10,
       border: solid ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
       background: solid ? '#FFFFFF' : 'transparent',
       color: solid ? '#050505' : '#FFFFFF',
@@ -820,11 +824,11 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="mt-[20px] flex w-full min-w-0 items-center gap-[5px]">
+                    <div className="mt-[19px] flex w-full min-w-0 items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(0)}
-                        className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
+                        className="box-border flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
                         aria-label="Назад"
                       >
                         <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }} aria-hidden>
@@ -837,7 +841,7 @@ export default function OrderCreationLandingPage({
                       <button
                         type="button"
                         onClick={handlePrepTypeNext}
-                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                        className="box-border flex h-[50px] min-h-[50px] flex-none cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
                         style={{
                           ...wizardNextStyle(1),
                           fontFamily: "'TT Firs Neue', system-ui, sans-serif",
@@ -904,11 +908,11 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="mt-[20px] flex w-full min-w-0 items-center gap-[5px]">
+                    <div className="mt-[19px] flex w-full min-w-0 items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(1)}
-                        className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
+                        className="box-border flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
                         aria-label="Назад"
                       >
                         <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }} aria-hidden>
@@ -921,7 +925,7 @@ export default function OrderCreationLandingPage({
                       <button
                         type="button"
                         onClick={handleStyleNext}
-                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                        className="box-border flex h-[50px] min-h-[50px] flex-none cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
                         style={wizardNextStyle(2)}
                       >
                         Далее
@@ -984,11 +988,11 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="mt-[20px] flex w-full min-w-0 items-center gap-[5px]">
+                    <div className="mt-[19px] flex w-full min-w-0 items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(2)}
-                        className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
+                        className="box-border flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
                         aria-label="Назад"
                       >
                         <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }} aria-hidden>
@@ -1001,7 +1005,7 @@ export default function OrderCreationLandingPage({
                       <button
                         type="button"
                         onClick={handleGradeNext}
-                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                        className="box-border flex h-[50px] min-h-[50px] flex-none cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
                         style={wizardNextStyle(3)}
                       >
                         Далее
@@ -1064,11 +1068,11 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="mt-[20px] flex w-full min-w-0 items-center gap-[5px]">
+                    <div className="mt-[19px] flex w-full min-w-0 items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(3)}
-                        className="flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
+                        className="box-border flex h-[50px] w-[50px] flex-shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.92]"
                         aria-label="Назад"
                       >
                         <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }} aria-hidden>
@@ -1081,7 +1085,7 @@ export default function OrderCreationLandingPage({
                       <button
                         type="button"
                         onClick={handleSubjectsNext}
-                        className="flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                        className="box-border flex h-[50px] min-h-[50px] flex-none cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
                         style={wizardNextStyle(4)}
                       >
                         Далее
@@ -1159,7 +1163,7 @@ export default function OrderCreationLandingPage({
                     <button
                       type="button"
                       onClick={handleDurationNext}
-                      className="mt-[20px] flex h-[50px] min-h-[50px] w-full min-w-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                      className="box-border mt-[20px] flex h-[50px] min-h-[50px] w-full min-w-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
                       style={{ ...involve, fontSize: 16, lineHeight: '315%', color: '#050505' }}
                     >
                       Продолжение
