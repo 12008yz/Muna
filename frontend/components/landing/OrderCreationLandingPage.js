@@ -376,7 +376,7 @@ export default function OrderCreationLandingPage({
       ...involve,
       fontSize: 16,
       lineHeight: '315%',
-      width: 'min(330px, calc(100% - 55px))',
+      width: 'min(350px, calc(100% - 55px))',
       height: 50,
       minHeight: 50,
       borderRadius: 10,
@@ -1164,8 +1164,16 @@ export default function OrderCreationLandingPage({
                     <button
                       type="button"
                       onClick={handleDurationNext}
-                      className="box-border mt-[20px] flex h-[50px] min-h-[50px] w-full min-w-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
-                      style={{ ...involve, fontSize: 16, lineHeight: '315%', color: '#050505' }}
+                      className="box-border mt-[20px] flex h-[50px] min-h-[50px] min-w-0 max-w-full cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                      style={{
+                        ...involve,
+                        fontSize: 16,
+                        lineHeight: '315%',
+                        color: '#050505',
+                        width: 350,
+                        maxWidth: '100%',
+                        borderRadius: 10,
+                      }}
                     >
                       Продолжение
                     </button>

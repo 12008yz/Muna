@@ -581,10 +581,11 @@ export default function ConsultationLandingPage({
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="box-border flex w-full min-w-0 shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid outline-none transition-opacity focus:outline-none disabled:opacity-60"
+                  className="box-border flex min-w-0 max-w-full shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid outline-none transition-opacity focus:outline-none disabled:opacity-60"
                   style={{
                     ...involve,
-                    width: '100%',
+                    width: 350,
+                    maxWidth: '100%',
                     marginTop: 13,
                     marginBottom: 0,
                     height: 50,
@@ -805,10 +806,11 @@ export default function ConsultationLandingPage({
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="box-border flex w-full min-w-0 shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-opacity focus:outline-none disabled:opacity-60"
+                  className="box-border flex min-w-0 max-w-full shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none transition-opacity focus:outline-none disabled:opacity-60"
                   style={{
                     ...involve,
-                    width: '100%',
+                    width: 350,
+                    maxWidth: '100%',
                     marginTop: 13,
                     marginBottom: 0,
                     height: 50,

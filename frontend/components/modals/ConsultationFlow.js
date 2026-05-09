@@ -682,11 +682,15 @@ export default function ConsultationFlow({
               onMouseLeave={() => setIsNextBtnPressed(false)}
               onTouchStart={() => setIsNextBtnPressed(true)}
               onTouchEnd={() => setIsNextBtnPressed(false)}
-              className="h-[50px] flex-1 cursor-pointer rounded-[10px] outline-none disabled:cursor-not-allowed"
+              className="box-border flex h-[50px] min-h-[50px] flex-none cursor-pointer items-center justify-center rounded-[10px] outline-none disabled:cursor-not-allowed"
               style={{
                 ...involve,
                 fontSize: '16px',
                 lineHeight: '315%',
+                width: 'min(350px, calc(100% - 55px))',
+                height: 50,
+                minHeight: 50,
+                borderRadius: 10,
                 border: !contactMethodAttempted || selectedMethod ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
                 background: !contactMethodAttempted || selectedMethod ? '#FFFFFF' : 'transparent',
                 color: !contactMethodAttempted || selectedMethod ? '#050505' : '#FFFFFF',
@@ -923,11 +927,15 @@ export default function ConsultationFlow({
               onMouseLeave={() => setIsPhoneNextBtnPressed(false)}
               onTouchStart={() => setIsPhoneNextBtnPressed(true)}
               onTouchEnd={() => setIsPhoneNextBtnPressed(false)}
-              className="h-[50px] flex-1 cursor-pointer rounded-[10px] outline-none"
+              className="box-border flex h-[50px] min-h-[50px] flex-none cursor-pointer items-center justify-center rounded-[10px] outline-none"
               style={{
                 ...involve,
                 fontSize: '16px',
                 lineHeight: '315%',
+                width: 'min(350px, calc(100% - 55px))',
+                height: 50,
+                minHeight: 50,
+                borderRadius: 10,
                 border: callbackNextSolid ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
                 background: callbackNextSolid ? '#FFFFFF' : 'transparent',
                 color: callbackNextSolid ? '#050505' : '#FFFFFF',
@@ -1017,12 +1025,16 @@ export default function ConsultationFlow({
             switchStepAnimated('contact-method');
           }}
           disabled={!isPhoneValid}
-          className="w-full cursor-pointer rounded-[10px] outline-none disabled:cursor-not-allowed"
+          className="box-border flex min-h-[50px] min-w-0 max-w-full cursor-pointer items-center justify-center rounded-[10px] outline-none disabled:cursor-not-allowed"
           style={{
             ...involve,
-            height: '50px',
+            width: 350,
+            maxWidth: '100%',
+            height: 50,
+            minHeight: 50,
             fontSize: '16px',
             lineHeight: '315%',
+            borderRadius: 10,
             border: isPhoneValid ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
             background: isPhoneValid ? '#FFFFFF' : 'transparent',
             color: isPhoneValid ? '#050505' : '#FFFFFF',
