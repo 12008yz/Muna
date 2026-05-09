@@ -653,10 +653,11 @@ export default function OrderCreationLandingPage({
 
       <button
         type="button"
-        className="box-border mt-[20px] mb-0 flex w-full min-w-0 shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
+        className="box-border mt-[20px] mb-0 flex min-w-0 max-w-full shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
         style={{
           ...involve,
-          width: '100%',
+          width: 350,
+          maxWidth: '100%',
           height: 50,
           minHeight: 50,
           marginBottom: 0,
