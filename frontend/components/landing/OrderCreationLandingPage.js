@@ -781,7 +781,7 @@ export default function OrderCreationLandingPage({
                       <span className="block whitespace-nowrap">Кликните на очень похожее мнение</span>
                     </p>
 
-                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]" style={{ marginBottom: 19 }}>
+                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]">
                       {[
                         { id: 'low-known', label: 'Компания малоизвестна в сети' },
                         { id: 'high-known', label: 'Компания известна в сети' },
@@ -820,7 +820,7 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="flex w-full min-w-0 items-center gap-[5px]">
+                    <div className="mt-[20px] flex w-full min-w-0 items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(0)}
@@ -876,7 +876,7 @@ export default function OrderCreationLandingPage({
                       <span className="block whitespace-nowrap">Кликните на очень похожее мнение</span>
                     </p>
 
-                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]">
                       {[
                         { id: 'style-low', label: 'Компания скорее не имеет стиль' },
                         { id: 'style-high', label: 'Компания скорее имеет стиль' },
@@ -904,7 +904,7 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="flex w-full min-w-0 items-center gap-[5px]">
+                    <div className="mt-[20px] flex w-full min-w-0 items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(1)}
@@ -956,7 +956,7 @@ export default function OrderCreationLandingPage({
                       <span className="block whitespace-nowrap">Кликните на очень похожее мнение</span>
                     </p>
 
-                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]">
                       {[
                         { id: 0, label: 'Компания незнакома с трендами' },
                         { id: 1, label: 'Компания знакома с трендами' },
@@ -984,7 +984,7 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="flex w-full min-w-0 items-center gap-[5px]">
+                    <div className="mt-[20px] flex w-full min-w-0 items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(2)}
@@ -1036,7 +1036,7 @@ export default function OrderCreationLandingPage({
                       <span className="block whitespace-nowrap">Кликните на очень похожее мнение</span>
                     </p>
 
-                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]">
                       {[
                         { id: 'load-low', label: 'Компания не загружена на 95%' },
                         { id: 'load-high', label: 'Компания загружена на 95%' },
@@ -1064,7 +1064,7 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="flex w-full min-w-0 items-center gap-[5px]">
+                    <div className="mt-[20px] flex w-full min-w-0 items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(3)}
@@ -1116,7 +1116,7 @@ export default function OrderCreationLandingPage({
                       <span className="block whitespace-nowrap">Кликните на очень похожее мнение</span>
                     </p>
 
-                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]" style={{ marginBottom: 20 }}>
+                    <div className="mt-[90px] flex w-full min-w-0 flex-col gap-[5px]">
                       <div
                         className="box-border flex h-[105px] w-full items-start gap-[10px] rounded-[10px] border border-solid border-[rgba(255,255,255,0.1)] bg-transparent px-[10px] pt-[15px]"
                       >
@@ -1159,7 +1159,7 @@ export default function OrderCreationLandingPage({
                     <button
                       type="button"
                       onClick={handleDurationNext}
-                      className="flex h-[50px] min-h-[50px] w-full min-w-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                      className="mt-[20px] flex h-[50px] min-h-[50px] w-full min-w-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
                       style={{ ...involve, fontSize: 16, lineHeight: '315%', color: '#050505' }}
                     >
                       Продолжение

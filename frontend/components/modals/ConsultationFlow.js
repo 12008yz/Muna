@@ -592,7 +592,7 @@ export default function ConsultationFlow({
             Рекламирование ненужного тоже отсутствует.
           </div>
 
-          <div className="flex flex-col gap-[5px]" style={{ marginBottom: '20px' }}>
+          <div className="flex flex-col gap-[5px]" style={{ marginBottom: '0' }}>
             <div
               className="flex items-center justify-between"
               style={{
@@ -653,7 +653,7 @@ export default function ConsultationFlow({
             </button>
           </div>
 
-          <div className="flex items-center gap-[5px]">
+          <div className="mt-[20px] flex items-center gap-[5px]">
             <button
               type="button"
               onClick={handleBack}
@@ -841,7 +841,7 @@ export default function ConsultationFlow({
             </div>
           </div>
 
-          <div className="mb-[15px] mt-0 w-full min-w-0 shrink-0">
+          <div className="mb-0 mt-0 w-full min-w-0 shrink-0">
             <button
               type="button"
               className="relative box-border flex w-full min-w-0 cursor-pointer items-center rounded-[10px] border border-solid bg-transparent text-left outline-none focus:outline-none"
@@ -894,7 +894,7 @@ export default function ConsultationFlow({
             </button>
           </div>
 
-          <div className="flex items-center gap-[5px]">
+          <div className="mt-[20px] flex items-center gap-[5px]">
             <button
               type="button"
               onClick={handleBack}
