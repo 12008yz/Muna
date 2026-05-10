@@ -690,12 +690,14 @@ export default function ConsultationFlow({
               onMouseLeave={() => setIsNextBtnPressed(false)}
               onTouchStart={() => setIsNextBtnPressed(true)}
               onTouchEnd={() => setIsNextBtnPressed(false)}
-              className="box-border flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none disabled:cursor-not-allowed"
+              className="box-border flex h-[50px] min-h-[50px] flex-none cursor-pointer items-center justify-center rounded-[10px] outline-none disabled:cursor-not-allowed"
               style={{
                 ...involve,
                 ...consultationPrimaryCtaLabelStyle,
+                width: 'min(350px, calc(100% - 55px))',
                 height: CONSULTATION_PRIMARY_CTA_H,
                 minHeight: CONSULTATION_PRIMARY_CTA_H,
+                borderRadius: 10,
                 border: !contactMethodAttempted || selectedMethod ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
                 background: !contactMethodAttempted || selectedMethod ? '#FFFFFF' : 'transparent',
                 color: !contactMethodAttempted || selectedMethod ? '#050505' : '#FFFFFF',
@@ -932,12 +934,14 @@ export default function ConsultationFlow({
               onMouseLeave={() => setIsPhoneNextBtnPressed(false)}
               onTouchStart={() => setIsPhoneNextBtnPressed(true)}
               onTouchEnd={() => setIsPhoneNextBtnPressed(false)}
-              className="box-border flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none"
+              className="box-border flex h-[50px] min-h-[50px] flex-none cursor-pointer items-center justify-center rounded-[10px] outline-none"
               style={{
                 ...involve,
                 ...consultationPrimaryCtaLabelStyle,
+                width: 'min(350px, calc(100% - 55px))',
                 height: CONSULTATION_PRIMARY_CTA_H,
                 minHeight: CONSULTATION_PRIMARY_CTA_H,
+                borderRadius: 10,
                 border: callbackNextSolid ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
                 background: callbackNextSolid ? '#FFFFFF' : 'transparent',
                 color: callbackNextSolid ? '#050505' : '#FFFFFF',
@@ -1027,12 +1031,14 @@ export default function ConsultationFlow({
             switchStepAnimated('contact-method');
           }}
           disabled={!isPhoneValid}
-          className="box-border flex w-full cursor-pointer items-center justify-center rounded-[10px] outline-none disabled:cursor-not-allowed"
+          className="box-border flex h-[50px] min-h-[50px] w-full min-w-0 max-w-full cursor-pointer items-center justify-center rounded-[10px] outline-none disabled:cursor-not-allowed"
           style={{
             ...involve,
             ...consultationPrimaryCtaLabelStyle,
             height: CONSULTATION_PRIMARY_CTA_H,
             minHeight: CONSULTATION_PRIMARY_CTA_H,
+            width: 350,
+            maxWidth: '100%',
             border: isPhoneValid ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
             background: isPhoneValid ? '#FFFFFF' : 'transparent',
             color: isPhoneValid ? '#050505' : '#FFFFFF',

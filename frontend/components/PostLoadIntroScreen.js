@@ -111,9 +111,11 @@ export default function PostLoadIntroScreen({ onContinue }) {
           <button
             type="button"
             tabIndex={showContinueButton ? 0 : -1}
-            className="box-border flex min-h-[50px] w-full items-center justify-center border border-solid border-white outline-none transition-opacity duration-500 ease-out hover:opacity-90 focus:outline-none"
+            className="box-border flex h-[50px] min-h-[50px] min-w-0 max-w-full items-center justify-center border border-solid border-white outline-none transition-opacity duration-500 ease-out hover:opacity-90 focus:outline-none"
             style={{
               ...involve,
+              width: 350,
+              maxWidth: '100%',
               borderRadius: 10,
               fontSize: 16,
               lineHeight: '315%',

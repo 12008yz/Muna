@@ -1171,8 +1171,14 @@ export default function OrderCreationLandingPage({
                     <button
                       type="button"
                       onClick={handleDurationNext}
-                      className="box-border mt-[20px] flex h-[50px] min-h-[50px] w-full min-w-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
-                      style={{ ...involve, ...orderPrimaryCtaLabelStyle, color: '#050505' }}
+                      className="box-border mt-[20px] flex h-[50px] min-h-[50px] w-full min-w-0 max-w-full cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
+                      style={{
+                        ...involve,
+                        ...orderPrimaryCtaLabelStyle,
+                        color: '#050505',
+                        width: 350,
+                        maxWidth: '100%',
+                      }}
                     >
                       Продолжение
                     </button>

@@ -388,11 +388,13 @@ function ManaGlassMarketingCarouselCard({
           type="button"
           disabled={!isActionEnabled}
           onClick={isActionEnabled ? onNavigateToOrder : undefined}
-          className={`mt-[20px] box-border flex h-[50px] w-full max-w-[330px] items-center justify-center rounded-[10px] border border-solid border-white outline-none ${
+          className={`mt-[20px] box-border flex h-[50px] w-full max-w-[350px] items-center justify-center rounded-[10px] border border-solid border-white outline-none ${
             isActionEnabled ? 'cursor-pointer' : 'cursor-not-allowed'
           }`}
           style={{
             ...involveMana,
+            width: 350,
+            maxWidth: '100%',
             fontSize: 16,
             lineHeight: '315%',
             color: isActionEnabled ? '#050505' : '#FFFFFF',
@@ -668,8 +670,17 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
           <button
             type="button"
             disabled={!canSubmit}
-            className={`mt-[20px] h-[50px] w-full rounded-[10px] border border-white ${canSubmit ? 'cursor-pointer' : 'cursor-not-allowed'}`}
-            style={{ ...involveMana, fontSize: 16, lineHeight: '315%', color: '#050505', background: '#FFFFFF', opacity: 1 }}
+            className={`mt-[20px] box-border flex h-[50px] min-h-[50px] max-w-full items-center justify-center rounded-[10px] border border-white ${canSubmit ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+            style={{
+              ...involveMana,
+              width: 350,
+              maxWidth: '100%',
+              fontSize: 16,
+              lineHeight: '315%',
+              color: '#050505',
+              background: '#FFFFFF',
+              opacity: 1,
+            }}
           >
             Подтверждение
           </button>
@@ -860,11 +871,13 @@ function ManaGlassMarketingCarouselCardTwo({
           type="button"
           onClick={expandedButtonDisabled ? undefined : onNavigateToOrder}
           disabled={expandedButtonDisabled}
-          className={`mt-[20px] box-border flex h-[50px] w-full max-w-[330px] items-center justify-center rounded-[10px] border border-solid border-white outline-none ${
+          className={`mt-[20px] box-border flex h-[50px] w-full max-w-[350px] items-center justify-center rounded-[10px] border border-solid border-white outline-none ${
             expandedButtonDisabled ? 'cursor-not-allowed' : 'cursor-pointer'
           }`}
           style={{
             ...involveMana,
+            width: 350,
+            maxWidth: '100%',
             fontSize: 16,
             lineHeight: '315%',
             color: '#050505',

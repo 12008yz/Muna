@@ -286,9 +286,11 @@ export default function ConsultationModal({ isOpen, onClose, onComplete }) {
           <button
             type="button"
             onClick={handleSubmit}
-            className="box-border w-full rounded-[10px] border-none outline-none transition-[background,color] duration-150 focus:outline-none"
+            className="box-border flex min-w-0 max-w-full items-center justify-center rounded-[10px] border-none outline-none transition-[background,color] duration-150 focus:outline-none"
             style={{
               ...involve,
+              width: 350,
+              maxWidth: '100%',
               height: 50,
               minHeight: 50,
               fontSize: 16,
