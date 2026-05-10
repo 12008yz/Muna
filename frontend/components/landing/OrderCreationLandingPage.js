@@ -14,6 +14,14 @@ const involve = {
   fontSynthesis: 'none',
 };
 
+/** Первичные CTA высотой 50px: 315%×16≈50.4px даёт субпиксель и «прыжок» ~1px между кнопками. */
+const ORDER_PRIMARY_CTA_H = 50;
+const orderPrimaryCtaLabelStyle = {
+  padding: 0,
+  fontSize: 16,
+  lineHeight: `${ORDER_PRIMARY_CTA_H}px`,
+};
+
 /** Карточка мастера /order — заголовок (Figma: 330×20, Involve 500, 18px, line-height 110%) */
 const wizardTitleStyle = {
   ...involve,
@@ -374,11 +382,10 @@ export default function OrderCreationLandingPage({
     const solid = !attempted || valid;
     return {
       ...involve,
-      fontSize: 16,
-      lineHeight: '315%',
+      ...orderPrimaryCtaLabelStyle,
       width: 'min(330px, calc(100% - 55px))',
-      height: 50,
-      minHeight: 50,
+      height: ORDER_PRIMARY_CTA_H,
+      minHeight: ORDER_PRIMARY_CTA_H,
       borderRadius: 10,
       border: solid ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
       background: solid ? '#FFFFFF' : 'transparent',
@@ -656,16 +663,15 @@ export default function OrderCreationLandingPage({
         className="box-border mt-[20px] mb-0 flex min-w-0 max-w-full shrink-0 cursor-pointer items-center justify-center rounded-[10px] outline-none focus:outline-none"
         style={{
           ...involve,
+          ...orderPrimaryCtaLabelStyle,
           width: 350,
           maxWidth: '100%',
-          height: 50,
-          minHeight: 50,
+          height: ORDER_PRIMARY_CTA_H,
+          minHeight: ORDER_PRIMARY_CTA_H,
           marginBottom: 0,
           background: '#FFFFFF',
           border: '1px solid #FFFFFF',
           borderRadius: 10,
-          fontSize: 16,
-          lineHeight: '315%',
           color: '#050505',
         }}
         onClick={buttonHandler}
@@ -740,7 +746,8 @@ export default function OrderCreationLandingPage({
                   marginRight: 'var(--main-block-margin)',
                   width: 'auto',
                   minHeight: 360,
-                  height: 360,
+                  /* border-box 360 заметал ~3px контента (рамка+паддинги) — полоса под CTA не как у лид-карточки */
+                  height: 'auto',
                   boxSizing: 'border-box',
                   padding: 15,
                   marginBottom: 0,
@@ -825,7 +832,7 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="mt-[19px] flex w-full min-w-0 items-center gap-[5px]">
+                    <div className="mt-[20px] flex w-full min-w-0 items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(0)}
@@ -909,7 +916,7 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="mt-[19px] flex w-full min-w-0 items-center gap-[5px]">
+                    <div className="mt-[20px] flex w-full min-w-0 items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(1)}
@@ -989,7 +996,7 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="mt-[19px] flex w-full min-w-0 items-center gap-[5px]">
+                    <div className="mt-[20px] flex w-full min-w-0 items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(2)}
@@ -1069,7 +1076,7 @@ export default function OrderCreationLandingPage({
                       })}
                     </div>
 
-                    <div className="mt-[19px] flex w-full min-w-0 items-center gap-[5px]">
+                    <div className="mt-[20px] flex w-full min-w-0 items-center gap-[5px]">
                       <button
                         type="button"
                         onClick={() => setOrderStepAnimated(3)}
@@ -1165,7 +1172,7 @@ export default function OrderCreationLandingPage({
                       type="button"
                       onClick={handleDurationNext}
                       className="box-border mt-[20px] flex h-[50px] min-h-[50px] w-full min-w-0 cursor-pointer items-center justify-center rounded-[10px] border border-solid border-white bg-white outline-none transition-transform duration-150 ease-out focus:outline-none active:scale-[0.97]"
-                      style={{ ...involve, fontSize: 16, lineHeight: '315%', color: '#050505' }}
+                      style={{ ...involve, ...orderPrimaryCtaLabelStyle, color: '#050505' }}
                     >
                       Продолжение
                     </button>

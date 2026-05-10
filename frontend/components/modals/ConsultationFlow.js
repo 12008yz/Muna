@@ -76,11 +76,19 @@ function UnselectedArrowIcon() {
 
 const glassSheet = {
   boxSizing: 'border-box',
-  background: 'rgba(5, 5, 5, 0.75)',
+  background: 'rgba(5, 5, 5, 0.7)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
   backdropFilter: 'blur(7.5px)',
   WebkitBackdropFilter: 'blur(7.5px)',
   borderRadius: 20,
+};
+
+const CONSULTATION_PRIMARY_CTA_H = 50;
+/** Как OrderCreationLandingPage: 315%×16≈50.4px даёт субпиксель у flex-center */
+const consultationPrimaryCtaLabelStyle = {
+  padding: 0,
+  fontSize: 16,
+  lineHeight: `${CONSULTATION_PRIMARY_CTA_H}px`,
 };
 
 const involve = { fontFamily: "'TT Firs Neue', system-ui, sans-serif" };
@@ -565,8 +573,8 @@ export default function ConsultationFlow({
             width: 'calc(100% - 2 * var(--main-block-margin))',
             minWidth: 0,
             maxWidth: 390,
-            height: 335,
             minHeight: 335,
+            height: 'auto',
             marginTop: 'auto',
             marginBottom: 0,
             padding: '15px',
@@ -682,11 +690,12 @@ export default function ConsultationFlow({
               onMouseLeave={() => setIsNextBtnPressed(false)}
               onTouchStart={() => setIsNextBtnPressed(true)}
               onTouchEnd={() => setIsNextBtnPressed(false)}
-              className="h-[50px] flex-1 cursor-pointer rounded-[10px] outline-none disabled:cursor-not-allowed"
+              className="box-border flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none disabled:cursor-not-allowed"
               style={{
                 ...involve,
-                fontSize: '16px',
-                lineHeight: '315%',
+                ...consultationPrimaryCtaLabelStyle,
+                height: CONSULTATION_PRIMARY_CTA_H,
+                minHeight: CONSULTATION_PRIMARY_CTA_H,
                 border: !contactMethodAttempted || selectedMethod ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
                 background: !contactMethodAttempted || selectedMethod ? '#FFFFFF' : 'transparent',
                 color: !contactMethodAttempted || selectedMethod ? '#050505' : '#FFFFFF',
@@ -742,8 +751,8 @@ export default function ConsultationFlow({
             width: 'calc(100% - 2 * var(--main-block-margin))',
             minWidth: 0,
             maxWidth: 390,
-            height: 335,
             minHeight: 335,
+            height: 'auto',
             marginTop: 'auto',
             marginBottom: 0,
             padding: '15px',
@@ -923,11 +932,12 @@ export default function ConsultationFlow({
               onMouseLeave={() => setIsPhoneNextBtnPressed(false)}
               onTouchStart={() => setIsPhoneNextBtnPressed(true)}
               onTouchEnd={() => setIsPhoneNextBtnPressed(false)}
-              className="h-[50px] flex-1 cursor-pointer rounded-[10px] outline-none"
+              className="box-border flex h-[50px] min-h-[50px] flex-1 cursor-pointer items-center justify-center rounded-[10px] outline-none"
               style={{
                 ...involve,
-                fontSize: '16px',
-                lineHeight: '315%',
+                ...consultationPrimaryCtaLabelStyle,
+                height: CONSULTATION_PRIMARY_CTA_H,
+                minHeight: CONSULTATION_PRIMARY_CTA_H,
                 border: callbackNextSolid ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
                 background: callbackNextSolid ? '#FFFFFF' : 'transparent',
                 color: callbackNextSolid ? '#050505' : '#FFFFFF',
@@ -1017,12 +1027,12 @@ export default function ConsultationFlow({
             switchStepAnimated('contact-method');
           }}
           disabled={!isPhoneValid}
-          className="w-full cursor-pointer rounded-[10px] outline-none disabled:cursor-not-allowed"
+          className="box-border flex w-full cursor-pointer items-center justify-center rounded-[10px] outline-none disabled:cursor-not-allowed"
           style={{
             ...involve,
-            height: '50px',
-            fontSize: '16px',
-            lineHeight: '315%',
+            ...consultationPrimaryCtaLabelStyle,
+            height: CONSULTATION_PRIMARY_CTA_H,
+            minHeight: CONSULTATION_PRIMARY_CTA_H,
             border: isPhoneValid ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
             background: isPhoneValid ? '#FFFFFF' : 'transparent',
             color: isPhoneValid ? '#050505' : '#FFFFFF',
