@@ -78,8 +78,8 @@ const glassSheet = {
   boxSizing: 'border-box',
   background: 'rgba(5, 5, 5, 0.7)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
-  backdropFilter: 'blur(7.5px)',
-  WebkitBackdropFilter: 'blur(7.5px)',
+  backdropFilter: 'blur(3.75px)',
+  WebkitBackdropFilter: 'blur(3.75px)',
   borderRadius: 20,
 };
 
@@ -555,7 +555,7 @@ export default function ConsultationFlow({
             <button
               type="button"
               onClick={handleCloseImmediate}
-              className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
+              className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.7)] backdrop-blur-[3.75px] transition-opacity hover:opacity-90"
               aria-label="Свернуть окно"
             >
               <CollapseIcon />
@@ -736,7 +736,7 @@ export default function ConsultationFlow({
             <button
               type="button"
               onClick={handleCloseImmediate}
-              className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
+              className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.7)] backdrop-blur-[3.75px] transition-opacity hover:opacity-90"
               aria-label="Свернуть окно"
             >
               <CollapseIcon />
@@ -971,7 +971,7 @@ export default function ConsultationFlow({
           <button
             type="button"
             onClick={handleCloseImmediate}
-            className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[#050505] backdrop-blur-[5px] transition-opacity hover:opacity-90"
+            className="box-border flex h-10 w-10 items-center justify-center rounded-[20px] border border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.7)] backdrop-blur-[3.75px] transition-opacity hover:opacity-90"
             aria-label="Свернуть окно"
           >
             <CollapseIcon />
@@ -1113,8 +1113,8 @@ export default function ConsultationFlow({
             boxSizing: 'border-box',
             background: 'rgba(5, 5, 5, 0.85)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(7.5px)',
-            WebkitBackdropFilter: 'blur(7.5px)',
+            backdropFilter: 'blur(3.75px)',
+            WebkitBackdropFilter: 'blur(3.75px)',
             borderRadius: 20,
           }}
           onClick={(e) => e.stopPropagation()}

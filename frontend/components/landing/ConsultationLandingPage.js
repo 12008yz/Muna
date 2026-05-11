@@ -423,8 +423,8 @@ export default function ConsultationLandingPage({
                 overflow: 'hidden',
                 background: 'rgba(5, 5, 5, 0.7)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(7.5px)',
-                WebkitBackdropFilter: 'blur(7.5px)',
+                backdropFilter: 'blur(3.75px)',
+                WebkitBackdropFilter: 'blur(3.75px)',
               }}
             >
               <h1
@@ -648,8 +648,8 @@ export default function ConsultationLandingPage({
                 overflow: 'hidden',
                 background: 'rgba(255, 255, 255, 0.8)',
                 border: '1px solid rgba(255, 255, 255, 0.5)',
-                backdropFilter: 'blur(7.5px)',
-                WebkitBackdropFilter: 'blur(7.5px)',
+                backdropFilter: 'blur(3.75px)',
+                WebkitBackdropFilter: 'blur(3.75px)',
               }}
             >
               <h1

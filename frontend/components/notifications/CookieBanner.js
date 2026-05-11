@@ -81,8 +81,8 @@ export default function CookieBanner({
           boxSizing: 'border-box',
           background: 'rgba(5, 5, 5, 0.85)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(7.5px)',
-          WebkitBackdropFilter: 'blur(7.5px)',
+          backdropFilter: 'blur(3.75px)',
+          WebkitBackdropFilter: 'blur(3.75px)',
           borderRadius: 20,
         }}
         onClick={(e) => e.stopPropagation()}
@@ -181,8 +181,8 @@ export default function CookieBanner({
           boxSizing: 'border-box',
           background: 'rgba(5, 5, 5, 0.85)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(7.5px)',
-          WebkitBackdropFilter: 'blur(7.5px)',
+          backdropFilter: 'blur(3.75px)',
+          WebkitBackdropFilter: 'blur(3.75px)',
           borderRadius: 20,
         }}
         onClick={(e) => e.stopPropagation()}
@@ -248,8 +248,8 @@ export default function CookieBanner({
           ...(stacked ? {} : { left: 'var(--main-block-margin)', top: 'var(--notification-top)' }),
           background: stacked ? '#FFFFFF' : 'rgba(255, 255, 255, 0.85)',
           border: '1px solid rgba(255, 255, 255, 0.5)',
-          backdropFilter: stacked ? 'none' : 'blur(7.5px)',
-          WebkitBackdropFilter: stacked ? 'none' : 'blur(7.5px)',
+          backdropFilter: stacked ? 'none' : 'blur(3.75px)',
+          WebkitBackdropFilter: stacked ? 'none' : 'blur(3.75px)',
           borderRadius: 20,
           boxSizing: 'border-box',
         }}
@@ -294,8 +294,8 @@ export default function CookieBanner({
         padding: 15,
         boxSizing: 'border-box',
         background: '#FFFFFF',
-        backdropFilter: stacked ? 'none' : 'blur(7.5px)',
-        WebkitBackdropFilter: stacked ? 'none' : 'blur(7.5px)',
+        backdropFilter: stacked ? 'none' : 'blur(3.75px)',
+        WebkitBackdropFilter: stacked ? 'none' : 'blur(3.75px)',
       }}
       onClick={(e) => e.stopPropagation()}
       role="region"

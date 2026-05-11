@@ -194,8 +194,8 @@ const manaGlassCardStyle = {
   boxSizing: 'border-box',
   background: 'rgba(5, 5, 5, 0.7)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
-  backdropFilter: 'blur(7.5px)',
-  WebkitBackdropFilter: 'blur(7.5px)',
+  backdropFilter: 'blur(3.75px)',
+  WebkitBackdropFilter: 'blur(3.75px)',
   borderRadius: 20,
 };
 
@@ -552,8 +552,8 @@ function ManaGiftFlowCard({ onBack, containerStyle, stackCarouselLast = false, r
           className="fixed inset-0 z-[20000] flex items-end justify-center px-[var(--main-block-margin)] pb-[20px] pt-[80px]"
           style={{
             background: '#050505',
-            backdropFilter: 'blur(7.5px)',
-            WebkitBackdropFilter: 'blur(7.5px)',
+            backdropFilter: 'blur(3.75px)',
+            WebkitBackdropFilter: 'blur(3.75px)',
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? 'translateY(0)' : 'translateY(12px)',
             transition: 'opacity 520ms cubic-bezier(0.22, 1, 0.36, 1), transform 520ms cubic-bezier(0.22, 1, 0.36, 1)',

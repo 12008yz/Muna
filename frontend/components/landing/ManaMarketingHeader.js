@@ -26,9 +26,9 @@ function PaperPlaneIcon() {
 }
 
 
-/** Figma Rectangle 32: 40×40, radius 20 */
+/** Figma Rectangle 32: 40×40, radius 20 — стекло как у карточек лендинга */
 const circleBtn =
-  'flex h-10 w-10 shrink-0 box-border items-center justify-center rounded-[20px] border border-solid border-[rgba(255,255,255,0.1)] bg-[#050505] transition-opacity hover:opacity-90';
+  'flex h-10 w-10 shrink-0 box-border items-center justify-center rounded-[20px] border border-solid border-[rgba(255,255,255,0.1)] bg-[rgba(5,5,5,0.7)] backdrop-blur-[3.75px] transition-opacity hover:opacity-90';
 
 export default function ManaMarketingHeader({ onConsultationClick, menuHref = '#section-hero', onMenuClick }) {
   return (

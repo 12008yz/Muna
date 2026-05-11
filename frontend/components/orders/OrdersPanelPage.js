@@ -97,8 +97,8 @@ export default function OrdersPanelPage({ embedded = false } = {}) {
         }`}
         style={{
           background: 'rgba(255, 255, 255, 0.85)',
-          backdropFilter: 'blur(7.5px)',
-          WebkitBackdropFilter: 'blur(7.5px)',
+          backdropFilter: 'blur(3.75px)',
+          WebkitBackdropFilter: 'blur(3.75px)',
         }}
       >
         <h1 className="m-0 mb-2 text-[24px] font-normal text-[#101010]">Заявки</h1>
@@ -117,8 +117,8 @@ export default function OrdersPanelPage({ embedded = false } = {}) {
             }`}
             style={{
               background: 'rgba(255, 255, 255, 0.85)',
-              backdropFilter: 'blur(7.5px)',
-              WebkitBackdropFilter: 'blur(7.5px)',
+              backdropFilter: 'blur(3.75px)',
+              WebkitBackdropFilter: 'blur(3.75px)',
             }}
           >
             <table className="w-full min-w-[980px] border-collapse text-left text-[14px] text-[#101010]">
