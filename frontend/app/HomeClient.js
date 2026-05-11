@@ -19,7 +19,7 @@ export default function HomeClient() {
   const mainRef = useRef(null);
 
   useEffect(() => {
-    const LOADING_MIN_MS = 1500;
+    const LOADING_MIN_MS = 3000;
     const loadingStartedAt = Date.now();
     let completedSteps = 0;
     const totalSteps = 5;

@@ -98,7 +98,7 @@ export default function PostLoadIntroScreen({ onContinue }) {
         />
 
         <div
-          className="absolute"
+          className="absolute transition-opacity duration-[1400ms] ease-out"
           style={{
             left: '8.75%',
             right: '8.75%',
@@ -111,7 +111,7 @@ export default function PostLoadIntroScreen({ onContinue }) {
           <button
             type="button"
             tabIndex={showContinueButton ? 0 : -1}
-            className="box-border flex h-[50px] min-h-[50px] min-w-0 max-w-full items-center justify-center border border-solid border-white outline-none transition-opacity duration-500 ease-out hover:opacity-90 focus:outline-none"
+            className="box-border flex h-[50px] min-h-[50px] min-w-0 max-w-full items-center justify-center border border-solid border-white outline-none transition-opacity duration-300 ease-out hover:opacity-90 focus:outline-none"
             style={{
               ...involve,
               width: 350,
